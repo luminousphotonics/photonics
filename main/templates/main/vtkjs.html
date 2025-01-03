@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Photonics Visualization</title>
+    <meta charset="UTF-8">
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; }
+        #vtk-container { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="vtk-container"></div>
+
+    <script src="https://unpkg.com/vtk.js"></script>
+    <script>
+        const encoded_content = "{{ encoded_content }}";
+        const vtkjs_content = Uint8Array.from(atob(encoded_content), c => c.charCodeAt(0));
+
+        const { vtkFullScreenRenderWindow, vtkInteractorStyleTrackballCamera } = vtk;
+        const { vtkAlgorithm, vtkDataArray, vtkDataReader, vtkMapper, vtkActor, vtkColorTransferFunction, vtkLookupTable, vtkPiecewiseFunction } = vtk.Rendering.Core;
+
+        // Full screen render window
+        const fullScreenRenderer = vtkFullScreenRenderWindow.newInstance({
+            background: [0.5, 0.5, 0.5], // Set your desired background color
+            rootContainer: document.getElementById('vtk-container'),
+        });
+        const renderer = fullScreenRenderer.getRenderer();
+        const renderWindow = fullScreenRenderer.getRenderWindow();
+
+        // Data reader
+        const reader = vtkDataReader.newInstance();
+        reader.parseAsArrayBuffer(vtkjs_content.buffer);
+
+        const dataArray = reader.getOutputData(0).getPointData().getScalars();
+
+        // Color map
+        const lut = vtkLookupTable.newInstance();
+        lut.setMapValueRange(0, 1); // Adjust the range based on your heatmap intensity values
+        lut.setHueRange(0.667, 0); // Adjust the range based on your heatmap intensity values
+
+        // Piecewise function for opacity
+        const ofun = vtkPiecewiseFunction.newInstance();
+        ofun.addPoint(0, 0.0); // Adjust based on desired opacity mapping
+        ofun.addPoint(1, 1.0);
+
+        // Mapper
+        const mapper = vtkMapper.newInstance();
+        mapper.setInputConnection(reader.getOutputPort());
+        mapper.setLookupTable(lut);
+        mapper.setUseLookupTableScalarRange(true);
+        mapper.setScalarVisibility(true);
+
+        // Actor
+        const actor = vtkActor.newInstance();
+        actor.setMapper(mapper);
+        actor.getProperty().setOpacity(0.8); // Adjust overall opacity as needed
+
+        // Assign opacity function and color map to the actor's property
+        actor.getProperty().setPiecewiseFunction(ofun);
+        actor.getProperty().setRGBTransferFunction(0, lut);
+
+        // Add the actor to the scene
+        renderer.addActor(actor);
+
+        // Camera and interaction
+        renderer.resetCamera();
+        renderWindow.render();
+
+        const interactorStyle = vtkInteractorStyleTrackballCamera.newInstance();
+        renderWindow.getInteractor().setInteractorStyle(interactorStyle);
+    </script>
+</body>
+</html>

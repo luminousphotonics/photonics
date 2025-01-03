@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luminous Photonics - Revolutionizing Horticultural Lighting</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            font-weight: 600;
+        }
+        .hero {
+            background-image: url("{% static 'main/images/hero-bg.png' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 100px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            position: relative;
+            z-index: 0;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+        .intro-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            background-color: #008CBA;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0077A8;
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .feature {
+            text-align: center;
+            width: 30%;
+            margin-bottom: 20px;
+        }
+        .feature img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+        .feature h3 {
+            margin-bottom: 10px;
+        }
+        .feature p {
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #555;
+        }
+        .cta {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .cta p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        /* Navbar styles */
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            font-size: 1.4em;
+        }
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .nav-links li {
+            margin-left: 20px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #008CBA;
+        }
+        .fixture {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%; /* Allow full width */
+            margin: 0 auto; /* Center the entire fixture div */
+        }
+
+        .fixture img {
+            max-width: 500px;
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 15px;
+            display: block; /* Treat image as block element */
+        }
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px;
+            }
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            .feature {
+                width: 80%;
+            }
+        }
+        @media (min-width: 769px) {
+            .fixture {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'main/navbar.html' %}
+
+    <div class="container">
+        <div class="hero">
+            <h1>Luminous Photonics</h1>
+                <h2>Revolutionizing Horticultural Lighting</h2>
+            <p>Optimizing Energy Utilization with Near-Perfect Lambertian Emission</p>
+        </div>
+
+        <div class="intro-text">
+            <p>
+                Welcome to Luminous Photonics, where we are pioneering the future of horticultural lighting. Our patented (U.S. Patent #10687478), infinitely scalable, modularized lighting system achieves near-perfect Lambertian emission, dramatically improving energy efficiency and plant growth in controlled environments.
+            </p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <img src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon">
+                <h3>Unparalleled Energy Efficiency</h3>
+                <p>Reduce energy consumption while maximizing light output.</p>
+            </div>
+            <div class="feature">
+                <img src="{% static 'main/images/recycle.png' %}" alt="Growth Icon">
+                <h3>Enhanced Plant Growth</h3>
+                <p>Promote healthier, more uniform plant development with optimized light distribution.</p>
+            </div>
+            <div class="feature">
+                <img src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon">
+                <h3>Infinitely Scalable</h3>
+                <p>Adapt our system to any grow space, from small research setups to large commercial greenhouses.</p>
+            </div>
+        </div>
+
+        <div class="fixture">
+            <img src="{% static 'main/images/fixture.png' %}" alt="Scalability Icon">
+        </div>
+
+        <div class="cta">
+            <p>Learn more about the science behind our revolutionary technology:</p>
+            <a href="{% url 'technology' %}" class="button">Explore the Technology</a>
+        </div>
+    </div>
+</body>
+</html>

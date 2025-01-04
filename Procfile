@@ -1,1 +1,1 @@
-web: gunicorn photonics.wsgi
+gunicorn photonics.wsgi:application

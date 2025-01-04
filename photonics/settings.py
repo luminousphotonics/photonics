@@ -33,12 +33,9 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 SECRET_KEY = "django-insecure-p!aqx$+(u4&*=$^-9ak&k_0rtcgwj8hm+(o77e(0j1v^gg#*c^"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # Set to False in production
+DEBUG = False
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] # Add your domain(s) or IP address(es) in production
 
-ALLOWED_HOSTS = []  # Add your domain(s) or IP address(es) in production
-
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",

@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Technology - Luminous Photonics</title>
+    <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -21,6 +24,9 @@
         }
         h1, h2, h3 {
             font-weight: 600;
+        }
+        p {
+            line-height: 1.6;
         }
         /* Navbar styles */
         .navbar {
@@ -57,6 +63,28 @@
         .nav-links a:hover {
             color: #008CBA;
         }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            color: #008CBA;
+            margin-bottom: 20px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .image-container img {
+            width: 48%; /* Adjust as needed */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .image-caption{
+            text-align: center;
+            font-size: smaller;
+        }
     </style>
 </head>
 <body>
@@ -64,7 +92,88 @@
 
     <div class="container">
         <h1>Technology</h1>
-        <p>Explore the innovative technology behind Luminous Photonics' horticultural lighting solutions.</p>
+        <p>Explore the innovative technology behind Luminous Photonics' horticultural lighting solutions, based on our Uniform Photon Flux Principle (UPFP) for modular LED arrays.</p>
+
+        <div class="section">
+            <h2 class="section-title">Uniform Photon Flux Principle (UPFP)</h2>
+            <p>
+                Our research has led to the development of the Uniform Photon Flux Principle (UPFP), a groundbreaking approach to optimizing Photosynthetic Photon Flux Density (PPFD) distribution in controlled-environment agriculture.
+                The UPFP leverages a centered square arrangement of Lambertian LED elements, meticulously arranged in concentric layers. By carefully assigning optimal intensities to each layer, we can achieve unprecedented uniformity in PPFD across the growing area.
+            </p>
+            <p>
+                <b>Key Benefits of UPFP:</b>
+                <ul>
+                  <li><b>Enhanced Photosynthesis:</b> Uniform light distribution maximizes whole-canopy photosynthesis, leading to improved plant growth and yield.</li>
+                  <li><b>Reduced Leaf Senescence:</b> Consistent light levels help slow down the aging process of leaves, prolonging their productive lifespan.</li>
+                  <li><b>Ideal for High-DLI Crops:</b> Particularly beneficial for crops like Cannabis that require high Daily Light Integral (DLI) for optimal growth.</li>
+                  <li><b>Energy Efficiency:</b> Optimized light distribution minimizes wasted energy, making our lighting solutions more sustainable.</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Visualizing Light Uniformity</h2>
+            <p>
+                Below are graphical representations that demonstrate the effectiveness of our UPFP technology in achieving uniform light distribution. Each set of graphs compares a traditional or less optimized approach (left) with our UPFP-based solution (right).
+            </p>
+
+            <h3 class="section-title">Beam Profile</h3>
+            <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the right demonstrates a more focused beam with reduced energy waste.</p>
+            <div class="image-container">
+                <img src="{% static 'images/beam_profile_1.png' %}" alt="Beam Profile - Traditional">
+                <img src="{% static 'images/beam_profile_2.png' %}" alt="Beam Profile - UPFP">
+            </div>
+            <p class="image-caption">Figure 1: Comparison of Beam Profiles. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+            
+            <h3 class="section-title">PPFD Surface Graphs</h3>
+            <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the right exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target range).</p>
+            <div class="image-container">
+                <img src="{% static 'images/ppfd_surface_graph_1.png' %}" alt="PPFD Surface Graph - Traditional">
+                <img src="{% static 'images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP">
+            </div>
+            <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+
+            <h3 class="section-title">2D Variance Graphs</h3>
+            <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (right) demonstrates significantly reduced variance, indicating greater uniformity.</p>
+            <div class="image-container">
+                <img src="{% static 'images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional">
+                <img src="{% static 'images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP">
+            </div>
+            <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+
+            <h3 class="section-title">Heatmaps</h3>
+            <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (right) displays a more consistent color across the growing area, signifying superior uniformity.</p>
+            <div class="image-container">
+                <img src="{% static 'images/heatmap_1.png' %}" alt="Heatmap - Traditional">
+                <img src="{% static 'images/heatmap_2.png' %}" alt="Heatmap - UPFP">
+            </div>
+            <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Technical Details</h2>
+            <p>
+                Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
+            </p>
+            <ul>
+                <li><b>Centered Square Arrangement:</b> LED elements are arranged in concentric squares, with the number of elements per layer determined by the sequence \(a(n) = 2n(n+1) + 1\), where \(n\) is the layer number.</li>
+                <li><b>Lambertian Emission Model:</b> We assume each LED emitter follows a Lambertian emission pattern, where radiant intensity is modeled as \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]</li>
+                <li><b>Radiosity and Reflective Walls:</b> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), especially important in grow spaces with highly reflective walls (\(\rho \approx 1\)).</li>
+                <li><b>Optimization:</b> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.</li>
+                <li><b>Degree of Uniformity (DOU):</b> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\]. Our prototype numeric solutions have achieved DOU values exceeding 99%.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2 class="section-title">Experimental Validation</h2>
+            <p>
+                We are committed to rigorous experimental validation of our UPFP technology. We plan to use Apogee Instruments spectroradiometers (PS series for lab, MS-100 handheld) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
+            </p>
+            <ul>
+                <li>Measure total photon flux and PPFD distribution across the canopy.</li>
+                <li>Corroborate our theoretical predictions with real-world data.</li>
+                <li>Further refine our models and optimization algorithms.</li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>

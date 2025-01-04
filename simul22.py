@@ -11,15 +11,105 @@ import json
 import tkinter.simpledialog
 from tkinter import filedialog
 import csv
+from scipy.optimize import curve_fit
 
 SETTINGS_FILE = 'settings.json'
-LUMENS_TO_PPFD_CONVERSION = 23  # Updated Conversion Factor
+#LUMENS_TO_PPFD_CONVERSION = 23  # Updated Conversion Factor
 
+# Constants and Parameters
+HEIGHT_FROM_FLOOR = 2.5
+BEAM_ANGLE_DEG = 120
+REFLECTIVITY = 0.0
+NUM_MEASUREMENT_POINTS = 225
+DEFAULT_TARGET_PPFD = 1500
+PPFD_THRESHOLD_FACTOR = 0.5
+NUM_LAYERS = 6
+DEFAULT_FLOOR_WIDTH = 12.0  # Add this line, set to your desired default value
+DEFAULT_FLOOR_HEIGHT = 12.0 # Add this line, set to your desired default value
+DEFAULT_LIGHT_ARRAY_WIDTH = 12.0 # Add this line, set to your desired default value
+DEFAULT_LIGHT_ARRAY_HEIGHT = 12.0 # Add this line, set to your desired default value
 
 show_light_sources = True
 show_measurement_points = True
 
 #plt.rcParams['figure.dpi'] = 125  # or any other value
+
+# Data for Curve Fitting
+angles_deg = np.array([-90, -75, -60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90])
+relative_intensities = np.array([0, 10, 20, 35, 55, 80, 100, 80, 55, 35, 20, 10, 0]) / 100.0
+
+# 4th-Order Polynomial Function
+def polynomial_func(x, a, b, c, d, e):
+    return a * x**4 + b * x**3 + c * x**2 + d * x + e
+
+# Curve Fitting
+params, covariance = curve_fit(polynomial_func, angles_deg, relative_intensities)
+print("Fitted parameters (a, b, c, d, e):", params)
+
+# Fitted Intensity Function
+def fitted_intensity_func(angle_deg):
+    a, b, c, d, e = params
+    return polynomial_func(angle_deg, a, b, c, d, e)
+
+# Lambertian Emission Model with Fitted Function
+def lambertian_emission(ppfd, distance, z, beam_angle_rad):
+    theta = math.acos(max(min(z / distance, 1), -1))
+    theta_deg = abs(math.degrees(theta))
+    relative_intensity = fitted_intensity_func(theta_deg)
+    relative_intensity = max(0, min(relative_intensity, 1))
+    ppfd_at_point = ppfd * relative_intensity
+    ppfd_at_point /= distance ** 2
+    return ppfd_at_point
+
+# --- Calculate PPFD from Lumens ---
+def calculate_ppfd_from_lumens(lumens, effective_area):
+    """
+    Calculates PPFD from lumens, given the effective area.
+    """
+    # Simple conversion for now (can be made more accurate later)
+    ppfd = lumens / effective_area * 21.62513 # Using 15 as the conversion factor: 1 μmol/s ≈ 15 lumens
+    return ppfd
+
+def estimate_effective_area_per_emitter(emitter_x, emitter_y, measurement_points, ppfd_threshold_factor):
+    """
+    Estimates the effective area illuminated by a single emitter.
+    """
+    # Calculate PPFD distribution from this emitter
+    ppfd_values = []
+    for point in measurement_points:
+        distance = math.sqrt((emitter_x - point[0])**2 + (emitter_y - point[1])**2 + HEIGHT_FROM_FLOOR**2)
+        beam_angle_radians = math.radians(BEAM_ANGLE_DEG)
+        # Use a placeholder PPFD value (e.g., 1) for the emitter in lambertian_emission
+        ppfd = lambertian_emission(1, distance, HEIGHT_FROM_FLOOR, beam_angle_radians)  # Assume 1 as placeholder intensity
+        ppfd_values.append(ppfd)
+
+    # Find max PPFD (directly below the emitter)
+    max_ppfd = max(ppfd_values)
+
+    # Calculate PPFD threshold
+    ppfd_threshold = max_ppfd * ppfd_threshold_factor
+
+    # Estimate effective area based on the threshold
+    effective_area = sum(1 for ppfd in ppfd_values if ppfd >= ppfd_threshold) * (DEFAULT_FLOOR_WIDTH * DEFAULT_FLOOR_HEIGHT) / NUM_MEASUREMENT_POINTS
+
+    return effective_area
+
+# --- Calculate PPFD at a Point with Reflection ---
+def calculate_ppfd_at_point(point, light_sources, light_intensities_by_layer, pattern_option):
+    total_ppfd = 0
+    for layer_index, layer_sources in enumerate(light_sources):
+        if pattern_option == "5x5 Grid" or pattern_option == "8x8 Grid":
+            layer_ppfd = light_intensities_by_layer[0]
+        else:
+            layer_ppfd = light_intensities_by_layer[layer_index]
+        for source in layer_sources:
+            distance = math.sqrt((source[0] - point[0])**2 + (source[1] - point[1])**2 + HEIGHT_FROM_FLOOR**2)
+            beam_angle_radians = math.radians(BEAM_ANGLE_DEG)
+            direct_ppfd = lambertian_emission(layer_ppfd, distance, HEIGHT_FROM_FLOOR, beam_angle_radians)
+            reflected_ppfd = direct_ppfd * REFLECTIVITY
+            total_ppfd += direct_ppfd + reflected_ppfd
+
+    return total_ppfd
 
 def calculate_distance(light_position, measurement_point):
     light_x, light_y = light_position
@@ -131,159 +221,183 @@ def prepare_heatmap_data():
     # Dropdown menu for pattern arrangement
     pattern_option = selected_pattern.get()
 
+    # --- Light Source Arrangement Generation (Based on Pattern) ---
     if pattern_option == "5x5 Grid":
         # Calculate the spacing between lights
-        spacing = light_array_width_ft / 7
+        spacing = light_array_width_ft / 5
 
         # Prepare list for light sources
-        square_sources = []
+        light_sources = []
 
-        # We need to create an 8x8 square pattern
-        #for i in np.arange(-3.5, 4, 1):
-        #    for j in np.arange(-3.5, 4, 1):
-        # We need to create a 5x5 square pattern
+        # Create a 5x5 square pattern
         for i in np.arange(-2, 3, 1):
             for j in np.arange(-2, 3, 1):
-                # Calculate the x and y position
                 x_offset = spacing * i
                 y_offset = spacing * j
-
-                # Calculate the final position of this light source
                 light_pos = (center_x + x_offset, center_y + y_offset)
-        
-                # Check if this is the center source
-                if light_pos != center_source:
-                    # Add the position to the list
-                    square_sources.append(light_pos)
-    if pattern_option == "8x8 Grid":
+                light_sources.append(light_pos)
+
+    elif pattern_option == "8x8 Grid":
         # Calculate the spacing between lights
-        spacing = light_array_width_ft / 7
+        spacing = light_array_width_ft / 8
 
         # Prepare list for light sources
-        square_sources = []
+        light_sources = []
 
-        # We need to create an 8x8 square pattern
-        for i in np.arange(-3.5, 4, 1):
-            for j in np.arange(-3.5, 4, 1):
-
-                # Calculate the x and y position
+        # Create an 8x8 square pattern
+        for i in np.arange(-3.5, 4.5, 1):
+            for j in np.arange(-3.5, 4.5, 1):
                 x_offset = spacing * i
                 y_offset = spacing * j
-
-                # Calculate the final position of this light source
                 light_pos = (center_x + x_offset, center_y + y_offset)
-        
-                # Check if this is the center source
-                if light_pos != center_source:
-                    # Add the position to the list
-                    square_sources.append(light_pos)
+                light_sources.append(light_pos)
 
-        # Combine all the light sources
-        light_sources = square_sources
+    elif pattern_option in ["Diamond: 13", "Diamond: 25", "Diamond: 41", "Diamond: 61"]:
+        # Define layers for Diamond patterns
+        if pattern_option == "Diamond: 13":
+            layers = [
+                [(0, 0)],
+                [(-1, 0), (1, 0), (0, -1), (0, 1)],
+                [(-1, -1), (1, -1), (-1, 1), (1, 1), (-2, 0), (2, 0), (0, -2), (0, 2)]
+            ]
+        elif pattern_option == "Diamond: 25":
+            layers = [
+                [(0, 0)],
+                [(-1, 0), (1, 0), (0, -1), (0, 1)],
+                [(-1, -1), (1, -1), (-1, 1), (1, 1), (-2, 0), (2, 0), (0, -2), (0, 2)],
+                [(-2, -1), (2, -1), (-2, 1), (2, 1), (-1, -2), (1, -2), (-1, 2), (1, 2), (-3, 0), (3, 0), (0, -3), (0, 3)]
+            ]
+        elif pattern_option == "Diamond: 41": 
+            layers = [
+                [(0, 0)],
+                [(-1, 0), (1, 0), (0, -1), (0, 1)],
+                [(-1, -1), (1, -1), (-1, 1), (1, 1), (-2, 0), (2, 0), (0, -2), (0, 2)],
+                [(-2, -1), (2, -1), (-2, 1), (2, 1), (-1, -2), (1, -2), (-1, 2), (1, 2), (-3, 0), (3, 0), (0, -3), (0, 3)],
+                [(-2, -2), (2, -2), (-2, 2), (2, 2), (-3, -1), (3, -1), (-3, 1), (3, 1), (-1, -3), (1, -3), (-1, 3), (1, 3), (-4, 0), (4, 0), (0, -4), (0, 4)]
+            ]
+        elif pattern_option == "Diamond: 61":
+            layers = [
+                [(0, 0)],
+                [(-1, 0), (1, 0), (0, -1), (0, 1)],
+                [(-1, -1), (1, -1), (-1, 1), (1, 1), (-2, 0), (2, 0), (0, -2), (0, 2)],
+                [(-2, -1), (2, -1), (-2, 1), (2, 1), (-1, -2), (1, -2), (-1, 2), (1, 2), (-3, 0), (3, 0), (0, -3), (0, 3)],
+                [(-2, -2), (2, -2), (-2, 2), (2, 2), (-3, -1), (3, -1), (-3, 1), (3, 1), (-1, -3), (1, -3), (-1, 3), (1, 3), (-4, 0), (4, 0), (0, -4), (0, 4)],
+                [(-3, -2), (3, -2), (-3, 2), (3, 2), (-2, -3), (2, -3), (-2, 3), (2, 3), (-4, -1), (4, -1), (-4, 1), (4, 1), (-1, -4), (1, -4), (-1, 4), (1, 4), (-5, 0), (5, 0), (0, -5), (0, 5)]
+            ]
 
-    if pattern_option == "Diamond: 13":
-        layers = [
-            [(0, 0)],
-            [(-1, 0), (1, 0), (0, -1), (0, 1)],
-            [(-1, -1), (1, -1), (-1, 1), (1, 1), (-2, 0), (2, 0), (0, -2), (0, 2)]
-        ]
-    elif pattern_option == "Diamond: 25":
-        # Define the layers of the centered square pattern
-        layers = [
-            [(0, 0)],
-            [(-1, 0), (1, 0), (0, -1), (0, 1)],
-            [(-1, -1), (1, -1), (-1, 1), (1, 1), (-2, 0), (2, 0), (0, -2), (0, 2)],
-            [(-2, -1), (2, -1), (-2, 1), (2, 1), (-1, -2), (1, -2), (-1, 2), (1, 2), (-3, 0), (3, 0), (0, -3), (0, 3)]
-        ]
-    elif pattern_option == "Diamond: 41": 
-        layers = [
-            [(0, 0)],
-            [(-1, 0), (1, 0), (0, -1), (0, 1)],
-            [(-1, -1), (1, -1), (-1, 1), (1, 1), (-2, 0), (2, 0), (0, -2), (0, 2)],
-            [(-2, -1), (2, -1), (-2, 1), (2, 1), (-1, -2), (1, -2), (-1, 2), (1, 2), (-3, 0), (3, 0), (0, -3), (0, 3)],
-            [(-2, -2), (2, -2), (-2, 2), (2, 2), (-3, -1), (3, -1), (-3, 1), (3, 1), (-1, -3), (1, -3), (-1, 3), (1, 3), (-4, 0), (4, 0), (0, -4), (0, 4)]
-    ]
-    elif pattern_option == "Diamond: 61":
-        layers = [
-            [(0, 0)],
-            [(-1, 0), (1, 0), (0, -1), (0, 1)],
-            [(-1, -1), (1, -1), (-1, 1), (1, 1), (-2, 0), (2, 0), (0, -2), (0, 2)],
-            [(-2, -1), (2, -1), (-2, 1), (2, 1), (-1, -2), (1, -2), (-1, 2), (1, 2), (-3, 0), (3, 0), (0, -3), (0, 3)],
-            [(-2, -2), (2, -2), (-2, 2), (2, 2), (-3, -1), (3, -1), (-3, 1), (3, 1), (-1, -3), (1, -3), (-1, 3), (1, 3), (-4, 0), (4, 0), (0, -4), (0, 4)],
-            [(-3, -2), (3, -2), (-3, 2), (3, 2), (-2, -3), (2, -3), (-2, 3), (2, 3), (-4, -1), (4, -1), (-4, 1), (4, 1), (-1, -4), (1, -4), (-1, 4), (1, 4), (-5, 0), (5, 0), (0, -5), (0, 5)]
-        ]
-
-    if pattern_option in ["Diamond: 13", "Diamond: 25", "Diamond: 41", "Diamond: 61"]:
         # Calculate the spacing between lights
         spacing_x = light_array_width_ft / 7.2
         spacing_y = light_array_height_ft / 7.2
+
         # Prepare list for light sources
-        centered_square_sources = []
+        light_sources = []  # Initialize light_sources here
 
         # Add the center light source to the list
-        centered_square_sources.append(center_source)
+        light_sources.append(center_source)
 
+        # Generate light sources for Diamond patterns
         for layer in layers:
             for dot in layer:
-                # Check if this is the center source
                 if dot != (0, 0):
                     x_offset = spacing_x * dot[0]
                     y_offset = spacing_y * dot[1]
-                    # Calculate the rotated position using a rotation matrix for 45 degrees
-                    theta = math.radians(45)  # Convert to radians
+                    theta = math.radians(45)
                     rotated_x_offset = x_offset * math.cos(theta) - y_offset * math.sin(theta)
                     rotated_y_offset = x_offset * math.sin(theta) + y_offset * math.cos(theta)
-                    
                     light_pos = (center_x + rotated_x_offset, center_y + rotated_y_offset)
-                    centered_square_sources.append(light_pos)
+                    light_sources.append(light_pos)
 
-        # Combine all the light sources
-        light_sources = centered_square_sources
+    else:
+        # Default to an empty list if pattern option is not recognized
+        light_sources = []
 
+    # --- Measurement Points Generation ---
     def get_measurement_points():
-        # Calculate the distance between each light source and measurement point
-        num_measurement_points = 225
-        measurement_points_per_dimension = int(math.sqrt(num_measurement_points))
-        light_array_height_from_floor = 2
+        measurement_points = []
+        measurement_points_per_dimension = int(math.sqrt(num_points))
+        light_array_height_from_floor = HEIGHT_FROM_FLOOR
 
-        # Adjusted step size calculation
         step_size_x = floor_width / (measurement_points_per_dimension + 1)
         step_size_y = floor_height / (measurement_points_per_dimension + 1)
 
-        for x in range(1, measurement_points_per_dimension + 1):   # Change the range to start from 1
-            for y in range(1, measurement_points_per_dimension + 1):   # Change the range to start from 1
+        for x in range(1, measurement_points_per_dimension + 1):
+            for y in range(1, measurement_points_per_dimension + 1):
                 point_x = x * step_size_x
                 point_y = y * step_size_y
-                point_z = light_array_height_from_floor 
+                point_z = light_array_height_from_floor
                 measurement_points.append((point_x, point_y, point_z))
 
         return measurement_points
-    
+
     measurement_points = get_measurement_points()
 
+    # --- PPFD Calculation ---
     intensity = np.zeros(num_points)
 
+    # Determine the number of lights per layer based on pattern option
+    if pattern_option in ["5x5 Grid", "8x8 Grid"]:
+        num_lights_per_layer = len(light_sources)  # All lights in one layer
+    elif pattern_option in ["Diamond: 13", "Diamond: 25", "Diamond: 41", "Diamond: 61"]:
+        num_lights_per_layer = len(layers[0]) if layers else 0  # Assuming layers is defined based on pattern_option
+    else:
+        num_lights_per_layer = 0  # Default to 0 if pattern is not recognized
+        print(f"Warning: Pattern option '{pattern_option}' not recognized. No lights assigned to layers.")
+
+    # Calculate effective area per emitter for each layer
+    effective_areas_per_emitter = []
+    for light_source in light_sources:
+        # Ensure light_source is treated as a tuple (coordinates) for both grid and diamond patterns
+        if isinstance(light_source, tuple):
+            emitter_x, emitter_y = light_source
+        else:
+            # Handle cases where light_source is not a tuple (e.g., for grid patterns)
+            emitter_x, emitter_y = light_source, 0.0  # Adjust default y-value as needed
+
+        effective_area = estimate_effective_area_per_emitter(emitter_x, emitter_y, measurement_points, PPFD_THRESHOLD_FACTOR)
+        effective_areas_per_emitter.append(effective_area)
+
+    # Create a list to store PPFD values for each layer
+    light_ppfds_by_layer = []
+
+    # Convert lumens to PPFD for each layer
+    if pattern_option == "5x5 Grid" or pattern_option == "8x8 Grid":
+        # For grid patterns, use the first intensity value for all lights
+        ppfd = calculate_ppfd_from_lumens(light_intensities[0], effective_areas_per_emitter[0])
+        light_ppfds_by_layer = [ppfd] * len(light_sources)  # Repeat the same PPFD for all lights
+    else:
+        # For diamond patterns, use the intensity value for each layer
+        for i, layer in enumerate(layers):
+            # Check if there are more layers than intensity values provided
+            if i < len(light_intensities):
+                layer_lumens = light_intensities[i]
+                # Calculate PPFD for the layer based on the layer's total lumens and effective area
+                ppfd = calculate_ppfd_from_lumens(layer_lumens, effective_areas_per_emitter[i] * len(layer))
+                light_ppfds_by_layer.extend([ppfd] * len(layer))  # Repeat PPFD for each light in the layer
+            else:
+                # Handle the case where there are more layers than intensity values
+                print(f"Warning: No intensity provided for layer {i}. Using a default PPFD value.")
+                default_ppfd = 0.0
+                light_ppfds_by_layer.extend([default_ppfd] * len(layer))
+
+    # --- Intensity Calculation at Each Measurement Point ---
     for point_index, measurement_point in enumerate(measurement_points):
-        total = 0.0
+        total_ppfd = 0
         for light_index, light_position in enumerate(light_sources):
             distance = calculate_distance(light_position, measurement_point)
-            if distance == 0:
-                distance = 1  # Consider distance as 1 instead of 0
-            
-            # Calculate the intensity based on distance and light intensity
-            if light_index < len(light_intensities):
-                intensity_at_point = light_intensities[light_index]   
-                
-                # Calculate the beam angle in radians
-                beam_angle_radians = math.radians(115)  # Specify the beam angle in degrees
-                
-                # Modify the intensity with the Lambertian distribution
-                theta = math.acos(max(min(math.cos(beam_angle_radians/2) / distance, 1), -1))
-                intensity_at_point = intensity_at_point * math.cos(theta)**2 / (math.pi * max(math.sin(theta), 0.0001))
 
-                total += intensity_at_point
-            
-        intensity[point_index] = total
+            # Get the z-coordinate (height) of the light source
+            light_z = HEIGHT_FROM_FLOOR  # Assuming this is constant for all lights
+
+            # Use the fitted Lambertian emission model
+            if light_index < len(light_ppfds_by_layer):
+                # Calculate the PPFD at the measurement point using the lambertian_emission function
+                beam_angle_radians = math.radians(BEAM_ANGLE_DEG)
+                ppfd_at_point = lambertian_emission(light_ppfds_by_layer[light_index], distance, light_z, beam_angle_radians)
+
+                # Add to the total PPFD
+                total_ppfd += ppfd_at_point
+
+        intensity[point_index] = total_ppfd
 
     # Calculate the total lumens
     total_lumens = sum(light_intensities)
@@ -292,7 +406,7 @@ def prepare_heatmap_data():
     total_lumens_label = Label(root, text=f"Total Lumens: {total_lumens:.2f}")
     total_lumens_label.grid(row=27, column=5, columnspan=5)
 
-    # Calculate the average intensity
+# Calculate the average intensity
     average_intensity = np.mean(intensity)
 
     # Calculate the total intensity
@@ -311,14 +425,17 @@ def prepare_heatmap_data():
 
     # Display the total intensity on the GUI
     variance_label = Label(root, text=f"Total Intensity: {total_intensity:.2f}")
-    variance_label.grid(row=26, column=5, columnspan=5)   
-    
+    variance_label.grid(row=26, column=5, columnspan=5)
+
     # Calculate DPS
     dps = np.abs(intensity - average_intensity)
 
     center_point = (floor_width / 2, floor_height / 2)  # Assuming your center point is the center of the floor
 
     sorted_dps = reorder_dps(dps, measurement_points, center_point)
+
+    # Generate 2D intensity profile
+    #generate_2d_intensity_profile(center_x, center_y, measurement_points, intensity)
 
     return sorted_dps
 
@@ -374,9 +491,14 @@ def generate_heatmap():
     plt.ylim(0, floor_height)
 
     if show_light_sources.get():
-        for idx, (light_source, intensity_value) in enumerate(zip(light_sources, light_intensities)):
-            plt.plot(light_source[0], light_source[1], 'mo', markersize=6)  # Red circle for other light sources
-            plt.text(light_source[0], light_source[1], str(idx), color='red', fontsize=12, ha='right')
+        for idx, light_source in enumerate(light_sources):
+            if isinstance(light_source, tuple):  # Check if the light_source is a tuple
+                plt.plot(light_source[0], light_source[1], 'mo', markersize=6)  # Plot a single point
+                plt.text(light_source[0], light_source[1], str(idx), color='red', fontsize=12, ha='right')
+            else:
+                for source in light_source:
+                    plt.plot(source[0], source[1], 'mo', markersize=6)  # Plot a single point for each source in the layer
+                    plt.text(source[0], source[1], str(idx), color='red', fontsize=12, ha='right')
 
     # dropdown menu for cmap colors
     selected_option = selected_cmap.get()

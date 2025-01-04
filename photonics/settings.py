@@ -18,6 +18,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -55,15 +56,6 @@ MIDDLEWARE = [
 
 ]
 
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Use SMTP (for production)
-EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
-EMAIL_PORT = 587  # Replace with the appropriate port
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'austin.rouse@ledcultivation.com'  # Your company email address
-EMAIL_HOST_PASSWORD = '123!Satori123'  # Your company email password
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # Add this to specify a default from email
-
 ROOT_URLCONF = "photonics.urls"
 
 TEMPLATES = [
@@ -89,9 +81,9 @@ WSGI_APPLICATION = "photonics.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

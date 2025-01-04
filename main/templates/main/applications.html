@@ -5,66 +5,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Applications - Luminous Photonics</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f8f8;
-            color: #333;
-        }
-        .container {
-            width: 85%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1, h2, h3 {
-            font-weight: 600;
-        }
-        /* Navbar styles */
-        .navbar {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-            margin-bottom: 20px;
-        }
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar-brand {
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-            font-size: 1.4em;
-        }
-        .nav-links {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-        .nav-links li {
-            margin-left: 20px;
-        }
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .nav-links a:hover {
-            color: #008CBA;
-        }
-    </style>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     {% include 'main/navbar.html' %}
 
     <div class="container">
-        <h1>Applications</h1>
-        <p>Discover the diverse applications of our revolutionary horticultural lighting technology.</p>
+        <h1 class="hidden">Applications</h1>
+        <p class="section-description hidden">Our Uniform Photon Flux Principle (UPFP) technology, while initially developed for horticultural lighting, has far-reaching implications across a variety of industries. The core principle of achieving uniform light distribution can be adapted and applied to numerous fields where precise and controlled illumination is essential.</p>
+
+        <div class="section hidden">
+            <h2 class="section-title">Controlled-Environment Agriculture (CEA)</h2>
+            <p>
+                UPFP technology revolutionizes indoor farming by optimizing light delivery to plants [1]. This results in:
+                <ul>
+                    <li>Increased crop yields and faster growth cycles [2].</li>
+                    <li>Improved plant quality, including enhanced flavor, aroma, and nutritional content [2].</li>
+                    <li>Reduced energy consumption through minimized light wastage [3].</li>
+                    <li>Optimized growth of high-DLI and low-DLI crops, including cannabis, leafy greens, and fruiting vegetables [4].</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="section hidden">
+            <h2 class="section-title">Photovoltaic Research and Development</h2>
+            <p>
+                Precise and uniform illumination is crucial for accurate characterization and testing of solar cells and photovoltaic materials [5]. UPFP technology can be adapted to create:
+                <ul>
+                    <li>Highly uniform solar simulators for consistent and reliable testing conditions [6].</li>
+                    <li>Advanced testing platforms for evaluating the performance of new photovoltaic materials and devices under various light intensities and spectral distributions [5].</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="section hidden">
+            <h2 class="section-title">Architectural Lighting</h2>
+            <p>
+                UPFP principles can be applied to design architectural lighting systems that provide [7]:
+                <ul>
+                    <li>Uniform illumination across large spaces, eliminating hotspots and dark areas [7].</li>
+                    <li>Enhanced visual comfort and reduced glare [7].</li>
+                    <li>Improved energy efficiency through optimized light distribution [7].</li>
+                    <li>Customizable lighting solutions that adapt to the specific needs of different architectural environments [7].</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="section hidden">
+            <h2 class="section-title">Industrial Imaging and Machine Vision</h2>
+            <p>
+                In industrial settings where precise imaging is required, UPFP technology can be used to [8]:
+                <ul>
+                    <li>Create uniform illumination fields for accurate and consistent image acquisition [8].</li>
+                    <li>Improve the performance of machine vision systems by eliminating shadows and variations in light intensity [8].</li>
+                    <li>Enhance the quality control process in manufacturing by enabling reliable defect detection [8].</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="section hidden">
+            <h2 class="section-title">Biomedical Photonics</h2>
+            <p>
+                Uniform light delivery is essential in various biomedical applications, including [9]:
+                <ul>
+                    <li>Photodynamic therapy (PDT), where controlled illumination is used to activate photosensitive drugs [9].</li>
+                    <li>Optical imaging techniques, such as microscopy and endoscopy, that rely on precise illumination for accurate diagnosis and treatment [9].</li>
+                    <li>Development of advanced diagnostic and therapeutic devices that utilize light-based technologies [9].</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="section hidden">
+            <h2 class="section-title">Materials Science</h2>
+            <p>
+                UPFP can be employed in materials science research to [10]:
+                <ul>
+                    <li>Study the effects of uniform light exposure on material properties and behavior [10].</li>
+                    <li>Develop new light-activated materials and coatings [10].</li>
+                    <li>Create controlled environments for materials testing and characterization under specific illumination conditions [10].</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="section hidden">
+            <h2 class="section-title">Beyond Illumination</h2>
+            <p>
+                The core mathematical and optimization principles behind UPFP can be extended to other fields involving flux distribution, such as:
+                <ul>
+                    <li><b>Thermal Management:</b> Designing systems for uniform heat dissipation in electronic devices [11].</li>
+                    <li><b>Fluid Dynamics:</b> Optimizing flow patterns in microfluidic devices and industrial processes [12].</li>
+                </ul>
+            </p>
+        </div>
+        <div class="section hidden">
+            <h2 class="section-title">References (placeholders)</h2>
+            <ol>
+                <li><p>[Horticultural Lighting Reference] (e.g., a paper on the general impact of light uniformity on plant growth)</p></li>
+                <li><p>[CEA Reference] (e.g., a review article on controlled-environment agriculture and its benefits)</p></li>
+                <li><p>[Lighting Energy Efficiency Reference] (e.g., a paper on optimizing energy use in horticultural lighting)</p></li>
+                <li><p>[High-DLI/Low-DLI Crops Reference] (e.g., research articles on the specific light requirements of different crops)</p></li>
+                <li><p>[Photovoltaic Testing Reference] (e.g., a paper on standard testing procedures for solar cells)</p></li>
+                <li><p>[Solar Simulator Reference] (e.g., a paper on the design and development of solar simulators)</p></li>
+                <li><p>[Architectural Lighting Reference] (e.g., a book or article on principles of architectural lighting design)</p></li>
+                <li><p>[Industrial Imaging/Machine Vision Reference] (e.g., a paper on illumination techniques for machine vision)</p></li>
+                <li><p>[Biomedical Photonics Reference] (e.g., a review article on the use of light in medical applications)</p></li>
+                <li><p>[Materials Science Reference] (e.g., a paper on light-material interactions or light-activated materials)</p></li>
+                <li><p>[Thermal Management Reference] (e.g., a paper on heat dissipation in electronic devices)</p></li>
+                <li><p>[Fluid Dynamics Reference] (e.g., a paper on flow optimization in microfluidics)</p></li>
+            </ol>
+        </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.hidden');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        entry.target.classList.remove('visible'); // Make the effect repeatable
+                    }
+                });
+            });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -49,6 +49,15 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+# In settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Use SMTP (for production)
+EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
+EMAIL_PORT = 587  # Replace with the appropriate port
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'austin.rouse@ledcultivation.com'  # Your company email address
+EMAIL_HOST_PASSWORD = '123!Satori123'  # Your company email password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # Add this to specify a default from email
 
 ROOT_URLCONF = "photonics.urls"
 
@@ -118,10 +127,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+# Add back STATICFILES_DIRS
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Correct
+    BASE_DIR / "static",  # Points to your project-level static directory
 ]
 
+# You don't need STATIC_ROOT in development
 #STATIC_ROOT = BASE_DIR / "staticfiles"  # Correct (for production)
 
 # Default primary key field type

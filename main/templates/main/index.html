@@ -176,50 +176,81 @@
                 width: 200px;
             }
         }
+        /* Fade-In Styles */
+        .hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.5s ease, transform 1.5s ease; /* Increased duration to 1.5 seconds */
+        }
+
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
     {% include 'main/navbar.html' %}
 
     <div class="container">
-        <div class="hero">
+        <div class="hero hidden">
             <h1>Luminous Photonics</h1>
                 <h2>Revolutionizing Horticultural Lighting</h2>
             <p>Optimizing Energy Utilization with Near-Perfect Lambertian Emission</p>
         </div>
 
-        <div class="intro-text">
+        <div class="intro-text hidden">
             <p>
                 Welcome to Luminous Photonics, where we are pioneering the future of horticultural lighting. Our patented (U.S. Patent #10687478), infinitely scalable, modularized lighting system achieves near-perfect Lambertian emission, dramatically improving energy efficiency and plant growth in controlled environments.
             </p>
         </div>
 
         <div class="features">
-            <div class="feature">
+            <div class="feature hidden">
                 <img src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon">
                 <h3>Unparalleled Energy Efficiency</h3>
                 <p>Reduce energy consumption while maximizing light output.</p>
             </div>
-            <div class="feature">
+            <div class="feature hidden">
                 <img src="{% static 'main/images/recycle.png' %}" alt="Growth Icon">
                 <h3>Enhanced Plant Growth</h3>
                 <p>Promote healthier, more uniform plant development with optimized light distribution.</p>
             </div>
-            <div class="feature">
+            <div class="feature hidden">
                 <img src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon">
                 <h3>Infinitely Scalable</h3>
                 <p>Adapt our system to any grow space, from small research setups to large commercial greenhouses.</p>
             </div>
         </div>
 
-        <div class="fixture">
+        <div class="fixture hidden">
             <img src="{% static 'main/images/fixture.png' %}" alt="Scalability Icon">
         </div>
 
-        <div class="cta">
+        <div class="cta hidden">
             <p>Learn more about the science behind our revolutionary technology:</p>
             <a href="{% url 'technology' %}" class="button">Explore the Technology</a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.hidden');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        entry.target.classList.remove('visible'); // Optional: Hide again when out of view
+                    }
+                });
+            });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -28,6 +28,74 @@ p {
     color: white;
     padding: 10px 0;
     margin-bottom: 20px;
+    position: relative; /* Add for positioning the hamburger menu */
+}
+
+/* Hamburger Menu Styles */
+.hamburger-menu {
+    display: none; /* Hide by default on larger screens */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    position: absolute; /* Position inside the navbar */
+    right: 20px; /* Align to the right */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for exact vertical centering */
+}
+
+.hamburger-icon {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+    transition: transform 0.3s ease;
+}
+
+/* Close Icon (X) Styles */
+.close-icon .hamburger-icon:first-child {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.close-icon .hamburger-icon:nth-child(2) {
+    opacity: 0;
+}
+
+.close-icon .hamburger-icon:last-child {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Hide initially on mobile */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%; /* Position below the navbar */
+        left: 0;
+        background-color: #333;
+        z-index: 10; /* Ensure it's above other content */
+    }
+
+    .nav-links.open {
+        display: flex; /* Show when open */
+    }
+
+    .nav-links li {
+        margin: 0;
+        text-align: center;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 15px;
+    }
+
+    .hamburger-menu {
+        display: block; /* Show on smaller screens */
+    }
 }
 
 .navbar .container {

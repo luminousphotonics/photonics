@@ -11,36 +11,24 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Email Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
-EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = "django-insecure-p!aqx$+(u4&*=$^-9ak&k_0rtcgwj8hm+(o77e(0j1v^gg#*c^"
+# Get the secret key from the environment variable or use a default for development
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-p!aqx$+(u4&*=$^-9ak&k_0rtcgwj8hm+(o77e(0j1v^gg#*c^')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = False
-#ALLOWED_HOSTS = ['localhost', '127.0.0.1'] # Add your domain(s) or IP address(es) in production
+# Get the debug flag from the environment variable or default to False for production
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-# Security Settings
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+# Allowed hosts (update with your domain names)
+ALLOWED_HOSTS = ['luminous-photonics.onrender.com', 'www.luminousphotonics.com', 'luminousphotonics.com']
 
+# Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -48,40 +36,27 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'main.apps.MainConfig',  # Correct!
+    'main.apps.MainConfig',
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add whitenoise for static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line
-
 ]
-
-# Enable WhiteNoise's compressed manifest storage backend
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Use SMTP (for production)
-EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
-EMAIL_PORT = 587  # Replace with the appropriate port
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'austin.rouse@ledcultivation.com'  # Your company email address
-EMAIL_HOST_PASSWORD = '123!Satori123'  # Your company email password
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # Add this to specify a default from email
 
 ROOT_URLCONF = "photonics.urls"
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # Empty list, as templates are now in app-specific template folders
-        'APP_DIRS': True,  # This will remain true
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -95,10 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "photonics.wsgi.application"
 
-
 # Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -106,10 +78,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -125,34 +94,24 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-
-# Add back STATICFILES_DIRS
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Points to your project-level static directory
-]
-
-# You don't need STATIC_ROOT in development
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Correct (for production)
+# Email Configuration (using environment variables)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587)) # Default to 587 if not set
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'true').lower() == 'true' # Default to True if not set
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

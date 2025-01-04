@@ -58,8 +58,13 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line
+
 ]
-# In settings.py
+
+# Enable WhiteNoise's compressed manifest storage backend
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Use SMTP (for production)
 EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email provider's SMTP server
@@ -144,7 +149,7 @@ STATICFILES_DIRS = [
 ]
 
 # You don't need STATIC_ROOT in development
-#STATIC_ROOT = BASE_DIR / "staticfiles"  # Correct (for production)
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Correct (for production)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
+from .forms import ContactForm
+import os
 
 def index(request):
     return render(request, 'main/index.html')
@@ -17,26 +19,28 @@ def about(request):
 
 def contact(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        message = request.POST.get('message')
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
 
-        if name and email and message:
+            subject = f'New Contact Form Submission from {name}'
+            full_message = f'Name: {name}\nEmail: {email}\n\nMessage:\n{message}'
+
             try:
                 send_mail(
-                    f'Contact Form Submission from {name}',  # Subject
-                    message,  # Message body
-                    email,  # From email (user's email)
-                    [settings.EMAIL_HOST_USER],  # To email (your company email)
+                    subject,
+                    full_message,
+                    email,  # From email
+                    [os.environ.get('EMAIL_HOST_USER')],  # To email
                     fail_silently=False,
                 )
                 messages.success(request, 'Your message has been sent successfully!')
-                return redirect('contact')  # Redirect to the contact page after sending
-            except Exception as e:
-                messages.error(request, f'An error occurred: {e}')
                 return redirect('contact')
-        else:
-            messages.error(request, 'Please fill in all fields.')
-            return redirect('contact')
+            except Exception as e:
+                messages.error(request, 'There was an error sending your message. Please try again later.')
+    else:
+        form = ContactForm()
 
-    return render(request, 'main/contact.html')
+    return render(request, 'main/contact.html', {'form': form})

@@ -357,41 +357,6 @@ code {
 }
 
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-    .slick-prev {
-        left: -25px; /* Adjust arrow position for smaller screens */
-    }
-
-    .slick-next {
-        right: -25px; /* Adjust arrow position for smaller screens */
-    }
-}
-
-/* Hide carousel images initially to prevent large image flash */
-.carousel-image {
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s, opacity 0.5s linear;
-    max-height: 200px; /* Adjust as necessary */
-}
-
-.carousel-image.slick-initialized {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-    .slick-prev {
-        left: -25px; /* Adjust arrow position for smaller screens */
-    }
-
-    .slick-next {
-        right: -25px; /* Adjust arrow position for smaller screens */
-    }
-}
-
 /* Responsive Video */
 .responsive-video {
     max-width: 100%;
@@ -421,3 +386,114 @@ code {
         width: 200px;
     }
 }
+/* Carousel Styling */
+.carousel-container {
+    width: 80%; /* Adjust as needed */
+    margin: 0 auto; /* Center the carousel */
+    overflow: visible; /* Important to allow arrows to be outside */
+  }
+  
+  .carousel .slick-slide {
+    padding: 0 10px; /* Adjust as needed for spacing between images */
+    text-align: center;
+  }
+  
+  .carousel img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .carousel .slick-dots li button:before {
+    color: #008cba;
+    font-size: 12px;
+  }
+  
+  .carousel .slick-dots li.slick-active button:before {
+    color: #005f7a;
+  }
+  
+  /* Adjust Slick Arrows */
+  .carousel .slick-prev:before,
+  .carousel .slick-next:before {
+    color: #008cba;
+    font-size: 30px; /* Adjust arrow size as needed */
+    opacity: 1;
+    transition: color 0.3s ease;
+  }
+  
+  .carousel .slick-prev:hover:before,
+  .carousel .slick-next:hover:before {
+    color: #005f7a;
+  }
+  
+  /* Positioning and Visibility of Arrows */
+  .carousel .slick-prev,
+  .carousel .slick-next {
+    position: absolute; /* Ensure absolute positioning */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10; /* Make sure arrows are on top */
+    width: 30px;
+    height: 30px;
+    line-height: 30px; /* Vertically center arrow content */
+  }
+  
+  /* Specific positioning for each arrow */
+  .carousel .slick-prev {
+    left: -45px; /* Adjust to position the left arrow */
+  }
+  
+  .carousel .slick-next {
+    right: -45px; /* Adjust to position the right arrow */
+  }
+  
+  /* Style for slick dots */
+  .carousel .slick-dots {
+    position: relative; /* Use relative positioning */
+    bottom: -10px; /* Adjust as necessary to reduce space below the carousel */
+    margin-top: 0px;
+  }
+  
+  /* Responsive Carousel Adjustments */
+  @media (max-width: 1024px) {
+    .carousel img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .carousel img {
+      width: 60px;
+      height: 60px;
+    }
+  
+    .carousel .slick-prev {
+      left: -35px; /* Further adjust for smaller screens */
+    }
+  
+    .carousel .slick-next {
+      right: -35px; /* Further adjust for smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .carousel img {
+      width: 50px;
+      height: 50px;
+    }
+  
+    .carousel .slick-prev {
+      left: -25px; /* Further adjust for very small screens */
+    }
+  
+    .carousel .slick-next {
+      right: -25px; /* Further adjust for very small screens */
+    }
+  }

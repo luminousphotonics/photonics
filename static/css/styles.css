@@ -301,3 +301,81 @@ button[type="submit"]:hover {
         width: 200px;
     }
 }
+
+.carousel .slick-slide {
+    padding: 10px;
+    text-align: center; /* Ensures text and inline elements are centered */
+}
+
+.carousel .slick-slide img {
+    margin: 0 auto;
+    display: block;
+}
+
+.carousel img {
+    width: 100px; /* Fixed width for thumbnails */
+    height: 100px; /* Fixed height for thumbnails */
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+    border-radius: 8px; /* Rounded corners for aesthetics */
+    border: 2px solid #ddd; /* Adds a border around thumbnails */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional: Adds a subtle shadow */
+    margin: 0 auto; /* Centers the image horizontally */
+    display: block; /* Ensures margin auto works */
+}
+
+
+.carousel .slick-dots li button:before {
+    color: #008CBA; /* Theme color for dots */
+    font-size: 12px;
+}
+
+.carousel .slick-dots li.slick-active button:before {
+    color: #005f7a; /* Active dot color */
+}
+
+/* Adjust Slick Arrows */
+.carousel .slick-prev:before,
+.carousel .slick-next:before {
+    color: #008CBA; /* Theme color for arrows */
+    font-size: 30px;
+    opacity: 1; /* Ensure arrows are visible */
+    transition: color 0.3s ease; /* Smooth color transition on hover */
+}
+
+.carousel .slick-prev:hover:before,
+.carousel .slick-next:hover:before {
+    color: #005f7a; /* Darker shade on hover */
+}
+
+/* Positioning and Visibility of Arrows */
+.carousel .slick-prev,
+.carousel .slick-next {
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1; /* Ensure arrows are above carousel images */
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+}
+
+/* Responsive Carousel Adjustments */
+@media (max-width: 1024px) {
+    .carousel img {
+        width: 80px; /* Adjust thumbnail width for medium screens */
+        height: 80px; /* Adjust thumbnail height for medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel img {
+        width: 60px; /* Adjust thumbnail width for small screens */
+        height: 60px; /* Adjust thumbnail height for small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel img {
+        width: 50px; /* Adjust thumbnail width for extra small screens */
+        height: 50px; /* Adjust thumbnail height for extra small screens */
+    }
+}

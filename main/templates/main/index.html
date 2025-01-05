@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">    
+    
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
     <title>Luminous Photonics - Revolutionizing Horticultural Lighting</title>
     <style>
-
+        /* Hero Section Styles */
         .hero {
             background-image: url("{% static 'main/images/hero-bg.jpg' %}");
             background-size: cover;
@@ -23,26 +26,6 @@
             position: relative;
             z-index: 0;
         }
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            z-index: -1;
-        }
-        .hero h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-        }
-        .hero p {
-            font-size: 1.2em;
-            margin-bottom: 0;
-            line-height: 1.5;
-        }
     </style>
 </head>
 <body>
@@ -51,7 +34,7 @@
     <div class="container">
         <div class="hero hidden">
             <h1>Luminous Photonics</h1>
-                <h2>Revolutionizing Horticultural Lighting</h2>
+            <h2>Revolutionizing Horticultural Lighting</h2>
             <p>Optimizing Energy Utilization with Near-Perfect Lambertian Emission</p>
         </div>
 
@@ -63,24 +46,24 @@
 
         <div class="features">
             <div class="feature hidden">
-                <img src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon">
+                <img src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon" width="100" height="100">
                 <h3>Unparalleled Energy Efficiency</h3>
                 <p>Reduce energy consumption while maximizing light output.</p>
             </div>
             <div class="feature hidden">
-                <img src="{% static 'main/images/recycle.png' %}" alt="Growth Icon">
+                <img src="{% static 'main/images/recycle.png' %}" alt="Growth Icon" width="100" height="100">
                 <h3>Enhanced Plant Growth</h3>
                 <p>Promote healthier, more uniform plant development with optimized light distribution.</p>
             </div>
             <div class="feature hidden">
-                <img src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon">
+                <img src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon" width="100" height="100">
                 <h3>Infinitely Scalable</h3>
                 <p>Adapt our system to any grow space, from small research setups to large commercial greenhouses.</p>
             </div>
         </div>
 
         <div class="fixture hidden">
-            <img src="{% static 'main/images/fixture.png' %}" alt="Scalability Icon">
+            <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" width="500" height="500">
         </div>
 
         <div class="cta hidden">
@@ -89,8 +72,43 @@
         </div>
     </div>
 
+    <div class="carousel-container">
+        <div class="carousel">
+            <div><img src="{% static 'main/images/beam_profile_1.png' %}" alt="Carousel Image 1" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/beam_profile_2.png' %}" alt="Carousel Image 2" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/csn.jpeg' %}" alt="Carousel Image 3" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/csn22.png' %}" alt="Carousel Image 4" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="Carousel Image 5" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="Carousel Image 6" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="Carousel Image 7" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="Carousel Image 8" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/heatmap_1.png' %}" alt="Carousel Image 9" width="100" height="100"></div>
+            <div><img src="{% static 'main/images/heatmap_2.png' %}" alt="Carousel Image 10" width="100" height="100"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Slick Carousel
+            $('.carousel').slick({
+                dots: true,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 4, // Number of thumbnails visible at once
+                slidesToScroll: 1,
+                adaptiveHeight: false,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                arrows: true, // Show next/prev arrows
+                pauseOnHover: false,
+                centerMode: true, // Centers the active slide
+                variableWidth: false, // Ensures slides have uniform width
+            });
+
+            // Handle Visibility with IntersectionObserver
             const elements = document.querySelectorAll('.hidden');
 
             const observer = new IntersectionObserver((entries) => {
@@ -106,18 +124,10 @@
             elements.forEach(element => {
                 observer.observe(element);
             });
-        });
-    </script>
-    <!-- Back to Top Button -->
-    <a href="#" class="back-to-top" id="backToTopBtn">
-        <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
-    </a>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+            // Back to Top Button Functionality
             const backToTopBtn = document.getElementById('backToTopBtn');
 
-            // Show the button when the user scrolls down 300px from the top
             window.addEventListener('scroll', function() {
                 if (window.scrollY > 300) {
                     backToTopBtn.classList.add('show');
@@ -126,7 +136,6 @@
                 }
             });
 
-            // Smooth scroll to top when the button is clicked
             backToTopBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 window.scrollTo({
@@ -134,26 +143,7 @@
                     behavior: 'smooth'
                 });
             });
-
-            // Existing IntersectionObserver for '.hidden' elements
-            const elements = document.querySelectorAll('.hidden');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    } else {
-                        entry.target.classList.remove('visible'); // Make the effect repeatable
-                    }
-                });
-            });
-
-            elements.forEach(element => {
-                observer.observe(element);
-            });
         });
-    </script>    
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    </script> 
 </body>
 </html>

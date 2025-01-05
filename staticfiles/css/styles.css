@@ -356,7 +356,13 @@ code {
     }
 }
 
-
+/* Responsive Video */
+.responsive-video {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Prevents margin issues */
+    margin: 0 auto; /* Center the video */
+}
 /* Responsive Styles */
 @media (max-width: 768px) {
     .hero {

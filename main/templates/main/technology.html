@@ -5,99 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">   
     <title>Technology - Luminous Photonics</title>
     <script type="text/javascript" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
     </script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f8f8;
-            color: #333;
-        }
-        .container {
-            width: 85%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1, h2, h3 {
-            font-weight: 600;
-        }
-        p {
-            line-height: 1.6;
-        }
-        /* Navbar styles */
-        .navbar {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-            margin-bottom: 20px;
-        }
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar-brand {
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-            font-size: 1.4em;
-        }
-        .nav-links {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-        .nav-links li {
-            margin-left: 20px;
-        }
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .nav-links a:hover {
-            color: #008CBA;
-        }
-        .section {
-            margin-bottom: 40px;
-        }
-        .section-title {
-            color: #008CBA;
-            margin-bottom: 20px;
-        }
-        .image-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .image-container img {
-            width: 48%; /* Adjust as needed */
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .image-caption{
-            text-align: center;
-            font-size: smaller;
-        }
-        /* Fade-In Styles */
-        .hidden {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1.5s ease, transform 1.5s ease;
-        }
-
-        .visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
 </head>
 <body>
     {% include 'main/navbar.html' %}
@@ -169,6 +81,11 @@
             </p>
             <ul>
                 <li><b>Centered Square Arrangement:</b> LED elements are arranged in concentric squares, with the number of elements per layer determined by the sequence \(a(n) = 2n(n+1) + 1\), where \(n\) is the layer number.</li>
+                <div class="image-container">
+                    <img class="hidden" src="{% static 'main/images/csn.jpeg' %}" alt="Centered Square Number - Continuation">
+                    <img class="hidden" src="{% static 'main/images/csn22.png' %}" alt="Centered Square Number - Rotation">
+                </div>
+                <p class="image-caption">Figure 5: Showcasing for the infinite continuation of the centered square number sequence and transformation strategem to form a completed array.</p>
                 <li><b>Lambertian Emission Model:</b> We assume each LED emitter follows a Lambertian emission pattern, where radiant intensity is modeled as \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]</li>
                 <li><b>Radiosity and Reflective Walls:</b> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), especially important in grow spaces with highly reflective walls (\(\rho \approx 1\)).</li>
                 <li><b>Optimization:</b> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.</li>

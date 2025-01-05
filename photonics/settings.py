@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-p!aqx$+(u4&*=$^-9ak&k
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 # Allowed hosts (update with your domain names)
-ALLOWED_HOSTS = ['luminous-photonics.onrender.com', 'www.luminousphotonics.com', 'luminousphotonics.com']
+ALLOWED_HOSTS = ['luminous-photonics.onrender.com', 'www.luminousphotonics.com', 'luminousphotonics.com', '127.0.0.1', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [

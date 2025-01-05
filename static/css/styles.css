@@ -248,35 +248,35 @@ button[type="submit"]:hover {
     margin-bottom: 15px;
 }
 
-/* Image Container Styles */
-.image-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.image-container img {
-    width: 48%; /* Adjust as needed */
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.image-caption {
-    text-align: center;
-    font-size: smaller;
-}
+/* ... other styles ... */
 
 /* Fade-In Styles */
 .hidden {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 1.5s ease, transform 1.5s ease; /* Increased duration to 1.5 seconds */
+    transition: opacity 1.5s ease, transform 1.5s ease;
 }
 
 .visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Image Preload Styles */
+.image-container img {
+    width: 48%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    visibility: hidden; /* Hide images initially */
+}
+
+.image-container img.hidden {
+    opacity: 0;  /* Keep images hidden initially even when within the section */
+}
+
+.image-container img.visible {
+    visibility: visible; /* Make images visible when the 'visible' class is added */
+    opacity: 1;
 }
 
 /* Responsive Styles */

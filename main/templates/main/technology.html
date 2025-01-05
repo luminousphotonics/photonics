@@ -1,16 +1,25 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">   
-    <title>Technology - Luminous Photonics</title>
-    <script type="text/javascript" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-    </script>
-</head>
+    <head>
+        <!-- Existing meta tags and links -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+        
+        <!-- Prism.js CSS for syntax highlighting -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+        
+        <title>Technology - Luminous Photonics</title>
+        
+        <!-- MathJax for rendering mathematical equations -->
+        <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        
+        <!-- Prism.js JavaScript for syntax highlighting -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
+    </head>    
 <body>
     {% include 'main/navbar.html' %}
 
@@ -40,7 +49,7 @@
             <p>
                 Below are graphical representations that demonstrate the effectiveness of our UPFP technology in achieving uniform light distribution. Each set of graphs compares a traditional or less optimized approach (left) with our UPFP-based solution (right).
             </p>
-
+        
             <h3 class="section-title">Beam Profile</h3>
             <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the right demonstrates a more focused beam with reduced energy waste.</p>
             <div class="image-container">
@@ -48,7 +57,7 @@
                 <img class="hidden" src="{% static 'main/images/beam_profile_2.png' %}" alt="Beam Profile - UPFP">
             </div>
             <p class="image-caption">Figure 1: Comparison of Beam Profiles. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
-
+        
             <h3 class="section-title">PPFD Surface Graphs</h3>
             <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the right exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target range).</p>
             <div class="image-container">
@@ -56,7 +65,7 @@
                 <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP">
             </div>
             <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
-
+        
             <h3 class="section-title">2D Variance Graphs</h3>
             <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (right) demonstrates significantly reduced variance, indicating greater uniformity.</p>
             <div class="image-container">
@@ -64,7 +73,7 @@
                 <img class="hidden" src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP">
             </div>
             <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
-
+        
             <h3 class="section-title">Heatmaps</h3>
             <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (right) displays a more consistent color across the growing area, signifying superior uniformity.</p>
             <div class="image-container">
@@ -72,7 +81,95 @@
                 <img class="hidden" src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP">
             </div>
             <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+        
+            <h3 class="section-title">Proprietary Machine Learning Algorithm</h3>
+            <p>
+                Central to our Uniform Photon Flux Principle (UPFP) is a sophisticated machine learning algorithm that dynamically optimizes LED intensities to ensure uniform Photosynthetic Photon Flux Density (PPFD) across the grow area. Below are key components of our algorithm:
+            </p>
+        
+            <h4 class="section-title">Optimization Function</h4>
+            <p>
+                The optimization function minimizes the Mean Absolute Deviation (MAD) of PPFD from the target value while adhering to energy constraints. Here's a snippet of how the objective function is defined:
+            </p>
+        
+            {% verbatim %}
+            <pre><code class="language-python">
+        def objective_function(light_intensities, target_ppfd):
+            ppfd_values = calculate_ppfd(light_intensities)
+            mad = np.mean(np.abs(ppfd_values - target_ppfd))
+            energy_consumption = np.sum(light_intensities)
+            return mad + 0.3 * energy_consumption
+            </code></pre>
+            {% endverbatim %}
+        
+            <p>
+                <strong>Explanation:</strong> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities. The objective is to minimize both MAD and energy usage, with energy consumption weighted by a factor of 0.3.
+            </p>
+        
+            <h4 class="section-title">Intensity Calculation</h4>
+            <p>
+                Light intensity at each measurement point is determined using the Lambertian emission model. Below is a snippet illustrating this calculation:
+            </p>
+        
+            {% verbatim %}
+            <pre><code class="language-python">
+        def lambertian_emission(intensity, distance, height):
+            if distance == 0:
+                return intensity
+            return (intensity * height) / ((distance ** 2 + height ** 2) ** 1.5)
+            </code></pre>
+            {% endverbatim %}
+        
+            <p>
+                <strong>Explanation:</strong> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
+            </p>
+        
+            <h4 class="section-title">Optimization Process</h4>
+            <p>
+                We utilize the Sequential Least Squares Programming (SLSQP) method from SciPy to perform the optimization. Here's how the optimization is initiated:
+            </p>
+        
+            {% verbatim %}
+            <pre><code class="language-python">
+        result = minimize(
+            objective_function,
+            initial_intensities,
+            args=(target_ppfd,),
+            method='SLSQP',
+            bounds=bounds,
+            constraints=constraints
+        )
+            </code></pre>
+            {% endverbatim %}
+        
+            <p>
+                <strong>Explanation:</strong> The `minimize` function seeks the optimal light intensities that reduce the MAD while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
+            </p>
+        
+            <h4 class="section-title">Real-Time Adjustments</h4>
+            <p>
+                Our algorithm continuously monitors environmental data from integrated sensors. Based on real-time feedback, it dynamically recalibrates LED intensities to maintain optimal PPFD levels, ensuring consistent plant growth conditions.
+            </p>
+        
+            <h4 class="section-title">Benefits of Our Algorithm</h4>
+            <ul>
+                <li><b>Precision:</b> Achieves PPFD uniformity with over 99% Degree of Uniformity (DOU).</li>
+                <li><b>Energy Efficiency:</b> Minimizes energy waste by optimizing LED intensities.</li>
+                <li><b>Scalability:</b> Easily adaptable to various grow space sizes and configurations.</li>
+                <li><b>Adaptability:</b> Responds to environmental changes, ensuring consistent plant growth conditions.</li>
+            </ul>
+        
+            <h4 class="section-title">Interactive Demo</h4>
+            <p>
+                Explore our optimization process through an interactive simulation. Adjust parameters such as floor dimensions and perimeter reflectivity to see how our algorithm adapts LED intensities to maintain uniform PPFD.
+            </p>
+            <!-- You can embed an interactive simulation here using JavaScript or link to a separate demo page -->
+            <div class="interactive-demo">
+                <!-- Placeholder for interactive content -->
+                <p>Interactive simulation coming soon!</p>
+            </div>
         </div>
+        
 
         <div class="section hidden">
             <h2 class="section-title">Technical Details</h2>

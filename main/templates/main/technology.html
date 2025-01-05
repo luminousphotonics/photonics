@@ -2,21 +2,17 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <!-- Existing meta tags and links -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         
-        <!-- Prism.js CSS for syntax highlighting -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
         
         <title>Technology - Luminous Photonics</title>
         
-        <!-- MathJax for rendering mathematical equations -->
         <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
         
-        <!-- Prism.js JavaScript for syntax highlighting -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
     </head>    
@@ -52,32 +48,32 @@
             <h3 class="section-title">Beam Profile</h3>
             <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the right demonstrates a more focused beam with reduced energy waste.</p>
             <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/beam_profile_1.png' %}" alt="Beam Profile - Traditional">
-                <img class="hidden" src="{% static 'main/images/beam_profile_2.png' %}" alt="Beam Profile - UPFP">
+                <img class="hidden" src="{% static 'main/images/beam_profile_1.png' %}" alt="Beam Profile - Traditional" id="beam-profile-1">
+                <img class="hidden" src="{% static 'main/images/beam_profile_2.png' %}" alt="Beam Profile - UPFP" id="beam-profile-2">
             </div>
             <p class="image-caption">Figure 1: Comparison of Beam Profiles. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
         
             <h3 class="section-title">PPFD Surface Graphs</h3>
             <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the right exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target range).</p>
             <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="PPFD Surface Graph - Traditional">
-                <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP">
+                <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="PPFD Surface Graph - Traditional" id="ppfd-surface-1">
+                <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP" id="ppfd-surface-2">
             </div>
             <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
         
             <h3 class="section-title">2D Variance Graphs</h3>
             <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (right) demonstrates significantly reduced variance, indicating greater uniformity.</p>
             <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional">
-                <img class="hidden" src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP">
+                <img class="hidden" src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional" id="2d-variance-1">
+                <img class="hidden" src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP" id="2d-variance-2">
             </div>
             <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
         
             <h3 class="section-title">Heatmaps</h3>
             <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (right) displays a more consistent color across the growing area, signifying superior uniformity.</p>
             <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/heatmap_1.png' %}" alt="Heatmap - Traditional">
-                <img class="hidden" src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP">
+                <img class="hidden" src="{% static 'main/images/heatmap_1.png' %}" alt="Heatmap - Traditional" id="heatmap-1">
+                <img class="hidden" src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP" id="heatmap-2">
             </div>
             <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
         
@@ -93,188 +89,197 @@
         
             {% verbatim %}
             <pre><code class="language-python">
-        def objective_function(light_intensities, target_ppfd):
-            ppfd_values = calculate_ppfd(light_intensities)
-            mad = np.mean(np.abs(ppfd_values - target_ppfd))
-            energy_consumption = np.sum(light_intensities)
-            return mad + 0.3 * energy_consumption
-            </code></pre>
-            {% endverbatim %}
-        
-            <p>
-                <strong>Explanation:</strong> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities. The objective is to minimize both MAD and energy usage, with energy consumption weighted by a factor of 0.3.
-            </p>
-        
-            <h4 class="section-title">Intensity Calculation</h4>
-            <p>
-                Light intensity at each measurement point is determined using the Lambertian emission model. Below is a snippet illustrating this calculation:
-            </p>
-        
-            {% verbatim %}
-            <pre><code class="language-python">
-        def lambertian_emission(intensity, distance, height):
-            if distance == 0:
-                return intensity
-            return (intensity * height) / ((distance ** 2 + height ** 2) ** 1.5)
-            </code></pre>
-            {% endverbatim %}
-        
-            <p>
-                <strong>Explanation:</strong> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
-            </p>
-        
-            <h4 class="section-title">Optimization Process</h4>
-            <p>
-                We utilize the Sequential Least Squares Programming (SLSQP) method from SciPy to perform the optimization. Here's how the optimization is initiated:
-            </p>
-        
-            {% verbatim %}
-            <pre><code class="language-python">
-        result = minimize(
-            objective_function,
-            initial_intensities,
-            args=(target_ppfd,),
-            method='SLSQP',
-            bounds=bounds,
-            constraints=constraints
-        )
-            </code></pre>
-            {% endverbatim %}
-        
-            <p>
-                <strong>Explanation:</strong> The `minimize` function seeks the optimal light intensities that reduce the MAD while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
-            </p>
-        
-            <h4 class="section-title">Real-Time Adjustments</h4>
-            <p>
-                Our algorithm continuously monitors environmental data from integrated sensors. Based on real-time feedback, it dynamically recalibrates LED intensities to maintain optimal PPFD levels, ensuring consistent plant growth conditions.
-            </p>
-        
-            <h4 class="section-title">Benefits of Our Algorithm</h4>
-            <ul>
-                <li><b>Precision:</b> Achieves PPFD uniformity with over 99% Degree of Uniformity (DOU).</li>
-                <li><b>Energy Efficiency:</b> Minimizes energy waste by optimizing LED intensities.</li>
-                <li><b>Scalability:</b> Easily adaptable to various grow space sizes and configurations.</li>
-                <li><b>Adaptability:</b> Responds to environmental changes, ensuring consistent plant growth conditions.</li>
-            </ul>
-        
-            <h4 class="section-title">Interactive Demo</h4>
-            <p>
-                Explore our optimization process through an interactive simulation. Adjust parameters such as floor dimensions and perimeter reflectivity to see how our algorithm adapts LED intensities to maintain uniform PPFD.
-            </p>
-            <!-- You can embed an interactive simulation here using JavaScript or link to a separate demo page -->
-            <div class="interactive-demo">
-                <!-- Placeholder for interactive content -->
-                <p>Interactive simulation coming soon!</p>
+                def objective_function(light_intensities, target_ppfd):
+                ppfd_values = calculate_ppfd(light_intensities)
+                mad = np.mean(np.abs(ppfd_values - target_ppfd))
+                energy_consumption = np.sum(light_intensities)
+                return mad + 0.3 * energy_consumption
+                </code></pre>
+                {% endverbatim %}
+    
+                <p>
+                    <strong>Explanation:</strong> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities. The objective is to minimize both MAD and energy usage, with energy consumption weighted by a factor of 0.3.
+                </p>
+    
+                <h4 class="section-title">Intensity Calculation</h4>
+                <p>
+                    Light intensity at each measurement point is determined using the Lambertian emission model. Below is a snippet illustrating this calculation:
+                </p>
+    
+                {% verbatim %}
+                <pre><code class="language-python">
+            def lambertian_emission(intensity, distance, height):
+                if distance == 0:
+                    return intensity
+                return (intensity * height) / ((distance ** 2 + height ** 2) ** 1.5)
+                </code></pre>
+                {% endverbatim %}
+    
+                <p>
+                    <strong>Explanation:</strong> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
+                </p>
+    
+                <h4 class="section-title">Optimization Process</h4>
+                <p>
+                    We utilize the Sequential Least Squares Programming (SLSQP) method from SciPy to perform the optimization. Here's how the optimization is initiated:
+                </p>
+    
+                {% verbatim %}
+                <pre><code class="language-python">
+            result = minimize(
+                objective_function,
+                initial_intensities,
+                args=(target_ppfd,),
+                method='SLSQP',
+                bounds=bounds,
+                constraints=constraints
+            )
+                </code></pre>
+                {% endverbatim %}
+    
+                <p>
+                    <strong>Explanation:</strong> The `minimize` function seeks the optimal light intensities that reduce the MAD while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
+                </p>
+    
+                <h4 class="section-title">Real-Time Adjustments</h4>
+                <p>
+                    Our algorithm continuously monitors environmental data from integrated sensors. Based on real-time feedback, it dynamically recalibrates LED intensities to maintain optimal PPFD levels, ensuring consistent plant growth conditions.
+                </p>
+    
+                <h4 class="section-title">Benefits of Our Algorithm</h4>
+                <ul>
+                    <li><b>Precision:</b> Achieves PPFD uniformity with over 99% Degree of Uniformity (DOU).</li>
+                    <li><b>Energy Efficiency:</b> Minimizes energy waste by optimizing LED intensities.</li>
+                    <li><b>Scalability:</b> Easily adaptable to various grow space sizes and configurations.</li>
+                    <li><b>Adaptability:</b> Responds to environmental changes, ensuring consistent plant growth conditions.</li>
+                </ul>
+    
+                <h4 class="section-title">Interactive Demo</h4>
+                <p>
+                    Explore our optimization process through an interactive simulation. Adjust parameters such as floor dimensions and perimeter reflectivity to see how our algorithm adapts LED intensities to maintain uniform PPFD.
+                </p>
+                <div class="interactive-demo">
+                    <p>Interactive simulation coming soon!</p>
+                </div>
+            </div>
+    
+            <div class="section hidden">
+                <h2 class="section-title">Technical Details</h2>
+                <p>
+                    Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
+                </p>
+                <ul>
+                    <li><b>Centered Square Arrangement:</b> LED elements are arranged in concentric squares, with the number of elements per layer determined by the sequence \(a(n) = 2n(n+1) + 1\), where \(n\) is the layer number.</li>
+                    <div class="image-container">
+                        <img class="hidden" src="{% static 'main/images/csn.jpeg' %}" alt="Centered Square Number - Continuation" id="csn-image">
+                        <img class="hidden" src="{% static 'main/images/csn22.png' %}" alt="Centered Square Number - Rotation" id="csn22-image">
+                    </div>
+                    <p class="image-caption">Figure 5: Showcasing for the infinite continuation of the centered square number sequence and transformation strategem to form a completed array.</p>
+                    <li><b>Lambertian Emission Model:</b> We assume each LED emitter follows a Lambertian emission pattern, where radiant intensity is modeled as \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]</li>
+                    <li><b>Radiosity and Reflective Walls:</b> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), especially important in grow spaces with highly reflective walls (\(\rho \approx 1\)).</li>
+                    <li><b>Optimization:</b> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.</li>
+                    <li><b>Degree of Uniformity (DOU):</b> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\]. Our prototype numeric solutions have achieved DOU values exceeding 99%.</li>
+                </ul>
+            </div>
+            <div class="section hidden">
+                <h2 class="section-title">Interactive Simulation</h2>
+                <p>Experience the power of our technology through this interactive simulation. <em>Coming soon!</em></p>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/sveAkkc512k?si=oBpoE-QVgNCTRjV-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="section hidden">
+                <h2 class="section-title">Experimental Validation</h2>
+                <p>
+                    We are committed to rigorous experimental validation of our UPFP technology. We plan to use Apogee Instruments spectroradiometers (PS series for lab, MS-100 handheld) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
+                </p>
+                <ul>
+                    <li>Measure total photon flux and PPFD distribution across the canopy.</li>
+                    <li>Corroborate our theoretical predictions with real-world data.</li>
+                    <li>Further refine our models and optimization algorithms.</li>
+                </ul>
+            </div>
+                <h2 class="section-title">References</h2>
+                <ol>
+                    <li><p>Zhang, G., <em>et al.</em>, 2015. A combination of downward lighting and upward lighting improves plant growth in plant factories. <em>Hortscience</em>, 50(8), 1126--1130.</p></li>
+                    <li><p>Joshi, J., Zhang, G., Shen, S., Supaibulwatana, K., Watanabe, C., Yamori, W., 2017. A combination of downward lighting and supplemental upward lighting improves plant growth in a closed plant factory with artificial lighting. <em>Hortscience</em> 52 (6), 831--835. <a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">https://doi.org/10.21273/HORTSCI11822-17</a></p></li>
+                    <li><p>Kozai, T., 2022. Role and characteristics of PFALs. <em>Plant Factory Basics, Applications and Advances</em>, 46. Academic Press.</p></li>
+                    <li><p>Runkle, E., 2021. Hidden benefits of supplemental lighting. <em>Greenhouse Product News</em>, 42. <a href="https://gpnmag.com/article/hidden-benefits-of-supplemental-lighting/" target="_blank">https://gpnmag.com/article/hidden-benefits-of-supplemental-lighting/</a></p></li>
+                </ol>
             </div>
         </div>
-        
-
-        <div class="section hidden">
-            <h2 class="section-title">Technical Details</h2>
-            <p>
-                Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
-            </p>
-            <ul>
-                <li><b>Centered Square Arrangement:</b> LED elements are arranged in concentric squares, with the number of elements per layer determined by the sequence \(a(n) = 2n(n+1) + 1\), where \(n\) is the layer number.</li>
-                <div class="image-container">
-                    <img class="hidden" src="{% static 'main/images/csn.jpeg' %}" alt="Centered Square Number - Continuation">
-                    <img class="hidden" src="{% static 'main/images/csn22.png' %}" alt="Centered Square Number - Rotation">
-                </div>
-                <p class="image-caption">Figure 5: Showcasing for the infinite continuation of the centered square number sequence and transformation strategem to form a completed array.</p>
-                <li><b>Lambertian Emission Model:</b> We assume each LED emitter follows a Lambertian emission pattern, where radiant intensity is modeled as \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]</li>
-                <li><b>Radiosity and Reflective Walls:</b> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), especially important in grow spaces with highly reflective walls (\(\rho \approx 1\)).</li>
-                <li><b>Optimization:</b> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.</li>
-                <li><b>Degree of Uniformity (DOU):</b> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\]. Our prototype numeric solutions have achieved DOU values exceeding 99%.</li>
-            </ul>
-        </div>
-        <div class="section hidden">
-            <h2 class="section-title">Interactive Simulation</h2>
-            <p>Experience the power of our technology through this interactive simulation. <em>Coming soon!</em></p>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/sveAkkc512k?si=oBpoE-QVgNCTRjV-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>        </div>
-        <div class="section hidden">
-            <h2 class="section-title">Experimental Validation</h2>
-            <p>
-                We are committed to rigorous experimental validation of our UPFP technology. We plan to use Apogee Instruments spectroradiometers (PS series for lab, MS-100 handheld) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
-            </p>
-            <ul>
-                <li>Measure total photon flux and PPFD distribution across the canopy.</li>
-                <li>Corroborate our theoretical predictions with real-world data.</li>
-                <li>Further refine our models and optimization algorithms.</li>
-            </ul>
-        </div>
-            <h2 class="section-title">References</h2>
-            <ol>
-                <li><p>Zhang, G., <em>et al.</em>, 2015. A combination of downward lighting and upward lighting improves plant growth in plant factories. <em>Hortscience</em>, 50(8), 1126--1130.</p></li>
-                <li><p>Joshi, J., Zhang, G., Shen, S., Supaibulwatana, K., Watanabe, C., Yamori, W., 2017. A combination of downward lighting and supplemental upward lighting improves plant growth in a closed plant factory with artificial lighting. <em>Hortscience</em> 52 (6), 831--835. <a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">https://doi.org/10.21273/HORTSCI11822-17</a></p></li>
-                <li><p>Kozai, T., 2022. Role and characteristics of PFALs. <em>Plant Factory Basics, Applications and Advances</em>, 46. Academic Press.</p></li>
-                <li><p>Runkle, E., 2021. Hidden benefits of supplemental lighting. <em>Greenhouse Product News</em>, 42. <a href="https://gpnmag.com/article/hidden-benefits-of-supplemental-lighting/" target="_blank">https://gpnmag.com/article/hidden-benefits-of-supplemental-lighting/</a></p></li>
-            </ol>
-        </div>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const elements = document.querySelectorAll('.hidden');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    } else {
-                        entry.target.classList.remove('visible'); // Make the effect repeatable
-                    }
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const elements = document.querySelectorAll('.hidden');
+    
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        } else {
+                            entry.target.classList.remove('visible'); // Make the effect repeatable
+                        }
+                    });
+                });
+    
+                elements.forEach(element => {
+                    observer.observe(element);
                 });
             });
-
-            elements.forEach(element => {
-                observer.observe(element);
+        </script>
+        <a href="#" class="back-to-top" id="backToTopBtn">
+            <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+        </a>
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const backToTopBtn = document.getElementById('backToTopBtn');
+    
+                // Show the button when the user scrolls down 300px from the top
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 300) {
+                        backToTopBtn.classList.add('show');
+                    } else {
+                        backToTopBtn.classList.remove('show');
+                    }
+                });
+    
+                // Smooth scroll to top when the button is clicked
+                backToTopBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+    
+                // Existing IntersectionObserver for '.hidden' elements
+                const elements = document.querySelectorAll('.hidden');
+    
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        } else {
+                            entry.target.classList.remove('visible'); // Make the effect repeatable
+                        }
+                    });
+                });
+    
+                elements.forEach(element => {
+                    observer.observe(element);
+                });
             });
-        });
-    </script>
-    <!-- Back to Top Button -->
-    <a href="#" class="back-to-top" id="backToTopBtn">
-        <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
-    </a>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const backToTopBtn = document.getElementById('backToTopBtn');
-
-            // Show the button when the user scrolls down 300px from the top
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    backToTopBtn.classList.add('show');
-                } else {
-                    backToTopBtn.classList.remove('show');
+        </script>
+        <script>
+            window.addEventListener('load', function() {
+                var currentHash = window.location.hash;
+                if (currentHash) {
+                    var targetElement = document.querySelector(currentHash);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
                 }
             });
-
-            // Smooth scroll to top when the button is clicked
-            backToTopBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-
-            // Existing IntersectionObserver for '.hidden' elements
-            const elements = document.querySelectorAll('.hidden');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    } else {
-                        entry.target.classList.remove('visible'); // Make the effect repeatable
-                    }
-                });
-            });
-
-            elements.forEach(element => {
-                observer.observe(element);
-            });
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>

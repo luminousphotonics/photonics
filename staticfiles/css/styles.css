@@ -299,7 +299,62 @@ code {
     font-family: 'Fira Code', monospace;
     font-size: 0.95em;
 }
+/* Back to Top Button Styles */
+.back-to-top {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    padding: 12px;
+    border-radius: 50%;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
+    z-index: 1000; /* Ensures the button appears above other elements */
+}
 
+.back-to-top:hover {
+    cursor: pointer;
+}
+
+.back-to-top svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Show the button when it has the 'show' class */
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Pulse Animation on Hover (Optional) */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    70% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.back-to-top:hover {
+    animation: pulse 0.6s;
+}
+
+/* Responsive Adjustments for Back to Top Button */
+@media (max-width: 768px) {
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        padding: 10px;
+    }
+}
 
 
 /* Responsive Styles */

@@ -356,6 +356,42 @@ code {
     }
 }
 
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .slick-prev {
+        left: -25px; /* Adjust arrow position for smaller screens */
+    }
+
+    .slick-next {
+        right: -25px; /* Adjust arrow position for smaller screens */
+    }
+}
+
+/* Hide carousel images initially to prevent large image flash */
+.carousel-image {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+    max-height: 200px; /* Adjust as necessary */
+}
+
+.carousel-image.slick-initialized {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .slick-prev {
+        left: -25px; /* Adjust arrow position for smaller screens */
+    }
+
+    .slick-next {
+        right: -25px; /* Adjust arrow position for smaller screens */
+    }
+}
+
 /* Responsive Video */
 .responsive-video {
     max-width: 100%;

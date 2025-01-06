@@ -25,57 +25,76 @@
         <div class="section hidden">
             <h2 class="section-title">Uniform Photon Flux Principle (UPFP)</h2>
             <p>
-                Our research has led to the development of the Uniform Photon Flux Principle (UPFP), a groundbreaking approach to optimizing Photosynthetic Photon Flux Density (PPFD) distribution in controlled-environment agriculture \cite{Zhang2015,Joshi2017,Kozai2022}.
-                The UPFP leverages a centered square arrangement of Lambertian LED elements, meticulously arranged in concentric layers. By carefully assigning optimal intensities to each layer, we can achieve unprecedented uniformity in PPFD across the growing area.
+                Our research has led to the development of the Uniform Photon Flux Principle (UPFP), a groundbreaking approach to optimizing Photosynthetic Photon Flux Density (PPFD) distribution in controlled-environment agriculture.
+                The UPFP leverages a particular arrangement of Chip-on-Board (CoB) LED elements, positioned according to the centered square number integer sequence (<b>Online Encyclopedia of Integer Sequences</b>: A001844) pattern logic. By carefully assigning optimal intensities to each layer, as informed by our proprietary machine learning algorithm, we achieve unprecedented uniformity in PPFD across the growing area.
             </p>
             <p>
-                <b>Key Benefits of UPFP:</b>
+                <b>Key Benefits of the UPFP:</b>
                 <ul>
-                  <li><b>Enhanced Photosynthesis:</b> Uniform light distribution maximizes whole-canopy photosynthesis, leading to improved plant growth and yield \cite{Joshi2017}.</li>
-                  <li><b>Reduced Leaf Senescence:</b> Consistent light levels help slow down the aging process of leaves, prolonging their productive lifespan.</li>
-                  <li><b>Ideal for High-DLI Crops:</b> Particularly beneficial for crops like Cannabis that require high Daily Light Integral (DLI) for optimal growth \cite{Runkle2021}.</li>
-                  <li><b>Energy Efficiency:</b> Optimized light distribution minimizes wasted energy, making our lighting solutions more sustainable.</li>
+                  <li><b>Enhanced Photosynthesis:</b><br> Uniform light distribution maximizes whole-canopy photosynthesis, leading to improved plant growth and yield (Zhang and Joshi et al., 2017).</li>
+                  <li><b>Reduced Leaf Senescence:</b><br> Consistent light levels help slow down the aging process of leaves, prolonging their productive lifespan and preserving the vitality of lower leaves deep within the plant canopy, effectively solving the "light penetration" conundrum (Kozai, 2022).</li>
+                  <li><b>Ideal for High-DLI Crops:</b><br> Particularly beneficial for crops like Cannabis that require high Daily Light Integral (DLI) for optimal growth (Runkle, 2021).</li>
+                  <li><b>Energy Efficiency:</b><br> Optimized light distribution minimizes wasted energy, resulting in an energy utilization rate of > 20% when compared with leading competitors.</li>
                 </ul>
             </p>
         </div>
+        <h3 class="section-title">Infinitely Scalable Modularized System</h3>
 
+        <div class="modular-images-section">
+            <div class="image-container">
+                <img class="hidden" src="{% static 'main/images/mod1.png' %}" alt="Modular Fixture #1" id="mod1-image" width="500" height="500">
+                <img class="hidden" src="{% static 'main/images/mod2.png' %}" alt="Modular Fixture #2" id="mod2-image" width="500" height="500">
+            </div>
+            <div class="image-container">
+                <img class="hidden" src="{% static 'main/images/mod3.png' %}" alt="Modular Fixture #3" id="mod3-image" width="500" height="500">
+            </div>
+            <h3 class="section-text">Our arrangement strategem continues ad infinitum...</h3>
+            <div class="image-container">
+                <img class="hidden" src="{% static 'main/images/mod4.png' %}" alt="Modular Assembly #1" id="mod4-image" width="600" height="500">
+                <img class="hidden" src="{% static 'main/images/mod5.png' %}" alt="Modular Assembly #2" id="mod5-image" width="500" height="500">
+            </div>
+            <div class="image-container">
+                <img class="hidden" src="{% static 'main/images/mod6.png' %}" alt="Modular Assembly #3" id="mod6-image" width="500" height="500">
+                <img class="hidden" src="{% static 'main/images/mod7.png' %}" alt="Modular Assembly #4" id="mod7-image" width="500" height="500">
+            </div>
+        </div>
         <div class="section hidden">
             <h2 class="section-title">Visualizing Light Uniformity</h2>
             <p>
-                Below are graphical representations that demonstrate the effectiveness of our UPFP technology in achieving uniform light distribution. Each set of graphs compares a traditional or less optimized approach (left) with our UPFP-based solution (right).
+                Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs compares a traditional or less optimized approach (right) with our UPFP-based solution (left).
             </p>
         
             <h3 class="section-title">Beam Profile</h3>
-            <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the right demonstrates a more focused beam with reduced energy waste.</p>
+            <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the left demonstrates a more uniform beam spread with significantly reduced energy waste.</p>
             <div class="image-container">
                 <img class="hidden" src="{% static 'main/images/beam_profile_1.png' %}" alt="Beam Profile - Traditional" id="beam-profile-1">
                 <img class="hidden" src="{% static 'main/images/beam_profile_2.png' %}" alt="Beam Profile - UPFP" id="beam-profile-2">
             </div>
-            <p class="image-caption">Figure 1: Comparison of Beam Profiles. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+            <p class="image-caption">Figure 1: Comparison of Beam Profiles. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
             <h3 class="section-title">PPFD Surface Graphs</h3>
-            <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the right exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target range).</p>
+            <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the left exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target PPFD range).</p>
             <div class="image-container">
                 <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="PPFD Surface Graph - Traditional" id="ppfd-surface-1">
                 <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP" id="ppfd-surface-2">
             </div>
-            <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+            <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
             <h3 class="section-title">2D Variance Graphs</h3>
-            <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (right) demonstrates significantly reduced variance, indicating greater uniformity.</p>
+            <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (left) demonstrates significantly reduced variance in photon distribution, showcasing far superior uniformity.</p>
             <div class="image-container">
                 <img class="hidden" src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional" id="2d-variance-1">
                 <img class="hidden" src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP" id="2d-variance-2">
             </div>
-            <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+            <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
             <h3 class="section-title">Heatmaps</h3>
-            <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (right) displays a more consistent color across the growing area, signifying superior uniformity.</p>
+            <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (left) displays a more consistent color across the growing area, signifying superior uniformity. While the competitor displays a pronounced concentration of photons toward the center of the illuminated area, as can be seen by the circular radiation pattern.</p>
             <div class="image-container">
                 <img class="hidden" src="{% static 'main/images/heatmap_1.png' %}" alt="Heatmap - Traditional" id="heatmap-1">
                 <img class="hidden" src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP" id="heatmap-2">
             </div>
-            <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Left: Traditional distribution. Right: Optimized UPFD distribution.</p>
+            <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
             <h3 class="section-title">Proprietary Machine Learning Algorithm</h3>
             <p>
@@ -98,12 +117,12 @@
                 {% endverbatim %}
     
                 <p>
-                    <strong>Explanation:</strong> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities. The objective is to minimize both MAD and energy usage, with energy consumption weighted by a factor of 0.3.
+                    <strong>Explanation:</strong><br> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities (to represent their cumulative contribution at each point along the surface of the illuminated plane). The objective is to minimize both MAD and energy usage while hitting the target PPFD, with energy consumption weighted by a factor of 0.3.
                 </p>
     
                 <h4 class="section-title">Intensity Calculation</h4>
                 <p>
-                    Light intensity at each measurement point is determined using the Lambertian emission model. Below is a snippet illustrating this calculation:
+                    Light intensity at each measurement point is determined using the Lambertian emission model. This is appropriate as CoBs are near-perfect Lambertian emitters. Below is a snippet illustrating this calculation:
                 </p>
     
                 {% verbatim %}
@@ -116,7 +135,7 @@
                 {% endverbatim %}
     
                 <p>
-                    <strong>Explanation:</strong> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
+                    <strong>Explanation:</strong><br> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
                 </p>
     
                 <h4 class="section-title">Optimization Process</h4>
@@ -138,20 +157,20 @@
                 {% endverbatim %}
     
                 <p>
-                    <strong>Explanation:</strong> The `minimize` function seeks the optimal light intensities that reduce the MAD while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
+                    <strong>Explanation:</strong><br> The `minimize` function seeks the optimal light intensities for each concentric square layer of CoBs in our patented solution's LED arrangement that reduce the MAD, while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
                 </p>
     
                 <h4 class="section-title">Real-Time Adjustments</h4>
                 <p>
-                    Our algorithm continuously monitors environmental data from integrated sensors. Based on real-time feedback, it dynamically recalibrates LED intensities to maintain optimal PPFD levels, ensuring consistent plant growth conditions.
+                    An integral component of our agentic AI platform, our algorithm continuously monitors environmental data from integrated sensors. Based on real-time feedback, it dynamically recalibrates LED intensities to maintain optimal PPFD levels, ensuring consistent plant growth conditions.
                 </p>
     
                 <h4 class="section-title">Benefits of Our Algorithm</h4>
                 <ul>
-                    <li><b>Precision:</b> Achieves PPFD uniformity with over 99% Degree of Uniformity (DOU).</li>
+                    <li><b>Precision:</b> Achieves PPFD uniformity with a Degree of Uniformity (DOU) exceeding > 99%.</li>
                     <li><b>Energy Efficiency:</b> Minimizes energy waste by optimizing LED intensities.</li>
-                    <li><b>Scalability:</b> Easily adaptable to various grow space sizes and configurations.</li>
-                    <li><b>Adaptability:</b> Responds to environmental changes, ensuring consistent plant growth conditions.</li>
+                    <li><b>Scalability:</b> Easily adaptable to any grow space size and configuration.</li>
+                    <li><b>Adaptability:</b> Agentic AI: Responds to environmental changes, ensuring consistent plant growth conditions.</li>
                 </ul>
     
                 <h4 class="section-title">Interactive Demo</h4>
@@ -162,37 +181,25 @@
                     <p>Interactive simulation coming soon!</p>
                 </div>
             </div>
-    
             <div class="section hidden">
                 <h2 class="section-title">Technical Details</h2>
                 <p>
                     Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
                 </p>
                 <ul>
-                    <li><b>Centered Square Arrangement:</b> LED elements are arranged in concentric squares, with the number of elements per layer determined by the sequence \(a(n) = 2n(n+1) + 1\), where \(n\) is the layer number.</li>
-                    <div class="image-container">
-                        <img class="hidden" src="{% static 'main/images/csn.jpeg' %}" alt="Centered Square Number - Continuation" id="csn-image">
-                        <img class="hidden" src="{% static 'main/images/csn22.png' %}" alt="Centered Square Number - Rotation" id="csn22-image">
-                    </div>
-                    <p class="image-caption">Figure 5: Showcasing for the infinite continuation of the centered square number sequence and transformation strategem to form a completed array.</p>
-                    <li><b>Lambertian Emission Model:</b> We assume each LED emitter follows a Lambertian emission pattern, where radiant intensity is modeled as \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]</li>
-                    <li><b>Radiosity and Reflective Walls:</b> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), especially important in grow spaces with highly reflective walls (\(\rho \approx 1\)).</li>
-                    <li><b>Optimization:</b> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.</li>
-                    <li><b>Degree of Uniformity (DOU):</b> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\]. Our prototype numeric solutions have achieved DOU values exceeding 99%.</li>
+                    <li><b>Lambertian Emission Model:</b><br> We assume each LED emitter follows a Lambertian emission pattern (an appropriate light modeling strategy for CoB LEDs), where radiant intensity is modeled as \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]</li>
+                    <li><b>Radiosity and Reflective Walls:</b><br> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), which is especially important in grow spaces as they tend to have highly reflective walls (\(\rho \approx 1\)).</li>
+                    <li><b>Optimization:</b><br> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.</li>
+                    <li><b>Degree of Uniformity (DOU):</b><br> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\] Our prototype numeric solutions have achieved DOU values exceeding 99%.</li>
                 </ul>
-            </div>
-            <div class="section hidden">
-                <h2 class="section-title">Interactive Simulation</h2>
-                <p>Experience the power of our technology through this interactive simulation. <em>Coming soon!</em></p>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/sveAkkc512k?si=oBpoE-QVgNCTRjV-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
             <div class="section hidden">
                 <h2 class="section-title">Experimental Validation</h2>
                 <p>
-                    We are committed to rigorous experimental validation of our UPFP technology. We plan to use Apogee Instruments spectroradiometers (PS series for lab, MS-100 handheld) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
+                    We are committed to rigorous experimental validation of our UPFP technology. We will be using Apogee Instruments spectroradiometers (PS series for lab testing and the MS-100 handheld for field testing) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
                 </p>
                 <ul>
-                    <li>Measure total photon flux and PPFD distribution across the canopy.</li>
+                    <li>Measure total photon flux and PPFD distribution across the plant canopy.</li>
                     <li>Corroborate our theoretical predictions with real-world data.</li>
                     <li>Further refine our models and optimization algorithms.</li>
                 </ul>

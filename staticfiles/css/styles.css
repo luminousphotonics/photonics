@@ -253,14 +253,64 @@ button[type="submit"]:hover {
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
+    gap: 10px;
 }
 
 .image-container img {
     width: 48%; /* Adjust as needed */
     border: 1px solid #ddd;
     border-radius: 4px;
+    margin-bottom: 10px;
+}
+  
+  /* Style for the list item to separate it from the images */
+  .image-container li {
+    width: 100%; /* Make the list item take full width */
+    text-align: center; /* Center the text */
+    margin-top: 10px; /* Add some space above the text */
+    margin-bottom: 10px; /* Add some space below the text */
+  }
+
+/* New styles for the modular images section */
+.modular-images-section {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center elements horizontally */
+    width: 100%; /* Ensure it takes full width */
 }
 
+.modular-images-section .image-container {
+    /* Retain the two-column layout for images */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%; /* Ensure it takes full width */
+    margin-top: 20px; /* Space between rows */
+}
+
+.modular-images-section .image-container img {
+    /* Image styling, adjust as needed */
+    width: 48%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Style for the h3 text */
+.modular-images-section .section-text {
+    text-align: center; /* Center the text */
+    margin-top: 20px; /* Space above the text */
+    margin-bottom: 20px; /* Space below the text */
+    width: 100%; /* Ensure it takes full width */
+}
+#pdfContainer {
+    margin-top: 20px; /* Add some space between buttons and PDF */
+  }
+  
+  #pdfContainer iframe {
+    border: 1px solid #ccc;
+  }
 .image-caption {
     text-align: center;
     font-size: smaller;

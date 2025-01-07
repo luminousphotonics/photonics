@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulation</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
+    <style>
+        /* You can add CSS styles here, or in a separate CSS file */
+        .error-message {
+            color: red;
+        }
+        /* Other styles for your components */
+        .simulation-form-container {
+            /* Example styles */
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .modular-visualization-container {
+            /* Example styles */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div> 
+
+    {% csrf_token %}
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+    </script>
+
+    <script src="{% static 'js/main.ebded9e3.js' %}"></script> </body>
+</html>

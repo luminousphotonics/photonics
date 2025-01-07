@@ -18,16 +18,22 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# Get the secret key from the environment variable or use a default for development
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-p!aqx$+(u4&*=$^-9ak&k_0rtcgwj8hm+(o77e(0j1v^gg#*c^')
+# *** Use an environment variable for production ***
+SECRET_KEY = os.environ.get('SECRET_KEY')  # In production, get from environment variable
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# Get the debug flag from the environment variable or default to False for production
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+# *** Set DEBUG to False for production ***
+DEBUG = False
 
 # Allowed hosts (update with your domain names)
-ALLOWED_HOSTS = ['luminous-photonics.onrender.com', 'www.luminousphotonics.com', 'luminousphotonics.com', '127.0.0.1', 'localhost']
-
+# *** Add your domain names here ***
+ALLOWED_HOSTS = [
+    'luminous-photonics.onrender.com',  # Your Render domain
+    'www.luminousphotonics.com',        # Your custom domain (if any)
+    'luminousphotonics.com',           # Your custom domain (if any)
+    '127.0.0.1',                     # For local development
+    'localhost'                      # For local development
+]
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -41,7 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add whitenoise for static files
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise for static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -71,9 +77,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "photonics.wsgi.application"
 
 # Database
+# *** Configure your database for production ***
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
+        "ENGINE": "django.db.backends.sqlite3",  # Or use a more robust database like PostgreSQL
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
@@ -102,13 +109,19 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Where collectstatic will put files
+
+# Tell Django to look for static files in the React build directory
+STATICFILES_DIRS = [
+    BASE_DIR / "frontend/build/static",
+]
 
 # Email Configuration (using environment variables)
+# *** Configure for your email provider ***
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587)) # Default to 587 if not set
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'true').lower() == 'true' # Default to True if not set
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'true').lower() == 'true'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')

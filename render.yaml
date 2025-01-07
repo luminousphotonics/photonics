@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: luminous-photonics # Change to your desired service name
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn photonics.wsgi:application"
+    static: true # This tells Render to serve static files
+    staticPath: ./staticfiles # This is the path to your STATIC_ROOT
+    envVars:
+      - key: SECRET_KEY
+        fromDatabase: # If using a Render PostgreSQL database
+          name: photonics-db # Change to your database name
+          property: connectionString
+      - key: DATABASE_URL
+        fromDatabase:
+          name: photonics-db # Change to your database name
+          property: connectionString
+      - key: DEBUG
+        value: False
+      # Add other environment variables as needed:
+      - key: EMAIL_HOST
+        sync: false # Do not sync this from a blueprint spec
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      # ... other environment variables

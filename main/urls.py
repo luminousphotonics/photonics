@@ -7,4 +7,6 @@ urlpatterns = [
     path('applications/', views.applications, name='applications'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
+    path('api/simulation/', views.run_simulation, name='run_simulation'),
+    path('simulation/', views.simulation_view, name='simulation_view'),
 ]

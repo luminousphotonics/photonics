@@ -250,7 +250,6 @@ button[type="submit"]:hover {
 /* Image Container Styles */
 .image-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     margin-top: 20px;
     gap: 10px;
@@ -271,36 +270,30 @@ button[type="submit"]:hover {
     margin-bottom: 10px; /* Add some space below the text */
   }
 
-/* Existing styles for .image-container and .image-container img */
+
+
+/* Image Container Styles - Simplified */
 .image-container {
     display: flex;
-    justify-content: space-between;
+    /* Remove justify-content: space-between; */
     align-items: center;
     margin-top: 20px;
     gap: 10px;
 }
 
 .image-container img {
-    width: 48%; /* Adjust as needed */
+    /* width: 48%; Remove or adjust as needed */
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-bottom: 10px;
+    max-width: 100%; /* Add this to prevent image overflow */
+    height: auto;     /* Maintain aspect ratio */
 }
 
-/* Existing styles for .image-container and .image-container img (for desktop) */
-.image-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    gap: 10px;
-}
-
-.image-container img {
-    width: 48%; /* Adjust as needed */
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
+.modular-images-section .image-container#center-this-image {
+    display: grid;
+    place-items: center;
+    width: 100%;
 }
 
 /* New styles for the modular images section */
@@ -360,6 +353,12 @@ button[type="submit"]:hover {
     margin-top: 20px; /* Add some space between buttons and PDF */
   }
   
+
+  .some-other-element + .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
   #pdfContainer iframe {
     border: 1px solid #ccc;
   }

@@ -1,6 +1,15 @@
 /* Base Styles */
-body {
+/*body {
     font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}*/
+/* Fallback to Helvetica Neue and sans-serif */
+
+body {
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif; 
     margin: 0;
     padding: 0;
     background-color: #f8f8f8;
@@ -206,6 +215,7 @@ button[type="submit"]:hover {
 
 .feature img {
     width: 80px;
+    height: 80px;
     margin-bottom: 15px;
 }
 
@@ -234,6 +244,13 @@ button[type="submit"]:hover {
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 15px;
     display: block; /* Treat image as block element */
+}
+
+/* Media query for smaller screens (e.g., mobile) */
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+    .fixture img {
+        max-width: 90%; /* Adjust as needed, could be 100% for full width */
+    }
 }
 
 /* CTA Styles */

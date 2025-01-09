@@ -1,6 +1,9 @@
+{% load static %}
 <nav class="navbar">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'index' %}">Luminous Photonics</a>
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <img src="{% static 'main/images/luminous-photonics-removebg.png' %}" alt="Luminous Photonics Logo" height="60"> 
+        </a>
         <ul class="nav-links">
             <li><a href="{% url 'technology' %}">Technology</a></li>
             <li><a href="{% url 'applications' %}">Applications</a></li>

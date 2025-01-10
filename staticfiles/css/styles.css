@@ -73,7 +73,7 @@ p {
 }
 
 .nav-links a:hover {
-    color: #008CBA;
+    color: #0047AB;
 }
 
 /* --- Additions for Mobile Responsiveness --- */
@@ -149,7 +149,7 @@ p {
 }
 
 .section-title {
-    color: #008CBA;
+    color: #0047AB;
     margin-bottom: 10px;
 }
 
@@ -398,7 +398,7 @@ button[type="submit"]:hover {
 
 /* Style for the image containers */
 .modular-images-section .image-container {
-    width: 75%; /* Adjust as needed for spacing */
+    width: 85%; /* Adjust as needed for spacing */
     text-align: center; /* Center the image within the container */
 }
 
@@ -423,10 +423,11 @@ button[type="submit"]:hover {
     }
 
     .modular-images-section .image-container {
-        width: 55%; /* Two columns on mobile */
+        width: 80%; /* Two columns on mobile */
     }
     .modular-images-section .image-container img {
         margin-bottom: 10px; /* Space between images on mobile */
+        max-width: 100%;
     }
 }
 /* ... other styles ... */
@@ -595,7 +596,7 @@ pre code {
   }
   
   .carousel .slick-dots li button:before {
-    color: #008cba;
+    color: #0047AB;
     font-size: 12px;
   }
   
@@ -606,7 +607,7 @@ pre code {
   /* Adjust Slick Arrows */
   .carousel .slick-prev:before,
   .carousel .slick-next:before {
-    color: #008cba;
+    color: #0047AB;
     font-size: 30px; /* Adjust arrow size as needed */
     opacity: 1;
     transition: color 0.3s ease;
@@ -620,7 +621,7 @@ pre code {
   /* Adjust Slick Arrows */
   .carousel .slick-prev:before,
   .carousel .slick-next:before {
-    color: #008CBA;
+    color: #0047AB;
     font-size: 40px; /* Increase arrow size (adjust as needed) */
     opacity: 1;
     transition: color 0.3s ease;

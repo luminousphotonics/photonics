@@ -30,6 +30,7 @@
             background-position: center;
             background-repeat: no-repeat;
             padding: 100px 20px;
+            max-height: 50%;
             text-align: center;
             margin-bottom: 40px;
             color: white;
@@ -48,21 +49,21 @@
         </div>
 
         <div class="intro-text hidden">
-            <p>
-                Welcome to <b style="color: #008CBA;">Luminous Photonics</b>, where we are pioneering the future of horticultural lighting. Our patented (<i>U.S. Patent #10687478</i>: <a  href="https://patents.google.com/patent/US10687478B2" target="_blank">Optimized LED Lighting Array for Horticultural Applications</a>), infinitely scalable, modularized lighting system achieves near-perfect Lambertian emission, dramatically improving energy efficiency and plant growth in controlled environments.
+            <p style="font-size: 20px;">
+                Welcome to <i style="color: #0047AB;">Luminous Photonics</i>, where we are pioneering the future of horticultural lighting. Our patented (<i>U.S. Patent #10687478</i>: <a  href="https://patents.google.com/patent/US10687478B2" target="_blank">Optimized LED Lighting Array for Horticultural Applications</a>), infinitely scalable, modularized lighting system achieves near-perfect Lambertian emission, dramatically improving energy efficiency and plant growth in controlled environments.
             </p>
-            <h3 style="color: #008CBA;"><b>What is Lambertian emission?</b></h2>
+            <h1 style="color: #0047AB;">What is Lambertian emission?</h3>
         <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content;">
             <code>
-        A Lambertian emission refers to a light emission pattern where the radiance (brightness) observed from a surface is constant regardless of the viewing angle, meaning the surface appears equally bright from any direction, following Lambert's cosine law which states that the intensity of emitted light is proportional to the cosine of the angle between the viewing direction and the surface normal; essentially, a perfectly diffuse light source emits light in a Lambertian pattern.
+A Lambertian emission refers to a light emission pattern where the radiance (brightness) observed from a surface is constant regardless of the viewing angle, meaning the surface appears equally bright from any direction, following Lambert's cosine law which states that the intensity of emitted light is proportional to the cosine of the angle between the viewing direction and the surface normal; essentially, a perfectly diffuse light source emits light in a Lambertian pattern.
         
         &mdash; R. Paschotta, <cite><a href="https://www.rp-photonics.com/lambertian_emitters_and_scatterers.html">Lambertian Emitters and Scatterers</a></cite>, RP Photonics Encyclopedia. [Accessed Oct. 27, 2023].
             </code>
         </pre>
-
-	<h3 style="color: #008CBA;"><b>Why is achieving near-perfect Lambertian emission in a horticultural lighting system important?</b></h2>
-    <p style="text-indent: 15px;"> As previously mentioned, a perfectly diffuse light source emits light in a Lambertian pattern. A "<i>perfect diffuse light source</i>" refers to a light source that evenly distributes light in all directions, creating a soft, shadowless illumination with no discernible hotspots.</p>
-	<p style="text-indent: 15px;">In horticultural applications, this results in every part of every leaf receiving the same intensity of light, effectively optimizing photosynthetic processes.</p>
+ 
+            <h2 style="color: #0047AB;">Why is achieving near-perfect Lambertian emission in a horticultural lighting system important?</h3>
+            <p> As previously mentioned, a perfectly diffuse light source emits light in a Lambertian pattern. A "<i>perfect diffuse light source</i>" refers to a light source that evenly distributes light in all directions, creating a soft, shadowless illumination with no discernible hotspots.</p>
+            <p>In horticultural applications, this results in every part of every leaf receiving the same intensity of light, effectively optimizing photosynthetic processes.</p>
         </div>
 
         <div class="features">
@@ -86,10 +87,32 @@
         <div class="fixture hidden">
             <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" width="500" height="500">
         </div>
+        <div class="container">
+            <h1 style="color: #0047AB;">Achieving Perfect Plant Growth with our Agentic AI Platform</h2>
+            <h3 style="color: #0047AB;">Integration of Chlorophyll Fluorescence and Phosphorescence Sensors for Real-Time Adjustment</h3>
+            <p>Our system integrates <b>PAM fluorometry sensors</b> and <b>hyperspectral cameras</b> to provide real-time feedback on photosynthetic efficiency and stress conditions. The control module dynamically adjusts light spectrum and intensity based on the detected data, ensuring optimized plant growth and energy efficiency. For instance, if stress signals are detected, the system can modulate specific wavelengths like far-red or blue light to enhance plant health.</p>
+            <h4>Autonomous Agentic Decision-Making with Historical Learning</h4>
+            <p>The lighting system incorporates an <b>agentic AI platform</b> that continuously learns from real-time inputs and historical data. The system autonomously adjusts lighting parameters based on plant signals, growth goals, and energy constraints. By utilizing machine learning, the system refines light recipes, achieving improved plant yields and resource efficiency over time. Our agentic AI platform builds upon uniform lighting principles by integrating real-time plant feedback with advanced automation. Through continuous multimodal data acquisition and intelligent decision-making, the system dynamically refines both spectrum and intensity to optimize every aspect of growth.</p><br>
+            <p>Our agentic AI platform builds upon uniform lighting principles by integrating real-time plant feedback with advanced automation. Through continuous multimodal data acquisition and intelligent decision-making, the system dynamically refines both spectrum and intensity to optimize every aspect of growth.</p>
+            <h4>Multimodal Input Integration for Tailored Light Spectrum</h4>
+            <p>Our agentic AI platform builds upon uniform lighting principles by integrating real-time plant feedback with advanced automation. Through continuous multimodal data acquisition and intelligent decision-making, the system dynamically refines both spectrum and intensity to optimize every aspect of growth.</p>
+            <p>Our system synthesizes data from various sensors, including:</p>
+                <ul>
+                    <li>Chlorophyll fluorometers for photosynthetic efficiency</li>
+                    <li>Tensiometers for soil moisture</li>
+                    <li>CO₂ sensors for ambient CO₂ levels</li>
+                    <li>Infrared thermometers for leaf surface temperature</li>
+                    <li>Nutrient meters for EC, pH, and DO levels</li>
+                    <li>Porometers for stomatal conductance</li>
+                </ul>
+            <p>This multimodal input integration allows the system to create precise light recipes tailored to real-time environmental and plant needs, ensuring optimal growth at every stage.</p>
+            <h4>Energy Optimization Through Adaptive Dimming</h4>
+            <p>The lighting array comprises <b>concentric square layers of CoB lighting elements</b>, in which separate layers are assigned specific degrees of intensity informed by our closed-form analytical physics/mathematical proof and lighting simulation software. This enables maximal uniformity and precise control of photon distribution, including <b>targeted treatments of user-defined non-uniformity</b> to introduce stress to the plant canopy for crop steering. Historical data gleaned from our agentic AI integration and advanced sensor technology informs the lighting system when reduced intensity suffices, autonomously adjusting the intensity while maintaining maximal uniformity. This minimizes power usage while maintaining optimized plant growth.</p>
+        </div>
 
         <div class="cta hidden">
-            <p>Learn more about the science behind our revolutionary technology:</p>
-            <a href="{% url 'technology' %}" class="button">Explore the Technology</a>
+            <h1 style="color: #0047AB">Learn More About the Science Behind our Revolutionary Technology</h1>
+            <a href="{% url 'technology' %}" class="button" style="border: 2px solid #000000;">Explore the Technology</a>
         </div>
     </div>
 
@@ -132,7 +155,7 @@
             <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
         </a>
         <div class="cta hidden">
-            <p>Observe our cutting-edge research:</p>
+            <h1 style="color: #0047AB">Observe our Cutting-Edge Research</h1>
             <button id="pdfButton1" onclick="displayPDF('pdf1')" class="button">Closed-Form Analytical Proof (In-Progress)</button>
             <button id="pdfButton2" onclick="displayPDF('pdf2')" class="button">White Paper (Complete)</button>
             <div id="pdfContainer"></div>

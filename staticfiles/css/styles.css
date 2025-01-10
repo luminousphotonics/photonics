@@ -31,12 +31,15 @@ p {
     line-height: 1.6;
 }
 
+/* --- Existing Navbar Styles (No Changes) --- */
 /* Navbar Styles */
 .navbar {
     background-color: #333;
     color: white;
     padding: 10px 0;
     margin-bottom: 20px;
+    position: relative; /* Add this if it's not already there */
+    z-index: 10;      /* Add this line to set a z-index */
 }
 
 .navbar .container {
@@ -71,6 +74,73 @@ p {
 
 .nav-links a:hover {
     color: #008CBA;
+}
+
+/* --- Additions for Mobile Responsiveness --- */
+
+/* Hamburger Button Styling */
+.hamburger {
+    display: none; /* Hide on larger screens */
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 10px;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white; /* Changed to white */
+    margin: 5px 0;
+    transition: 0.4s;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Show hamburger on smaller screens */
+    }
+
+    .nav-links-container {
+        display: none; /* Initially hide the links */
+        width: 100%;
+        position: absolute;
+        top: 80px; /* Adjust this value based on your logo's height*/
+        left: 0;
+        background-color: #333; /* Match navbar background */
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-links-container.active {
+        display: block;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-links li {
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    .navbar .container {
+        position: relative;
+    }
+    /* Hamburger animation */
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
 }
 
 /* Section Styles */
@@ -307,65 +377,60 @@ button[type="submit"]:hover {
     height: auto;     /* Maintain aspect ratio */
 }
 
-.modular-images-section .image-container#center-this-image {
-    display: grid;
-    place-items: center;
-    width: 100%;
-}
-
-/* New styles for the modular images section */
+/* Styles for the modular images section */
 .modular-images-section {
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    align-items: center; /* Center elements horizontally */
-    width: 100%; /* Ensure it takes full width */
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px; /* Limit width on desktop */
+    margin: 0 auto; /* Center the section */
 }
 
-.modular-images-section .image-container {
-    /* Retain the two-column layout for images */
+/* Style for the image rows (for desktop) */
+.modular-images-section .image-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around; /* Or space-between, depending on desired spacing */
     align-items: center;
-    gap: 10px;
-    width: 100%; /* Ensure it takes full width */
+    width: 100%;
     margin-top: 20px; /* Space between rows */
+}
+
+/* Style for the image containers */
+.modular-images-section .image-container {
+    width: 75%; /* Adjust as needed for spacing */
+    text-align: center; /* Center the image within the container */
+}
+
+.modular-images-section .image-container img {
+    max-width: 100%; /* Make images responsive */
+    height: auto;
+    object-fit: cover;
 }
 
 /* Style for the h3 text */
 .modular-images-section .section-text {
-    text-align: center; /* Center the text */
-    margin-top: 20px; /* Space above the text */
-    margin-bottom: 20px; /* Space below the text */
-    width: 100%; /* Ensure it takes full width */
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 /* Styles for mobile devices (adjust breakpoint as needed) */
-@media (max-width: 768px) { /* Example breakpoint: 768px */
-
-    /* Force images to be square on mobile */
-    .modular-images-section .image-container .square-image {
-        position: relative;
-        width: 48%; /* Maintain two-column layout */
-        padding-top: 48%; /* Force square shape using padding-top trick */
-        overflow: hidden;
+@media (max-width: 768px) {
+    .modular-images-section .image-row {
+        flex-wrap: wrap; /* Allow wrapping on mobile */
     }
 
-    .modular-images-section .image-container .square-image img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        margin-bottom: 0; /* Remove default margin for mobile */
+    .modular-images-section .image-container {
+        width: 55%; /* Two columns on mobile */
     }
-    /* Override the default image styling for mobile */
     .modular-images-section .image-container img {
-        width: 100%; /* Occupy full width within the square container */
-        height: auto; /* Maintain aspect ratio */
-        margin-bottom: 0; /* Remove margin that may conflict with square-image */
+        margin-bottom: 10px; /* Space between images on mobile */
     }
 }
+/* ... other styles ... */
+
 #pdfContainer {
     margin-top: 20px; /* Add some space between buttons and PDF */
   }
@@ -407,15 +472,17 @@ img.lazy-load.visible {
 
 /* Code Block Styles */
 pre {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 5px;
-    overflow: auto;
+    background-color: #f5f5f5; /* Light gray background */
+    padding: 10px;             /* Padding inside the block */
+    overflow-x: auto;         /* Add horizontal scroll if needed */
+    font-family: monospace;    /* Use a monospace font */
+    white-space: pre-wrap;    /* Preserve line breaks and wrap text */
+    max-width: 700px;         /* Example maximum width */
+    border: 1px solid #000000; /* Correct: Black border */
+    border-radius: 4px;     /* Add border-radius to pre element */
 }
-
-code {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.95em;
+pre code {
+    font-size: 0.9em;       /* Adjust font size if needed */
 }
 /* Back to Top Button Styles */
 .back-to-top {
@@ -550,9 +617,9 @@ code {
     color: #005f7a;
   }
   
- /* Adjust Slick Arrows */
-.carousel .slick-prev:before,
-.carousel .slick-next:before {
+  /* Adjust Slick Arrows */
+  .carousel .slick-prev:before,
+  .carousel .slick-next:before {
     color: #008CBA;
     font-size: 40px; /* Increase arrow size (adjust as needed) */
     opacity: 1;
@@ -592,6 +659,10 @@ code {
       width: 80px;
       height: 80px;
     }
+    .text-below-carousel {
+        margin-top: 50px; /* Adjust spacing as needed */
+        text-align: center; /* Center the text */
+    }
   }
   
   @media (max-width: 768px) {
@@ -606,6 +677,10 @@ code {
   
     .carousel .slick-next {
       right: -35px; /* Further adjust for smaller screens */
+    }
+    .text-below-carousel {
+        margin-top: 50px; /* Adjust spacing as needed */
+        text-align: center; /* Center the text */
     }
   }
   
@@ -622,4 +697,13 @@ code {
     .carousel .slick-next {
       right: -25px; /* Further adjust for very small screens */
     }
+    .text-below-carousel {
+        margin-top: 50px; /* Adjust spacing as needed */
+        text-align: center; /* Center the text */
+    }
   }
+
+  .text-below-carousel {
+    margin-top: 50px; /* Adjust spacing as needed */
+    text-align: center; /* Center the text */
+}

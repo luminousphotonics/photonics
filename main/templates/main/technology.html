@@ -19,7 +19,12 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
         
         <title>Technology - Luminous Photonics</title>
-        
+        <style>
+            /* Add any additional styles or overrides here */
+            .modular-images-section .image-container {
+                justify-content: center; /* Center images in their container */
+            }
+        </style>
         <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
@@ -47,27 +52,27 @@
                 </ul>
             </p>
         </div>
-        <h3 class="section-title">Infinitely Scalable Modularized System</h3>
-        <div class="modular-images-section">
-            <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/mod1.png' %}" alt="Modular Fixture #1" id="mod1-image">
-                <img class="hidden" src="{% static 'main/images/mod2.png' %}" alt="Modular Fixture #2" id="mod2-image">
+        <div class="container">
+            <div class="modular-images-section hidden">
+                <h3 class="section-title">Infinitely Scalable Modularized System</h3>
+                <div class="image-container">
+                    <img src="{% static 'main/images/mod1.png' %}" alt="Modular Fixture #1" id="mod1-image">
+                    <img src="{% static 'main/images/mod2.png' %}" alt="Modular Fixture #2" id="mod2-image">
+                </div>
+                <div class="image-container">
+                    <img src="{% static 'main/images/mod3.png' %}" alt="Modular Fixture #3" id="mod3-image">
+                    <img src="{% static 'main/images/mod4.png' %}" alt="Modular Assembly #1" id="mod4-image">
+                </div>
+                <h3 class="section-text">Our arrangement strategem continues ad infinitum...</h3>
+                <div class="image-container">
+                    <img src="{% static 'main/images/mod5.png' %}" alt="Modular Assembly #2" id="mod5-image">
+                    <img src="{% static 'main/images/mod6.png' %}" alt="Modular Assembly #3" id="mod6-image">
+                </div>
+                <div class="image-container">
+                    <img src="{% static 'main/images/fixture.png' %}" alt="Modular Assembly #4" id="mod7-image">
+                </div>
             </div>
-            <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/mod3.png' %}" alt="Modular Fixture #3" id="mod3-image">
-                <img class="hidden" src="{% static 'main/images/mod4.png' %}" alt="Modular Assembly #1" id="mod4-image">
             </div>
-            <h3 class="section-text">Our arrangement strategem continues ad infinitum...</h3>
-            <div class="image-container">
-                
-                <img class="hidden" src="{% static 'main/images/mod5.png' %}" alt="Modular Assembly #2" id="mod5-image">
-                <img class="hidden" src="{% static 'main/images/mod6.png' %}" alt="Modular Assembly #3" id="mod6-image">
-            </div>
-            <div class="some-other-element" id="center-this-image"></div>
-            <div class="image-container"> 
-                <img class="hidden" src="{% static 'main/images/fixture.png' %}" alt="Modular Assembly #4" id="mod7-image">
-            </div>
-        </div>
         <div class="section hidden">
             <h2 class="section-title">Visualizing Light Uniformity</h2>
             <p>

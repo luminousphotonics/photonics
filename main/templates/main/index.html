@@ -49,8 +49,20 @@
 
         <div class="intro-text hidden">
             <p>
-                Welcome to Luminous Photonics, where we are pioneering the future of horticultural lighting. Our patented (U.S. Patent #10687478), infinitely scalable, modularized lighting system achieves near-perfect Lambertian emission, dramatically improving energy efficiency and plant growth in controlled environments.
+                Welcome to <b style="color: #008CBA;">Luminous Photonics</b>, where we are pioneering the future of horticultural lighting. Our patented (<i>U.S. Patent #10687478</i>: <a  href="https://patents.google.com/patent/US10687478B2" target="_blank">Optimized LED Lighting Array for Horticultural Applications</a>), infinitely scalable, modularized lighting system achieves near-perfect Lambertian emission, dramatically improving energy efficiency and plant growth in controlled environments.
             </p>
+            <h3 style="color: #008CBA;"><b>What is Lambertian emission?</b></h2>
+        <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content;">
+            <code>
+        A Lambertian emission refers to a light emission pattern where the radiance (brightness) observed from a surface is constant regardless of the viewing angle, meaning the surface appears equally bright from any direction, following Lambert's cosine law which states that the intensity of emitted light is proportional to the cosine of the angle between the viewing direction and the surface normal; essentially, a perfectly diffuse light source emits light in a Lambertian pattern.
+        
+        &mdash; R. Paschotta, <cite><a href="https://www.rp-photonics.com/lambertian_emitters_and_scatterers.html">Lambertian Emitters and Scatterers</a></cite>, RP Photonics Encyclopedia. [Accessed Oct. 27, 2023].
+            </code>
+        </pre>
+
+	<h3 style="color: #008CBA;"><b>Why is achieving near-perfect Lambertian emission in a horticultural lighting system important?</b></h2>
+    <p style="text-indent: 15px;"> As previously mentioned, a perfectly diffuse light source emits light in a Lambertian pattern. A "<i>perfect diffuse light source</i>" refers to a light source that evenly distributes light in all directions, creating a soft, shadowless illumination with no discernible hotspots.</p>
+	<p style="text-indent: 15px;">In horticultural applications, this results in every part of every leaf receiving the same intensity of light, effectively optimizing photosynthetic processes.</p>
         </div>
 
         <div class="features">
@@ -115,15 +127,17 @@
             </a>
         </div>
     </div>
-    <a href="#" class="back-to-top" id="backToTopBtn">
-        <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
-    </a>
-    <div class="cta hidden">
-        <p>Observe our cutting-edge research:</p>
-        <button id="pdfButton1" onclick="displayPDF('pdf1')" class="button">Closed-Form Analytical Proof (In-Progress)</button>
-        <button id="pdfButton2" onclick="displayPDF('pdf2')" class="button">White Paper (Complete)</button>
-        <div id="pdfContainer"></div>
-      </div>
+    <div class="text-below-carousel">
+        <a href="#" class="back-to-top" id="backToTopBtn">
+            <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+        </a>
+        <div class="cta hidden">
+            <p>Observe our cutting-edge research:</p>
+            <button id="pdfButton1" onclick="displayPDF('pdf1')" class="button">Closed-Form Analytical Proof (In-Progress)</button>
+            <button id="pdfButton2" onclick="displayPDF('pdf2')" class="button">White Paper (Complete)</button>
+            <div id="pdfContainer"></div>
+        </div>
+    </div>
       <script>
         function displayPDF(pdfName) {
           var pdfUrl;
@@ -156,6 +170,24 @@
                 pauseOnHover: false,
                 centerMode: true,
                 variableWidth: false, // Ensure this is false
+            });
+
+            function adjustCarouselHeight() {
+                var maxHeight = 0;
+                $('.carousel .slick-slide').each(function() {
+                    if ($(this).height() > maxHeight) {
+                        maxHeight = $(this).height();
+                    }
+                });
+                $('.carousel').height(maxHeight);
+            }
+
+            // Adjust height on initialization
+            adjustCarouselHeight();
+
+            // Adjust height on window resize
+            $(window).on('resize', function() {
+                adjustCarouselHeight();
             });
 
             // Handle Visibility with IntersectionObserver

@@ -25,8 +25,8 @@ def build_diamond_61_pattern(width_ft, length_ft):
          (-1, -4), (1, -4), (-1, 4), (1, 4), # (Layer 5 - 20 Lighting elements)
          (-5, 0), (5, 0), (0, -5), (0, 5)] # (Layer 5 - 20 Lighting elements)
     ]
-    spacing_x = width_ft / 7.2
-    spacing_y = length_ft / 7.2
+    spacing_x = width_ft / 3.5
+    spacing_y = length_ft / 3.5
     theta = math.radians(45)
 
     layers_scaled = []

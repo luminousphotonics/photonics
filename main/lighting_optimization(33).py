@@ -28,7 +28,7 @@ DEFAULT_FLOOR_WIDTH = 12.0
 DEFAULT_FLOOR_LENGTH = 12.0
 HEIGHT_FROM_FLOOR = 2.5
 DEFAULT_TARGET_PPFD = 1000.0
-LUMENS_TO_PPFD_CONVERSION = 3
+LUMENS_TO_PPFD_CONVERSION = 7
 MAX_LUMENS = 20000.0
 MIN_LUMENS = 2000.0
 DEFAULT_PERIMETER_REFLECTIVITY = 0.0
@@ -181,39 +181,23 @@ def calculate_intensity(floor_width, floor_length, height_from_floor, light_inte
 
     return total_ppfd, mad, mean_intensity
 
+# --- Objective Function for Optimization ---
 def objective_function(light_intensities_by_layer, floor_width, floor_length, height_from_floor,
-                       target_ppfd, perimeter_reflectivity, measurement_points, phase=1):
+                       target_ppfd, perimeter_reflectivity, measurement_points):
     _, mad, mean_intensity = calculate_intensity(
         floor_width, floor_length, height_from_floor, light_intensities_by_layer, 
         perimeter_reflectivity, measurement_points
     )
+    print(f"Objective - MAD: {mad:.2f}, PPFD Penalty: {(mean_intensity - target_ppfd)**2:.2f}")
     ppfd_penalty = (mean_intensity - target_ppfd) ** 2
-
-    # Objective function components (adjusted weights)
-    mad_scaled = mad * 0.8  # Increased weight for MAD
-    ppfd_penalty_scaled = ppfd_penalty * 0.2 if phase == 2 else 0 # PPFD penalty only in phase 2
-
-    # Penalty for higher intensity in Layer 3, this can be tuned according to needs.
-    layer3_penalty = light_intensities_by_layer[2] * 0.1
-
-    # Combine factors into the objective function
-    objective_value = mad_scaled + ppfd_penalty_scaled + layer3_penalty
-
-    print(f"Phase: {phase}, Objective - MAD: {mad_scaled:.2f}, PPFD Penalty: {ppfd_penalty_scaled:.2f}, Layer 3 Penalty: {layer3_penalty:.2f}")
-    return objective_value
+    return mad * 1.0 + ppfd_penalty * 0.3
 
 # --- Optimization Process ---
 def optimize_lighting(floor_width, floor_length, height_from_floor,
                       initial_intensities_by_layer, target_ppfd, 
                       perimeter_reflectivity, measurement_points, verbose=False):
-    global active_layers
-
     # Determine the number of active layers based on floor dimensions
     active_layers = determine_active_layers(floor_width, floor_length)
-
-    # --- Phase 1: Initial Optimization (Ignoring PPFD Penalty) ---
-    if verbose:
-        print("Starting Phase 1: Initial Optimization (Ignoring PPFD Penalty)")
 
     # Set bounds: For active layers use normal bounds, inactive layers fixed to 0
     bounds = []
@@ -223,85 +207,38 @@ def optimize_lighting(floor_width, floor_length, height_from_floor,
         else:
             bounds.append((0, 0))  # Fix intensity for inactive layers
 
-    # Define a more reasonable initial guess for layer intensities
-    initial_intensities_phase1 = np.linspace(MIN_LUMENS, MAX_LUMENS / 2, active_layers)
-    initial_intensities_phase1 = np.concatenate((initial_intensities_phase1, np.zeros(NUM_LAYERS - active_layers)))
-    initial_intensities_phase1 = initial_intensities_phase1 / LUMENS_TO_PPFD_CONVERSION
+    # Initialize intensities: set nonzero for active layers, zero for others
+    for i in range(active_layers, NUM_LAYERS):
+        initial_intensities_by_layer[i] = 0.0
 
-    constraints = []
-    # Minimum difference between layers (increased to 100 lumens)
-    min_diff = 100 / LUMENS_TO_PPFD_CONVERSION
-    
-    # Ensure Layer 1 has the least intensity
-    constraints.append({'type': 'ineq', 'fun': lambda x: x[1] - x[0] - min_diff})
-    constraints.append({'type': 'ineq', 'fun': lambda x: x[2] - x[0] - min_diff})
-    constraints.append({'type': 'ineq', 'fun': lambda x: x[3] - x[0] - min_diff})
-    constraints.append({'type': 'ineq', 'fun': lambda x: x[4] - x[0] - min_diff})
-
-    # Enforce minimum difference between Layer 4 and 3
-    constraints.append({'type': 'ineq', 'fun': lambda x: x[3] - x[2] - min_diff})
-    # Enforce minimum difference between Layer 5 and 4
-    constraints.append({'type': 'ineq', 'fun': lambda x: x[4] - x[3] - min_diff})
-
-    # Run optimization for Phase 1
-    result_phase1 = minimize(
-        objective_function,
-        initial_intensities_phase1,
-        args=(
-            floor_width,
-            floor_length,
-            height_from_floor,
-            target_ppfd,
-            perimeter_reflectivity,
-            measurement_points,
-            1
-        ),
-        method='SLSQP',
-        bounds=bounds,
-        constraints=constraints,
-        options={'maxiter': 500, 'disp': verbose, 'ftol': 1e-6},  # Increased iteration limit for phase 1
-    )
-
-    if not result_phase1.success:
-        error_msg = f"Phase 1 Optimization did not converge: {result_phase1.message}"
-        print(error_msg, file=sys.stderr)
-        raise Exception(error_msg)
-
-    optimized_intensities_phase1 = result_phase1.x
-
-    # --- Phase 2: Refinement (Considering PPFD Penalty) ---
     if verbose:
-        print("\nStarting Phase 2: Refinement (Considering PPFD Penalty)")
+        print("Starting optimization...")
+        print(f"Initial intensities (PPFD): {initial_intensities_by_layer}")
+        print(f"Active layers based on floor dimensions: {active_layers}")
+        print(f"Perimeter Reflectivity: {perimeter_reflectivity}")
 
-    # Run optimization for Phase 2
-    result_phase2 = minimize(
+    result = minimize(
         objective_function,
-        optimized_intensities_phase1,  # Use optimized intensities from Phase 1 as initial guess
+        initial_intensities_by_layer,
         args=(
             floor_width,
             floor_length,
             height_from_floor,
             target_ppfd,
             perimeter_reflectivity,
-            measurement_points,
-            2
+            measurement_points
         ),
         method='SLSQP',
         bounds=bounds,
-        constraints=constraints,
-        options={'maxiter': 800, 'disp': verbose, 'ftol': 1e-6},  # Longer iteration limit for phase 2
+        options={'maxiter': 10000, 'disp': verbose}
     )
 
-    if not result_phase2.success:
-        error_msg = f"Phase 2 Optimization did not converge: {result_phase2.message}"
+    if not result.success:
+        error_msg = f"Optimization did not converge: {result.message}"
         print(error_msg, file=sys.stderr)
         raise Exception(error_msg)
 
-    optimized_intensities_phase2 = result_phase2.x
-
-    # Use the results from Phase 2 as the final optimized intensities
-    optimized_intensities_by_layer = optimized_intensities_phase2
-
+    optimized_intensities_by_layer = result.x
     _, mad, optimized_ppfd = calculate_intensity(
         floor_width, floor_length, height_from_floor, optimized_intensities_by_layer, 
         perimeter_reflectivity, measurement_points

@@ -13,7 +13,7 @@ from tkinter import filedialog
 import csv
 
 SETTINGS_FILE = 'settings.json'
-LUMENS_TO_PPFD_CONVERSION = 12.4  # Updated Conversion Factor
+LUMENS_TO_PPFD_CONVERSION = 5  # Updated Conversion Factor
 
 show_light_sources = True
 show_measurement_points = True

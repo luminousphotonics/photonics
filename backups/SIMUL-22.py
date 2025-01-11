@@ -13,7 +13,7 @@ from tkinter import filedialog
 import csv
 
 SETTINGS_FILE = 'settings.json'
-LUMENS_TO_PPFD_CONVERSION = 12.4  # Updated Conversion Factor
+LUMENS_TO_PPFD_CONVERSION = 160  # Updated Conversion Factor
 
 show_light_sources = True
 show_measurement_points = True
@@ -83,6 +83,12 @@ def reorder_dps(dps, measurement_points, center_point):
     # Extract and return the sorted dps values
     sorted_dps = [dps for dps, coord in dps_coords]
     return sorted_dps
+
+# Add the Lambertian emission function from Script 2 (outside prepare_heatmap_data)
+def lambertian_emission(intensity, distance, z):
+    if distance == 0:
+        return intensity
+    return (intensity * z) / ((distance ** 2 + z ** 2) ** 1.5)
 
 def prepare_heatmap_data():
     global show_light_sources, show_measurement_points, intensity 
@@ -256,65 +262,44 @@ def prepare_heatmap_data():
     # Downward-facing normal
     light_normal = np.array([0.0, 0.0, -1.0])
 
-    # Constants for reflection
-    reflected_fraction = 0.3  # Increased to 30% for better visibility
-    edge_threshold = min(floor_width, floor_height) * 0.2  # Increased to 20% of the smallest dimension
+    # Constants for reflection (updated values)
+    reflected_fraction = 0.1  # Reduced to 10%
+    edge_threshold = min(floor_width, floor_height) * 0.05  # Reduced to 5%
 
     # List to store PPFD contributions for reflection calculation
     reflected_light_contributions = []
 
     for point_index, measurement_point in enumerate(measurement_points):
-        total = 0.0
+        total_ppfd = 0.0  # Use a different variable name to avoid confusion
         x_m, y_m, z_m = measurement_point
         for light_index, (lx, ly) in enumerate(light_sources):
-            # Distance in 2D plus difference in z
-            dx = lx - x_m
-            dy = ly - y_m
-            dz = light_z - z_m
-            distance_ft = math.sqrt(dx*dx + dy*dy + dz*dz)
-            # Avoid dividing by zero
-            if distance_ft == 0:
-                distance_ft = 1.0
-
-            # Convert distance to meters
-            distance_m = distance_ft * 0.3048
+            # Calculate horizontal distance
+            horizontal_distance = math.sqrt((lx - x_m)**2 + (ly - y_m)**2)
 
             if light_index < len(light_intensities):
-                # Convert lumens -> approximate PPF (µmol/s)
+                # Convert lumens to PPF (µmol/s)
                 ppf_umol_s = (light_intensities[light_index] / 1000.0) * LUMENS_TO_PPFD_CONVERSION
 
-                # Direction from light to measurement
-                direction = np.array([
-                    x_m - lx,
-                    y_m - ly,
-                    z_m - light_z
-                ])
-                direction_norm = np.linalg.norm(direction)
-                if direction_norm != 0:
-                    direction /= direction_norm
-                else:
-                    direction = np.array([0.0, 0.0, -1.0])
+                # Use Lambertian emission model for intensity calculation
+                intensity_at_point = lambertian_emission(ppf_umol_s, horizontal_distance, light_z)
+                total_ppfd += intensity_at_point
 
-                # Lambert’s cosine factor
-                cos_theta = max(np.dot(direction, light_normal), 0.0)
+        intensity[point_index] = total_ppfd  # Update the intensity array
 
-                # PPFD ~ (ppf_umol_s / distance^2) * cos_theta
-                intensity_at_point = (ppf_umol_s / (distance_m**2)) * cos_theta
-                total += intensity_at_point
 
-        intensity[point_index] = total
 
         # Check if the measurement point is near the perimeter
-        near_left = x_m <= edge_threshold
-        near_right = x_m >= (floor_width - edge_threshold)
-        near_bottom = y_m <= edge_threshold
-        near_top = y_m >= (floor_height - edge_threshold)
-        is_near_wall = near_left or near_right or near_bottom or near_top
+        # Check if the measurement point is near the perimeter (updated condition)
+    near_left = x_m <= edge_threshold
+    near_right = x_m >= (floor_width - edge_threshold)
+    near_bottom = y_m <= edge_threshold
+    near_top = y_m >= (floor_height - edge_threshold)
+    is_near_wall = near_left or near_right or near_bottom or near_top
 
-        if is_near_wall:
-            # Assume that a fraction of the direct PPFD at this point hits the wall and is reflected
-            reflected_light = total * reflected_fraction
-            reflected_light_contributions.append(reflected_light)
+    if is_near_wall:
+        # Assume that a fraction of the direct PPFD at this point hits the wall and is reflected
+        reflected_light = total_ppfd * reflected_fraction  # Use total_ppfd here
+        reflected_light_contributions.append(reflected_light)
 
     # Calculate total reflected light
     total_reflected_light = sum(reflected_light_contributions) * perimeter_reflectivity
@@ -485,7 +470,7 @@ def generate_heatmap():
 
     plt.show()
 
-def generate_surface_graph(flatten_factor=1.0, scale_factor=1.0,x_limit=20, y_limit=20):
+def generate_surface_graph(flatten_factor=1.0, scale_factor=1.0, x_limit=20, y_limit=20):
     prepare_heatmap_data()
     # Get the user-defined settings from the input fields
     min_int = float(min_int_entry.get())
@@ -494,11 +479,11 @@ def generate_surface_graph(flatten_factor=1.0, scale_factor=1.0,x_limit=20, y_li
     x = []
     y = []
 
-    for i in range(15) :
-        for j in range(15) :
-            x.append(-7.5 + j*15./14)
-            y.append(7.5 - i*15./14)
-        
+    for i in range(15):
+        for j in range(15):
+            x.append(-7.5 + j * 15. / 14)
+            y.append(7.5 - i * 15. / 14)
+
     x = np.array(x) * scale_factor
     y = np.array(y) * scale_factor
 
@@ -506,42 +491,42 @@ def generate_surface_graph(flatten_factor=1.0, scale_factor=1.0,x_limit=20, y_li
     z = np.array(intensity)
 
     # The line below simply checks that the input (z) has the correct number of elements.
-    assert(len(z) == 225) , "Wrong length for input z. Should be 225, but it is " + str(len(z)) + " !"
+    assert (len(z) == 225), "Wrong length for input z. Should be 225, but it is " + str(len(z)) + " !"
 
-    x_pad = np.array([-18.,-9.,0.,9.,18.,-18.,-18.,-18.,-18.,-9.,0.,9.,18.,18.,18.,18.,-15.,-7.5,0.,7.5,15.,-15.,-15.,-15.,-15.,-7.5,0.,7.5,15.,15.,15.,15.]) * scale_factor
-    y_pad = np.array([-18.,-18.,-18.,-18.,-18.,-9.,0.,9.,18.,18.,18.,18.,18.,-9.,0.,9.,-15.,-15.,-15.,-15.,-15.,-7.5,0.,7.5,15.,15.,15.,15.,15.,-7.5,0.,7.5]) * scale_factor
+    x_pad = np.array(
+        [-18., -9., 0., 9., 18., -18., -18., -18., -18., -9., 0., 9., 18., 18., 18., 18., -15., -7.5, 0., 7.5, 15., -15.,
+         -15., -15., -15., -7.5, 0., 7.5, 15., 15., 15., 15.]) * scale_factor
+    y_pad = np.array(
+        [-18., -18., -18., -18., -18., -9., 0., 9., 18., 18., 18., 18., 18., -9., 0., 9., -15., -15., -15., -15., -15.,
+         -7.5, 0., 7.5, 15., 15., 15., 15., 15., -7.5, 0., 7.5]) * scale_factor
     z_pad = np.zeros(x_pad.shape)
 
-    x_ = np.concatenate((x,x_pad))
-    y_ = np.concatenate((y,y_pad))
-    z_ = np.concatenate((z,z_pad))
+    x_ = np.concatenate((x, x_pad))
+    y_ = np.concatenate((y, y_pad))
+    z_ = np.concatenate((z, z_pad))
 
-    # Add a constant to z_ to raise the surface plot
-    z_ = z_ + 0  # Adjust this value as needed
-
-    # Apply a power transformation to z_ to flatten the intensity
-    z_ = np.power(z_, flatten_factor)
+    # Apply a power transformation to z_ to flatten the intensity (conditionally)
+    if flatten_factor != 1.0:
+        z_ = np.power(z_, flatten_factor)
 
     triang = mtri.Triangulation(x_, y_)
     x_grid, y_grid = np.mgrid[x_.min():x_.max():.02, y_.min():y_.max():.02]
     interp_lin = mtri.LinearTriInterpolator(triang, z_)
     zi_lin = interp_lin(x_grid, y_grid)
 
-    fig = plt.figure(figsize=(15,15))
+    fig = plt.figure(figsize=(15, 15))
     ax = fig.add_subplot(111, projection='3d')
 
-    # Set the x and y limits
-    ax.set_xlim([-x_limit, x_limit])
-    ax.set_ylim([-y_limit, y_limit])
+    # Set the x and y limits based on the data
+    ax.set_xlim([x_grid.min(), x_grid.max()])
+    ax.set_ylim([y_grid.min(), y_grid.max()])
+    ax.set_zlim([z_.min(), z_.max()])  # Set z-axis limits based on z_ data
 
     ax.xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
     ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
     ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
 
-    #ax.set_zlim3d(0, 1650)
-    ax.set_zlim3d(min_int, max_int)
-
-    #dropdown menu for cmap colors
+    # dropdown menu for cmap colors
     selected_option = selected_cmap.get()
 
     # Dictionary mapping options to cmap values
@@ -560,17 +545,16 @@ def generate_surface_graph(flatten_factor=1.0, scale_factor=1.0,x_limit=20, y_li
     # Use the selected option to get the cmap value
     cmap_value = cmap_dict.get(selected_option, "jet")  # Default to "jet" if the option is not recognized
 
-    #pc = ax.plot_surface(x_grid, y_grid, zi_lin, cmap=cmap_value, vmin=0, vmax=1650)
-    pc = ax.plot_surface(x_grid, y_grid, zi_lin, cmap=cmap_value, vmin=min_int, vmax=max_int)
+    pc = ax.plot_surface(x_grid, y_grid, zi_lin, cmap=cmap_value, vmin=z_.min(), vmax=z_.max())
 
     fig.colorbar(pc, fraction=0.032, pad=0.04)
 
     ax.plot_wireframe(x_grid, y_grid, zi_lin, rstride=50, cstride=50, color='k', linewidth=0.4)
 
-    plt.title('Light Intensity Surface Graph') 
+    plt.title('Light Intensity Surface Graph')
 
     plt.show()
-
+    
 # Create the GUI
 root = Tk()
 root.title("PPFD Simulation Software")

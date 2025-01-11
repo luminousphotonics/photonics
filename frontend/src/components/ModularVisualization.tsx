@@ -25,6 +25,10 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
+  // Convert floor dimensions from feet to meters for internal calculations
+  const floorWidthMeters = floorWidth * 0.3048;
+  const floorLengthMeters = floorLength * 0.3048;
+
   // Determine min and max lumens for color scaling
   const minLumens = Math.min(...optimizedLumensByLayer);
   const maxLumens = Math.max(...optimizedLumensByLayer);
@@ -35,11 +39,8 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
   // Fixed unit size (adjust as needed)
   const fixedUnitSize = 50;
 
-  // Spacing between layers
-  const layerSpacing = fixedUnitSize * 22;
-
-  // **Special spacing between Layer 0 and Layer 1**
-  const layer0To1Spacing = fixedUnitSize * 30; // Increase as needed
+  // Spacing between layers - adjusted for meters
+  const layerSpacing = fixedUnitSize * 0.6; // Reduced spacing for meters
 
   // Set a large canvas size for the viewBox
   const viewBoxWidth = 11000;
@@ -51,7 +52,6 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
 
   // Introduce offsetY for upward shift
   const offsetY = 0; // Adjust this value as needed
-
   /**
    * Defines key color points for the custom jet colormap.
    */
@@ -122,60 +122,50 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
     return jetColors[index];
   };
 
-  // Function to determine the number of layers based on floor dimensions (from previous version)
-  const calculateLayers = (width: number, length: number): number => {
-    const layerDimensions = [
-      { width: 0, length: 0 },
-      { width: 3, length: 3 },
-      { width: 5, length: 5 },
-      { width: 8, length: 8 },
-      { width: 11, length: 11 },
-      { width: 14, length: 14 },
-    ];
+ // Function to determine the number of layers based on floor dimensions in meters
+ const calculateLayers = (width: number, length: number): number => {
+  const layerDimensions = [
+    { width: 0, length: 0 },      // Layer 0 (center)
+    { width: 0.9144, length: 0.9144 },  // Layer 1 (3 ft in meters)
+    { width: 1.524, length: 1.524 },   // Layer 2 (5 ft in meters)
+    { width: 2.4384, length: 2.4384 }, // Layer 3 (8 ft in meters)
+    { width: 3.048, length: 3.048 },   // Layer 4 (10 ft in meters)
+    { width: 3.6576, length: 3.6576 }  // Layer 5 (12 ft in meters)
+  ];
 
-    let fittedLayers = 0;
-    for (let i = 1; i < layerDimensions.length; i++) {
-      if (
-        width >= layerDimensions[i].width &&
-        length >= layerDimensions[i].length
-      ) {
-        fittedLayers = i;
-      } else {
-        break;
-      }
+  let activeLayers = 0;
+  for (let i = 0; i < layerDimensions.length; i++) {
+    if (width >= layerDimensions[i].width && length >= layerDimensions[i].length) {
+      activeLayers = i + 1; // Add one to include the central element as Layer 0
+    } else {
+      break; // Stop when dimensions no longer fit
     }
-    return fittedLayers;
-  };
+  }
+  return activeLayers;
+};
+
 
   // Update selectedLayers based on floor dimensions
   useEffect(() => {
-    if (floorWidth > 0 && floorLength > 0) {
-      const calculatedLayers = calculateLayers(floorWidth, floorLength);
+      const calculatedLayers = calculateLayers(floorWidthMeters, floorLengthMeters);
       setSelectedLayers(calculatedLayers);
-    }
-  }, [floorWidth, floorLength]);
+  }, [floorWidthMeters, floorLengthMeters]);
 
-  // Function to determine the number of fixtures in a layer
+  // Function to determine the number of fixtures in a layer (No changes)
   const determineFixturesInLayer = (layer: number): number => {
-    if (layer >= selectedLayers) return 0; // Only render up to selectedLayers
-
     switch (layer) {
-      case 0:
-        return 1;
-      case 1:
-        return 2;
-      case 2:
-        return 4;
-      case 3:
-        return 4;
-      case 4:
-        return 6;
-      default:
-        return 0;
+      case 0: return 1;   // Center unit (Layer 0)
+      case 1: return 4;   // 4 fixtures in Layer 1
+      case 2: return 4;   // 4 fixtures in Layer 2
+      case 3: return 4;   // 4 fixtures in Layer 3
+      case 4: return 4;   // 4 fixtures in Layer 4
+      case 5: return 4;   // 4 fixtures in Layer 5
+      case 6: return 4;   // 4 fixtures in Layer 6
+      default: return 0;
     }
   };
 
-  // Function to determine fixture placement and return corresponding JSX Element
+  // Function to determine fixture placement and return corresponding JSX Element (CORRECTED for meters)
   const determineFixturePlacement = (
     layer: number,
     fixtureIndex: number
@@ -185,15 +175,29 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
     // Determine color based on layer's lumens
     const layerLumens = optimizedLumensByLayer[layer];
     const fixtureColor = getColorForLumens(layerLumens);
-    // Calculate offset based on layer using the special spacing for Layer 0 to 1
-    let offsetValue = layer * layerSpacing;
-    if (layer > 1) {
-      offsetValue = layer0To1Spacing + (layer - 1) * layerSpacing;
-    } else if (layer === 1) {
-      offsetValue = layer0To1Spacing;
-    }
-    // Calculate offset based on layer
-    //const offsetValue = layer * layerSpacing;
+
+    // Calculate offset based on layer (in meters)
+    const offsetValue = layer * layerSpacing;
+
+    // Define rotation angles for fixtures in each layer
+    const rotationAngles = [
+      0,   // Layer 0 (center) - no rotation
+      -45, // Layer 1 - rotate by -45 degrees
+      0,   // Layer 2 - no rotation
+      45,  // Layer 3 - rotate by 45 degrees
+      0,   // Layer 4 - no rotation
+      0,   // Layer 5 - no rotation
+    ];
+
+    // Define the spacing for each layer (CORRECTED for meters)
+    const layerSpacings = [
+      fixedUnitSize * 11, // Layer 0 (center)
+      fixedUnitSize * 1.7, // Layer 1
+      fixedUnitSize * 1.6, // Layer 2
+      fixedUnitSize * 1.5, // Layer 3
+      fixedUnitSize * 1.4, // Layer 4
+      fixedUnitSize * 1.3, // Layer 5
+    ];
 
     // Center Unit
     if (layer === 0) {
@@ -203,53 +207,43 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
           x={centerX}
           y={centerY}
           size={fixedUnitSize}
-          spacing={fixedUnitSize * 11}
+          spacing={layerSpacings[layer]}
           color={fixtureColor}
         />
       );
     }
 
-    // Layer 1: 2 Reverse L-Shaped Units
+    // Layer 1: 4 L-Shaped Units with -45 degree rotation
     if (layer === 1) {
       const positions = [
-        {
-          type: "ReverseL",
-          x: centerX - offsetValue,
-          y: centerY + offsetValue,
-          rotation: 180,
-        },
-        {
-          type: "ReverseL",
-          x: centerX + offsetValue,
-          y: centerY - offsetValue,
-          rotation: 0,
-        },
+        { x: centerX - offsetValue, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX - offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
       ];
 
       const position = positions[fixtureIndex];
-      if (position.type === "ReverseL") {
-        return (
-          <CustomTopLeftUnit
-            key={`CTL-${layer}-${fixtureIndex}`}
-            x={position.x}
-            y={position.y}
-            numElementsLong={3}
-            numElementsShort={2}
-            rotation={position.rotation}
-            spacing={fixedUnitSize * 30}
-            color={fixtureColor}
-          />
-        );
-      }
+      return (
+        <LShapedUnit
+          key={`L-${layer}-${fixtureIndex}`}
+          x={position.x}
+          y={position.y}
+          numElementsLong={3}
+          numElementsShort={2}
+          rotation={position.rotation}
+          spacing={layerSpacings[layer]}
+          color={fixtureColor}
+        />
+      );
     }
 
     // Layer 2: 4 Linear Units
     if (layer === 2) {
       const positions = [
-        { x: centerX / 1.2, y: centerY - offsetValue, rotation: 0 }, // Top
-        { x: centerX + offsetValue, y: centerY / 1.2, rotation: 90 }, // Right
-        { x: centerX * 1.16, y: centerY + offsetValue, rotation: 180 }, // Bottom
-        { x: centerX - offsetValue, y: centerY * 1.120, rotation: 270 }, // Left
+        { x: centerX, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY, rotation: rotationAngles[layer] + 90 },
+        { x: centerX, y: centerY + offsetValue, rotation: rotationAngles[layer] + 180 },
+        { x: centerX - offsetValue, y: centerY, rotation: rotationAngles[layer] + 270 },
       ];
 
       const position = positions[fixtureIndex];
@@ -260,132 +254,85 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
           y={position.y}
           numElements={3}
           rotation={position.rotation}
-          spacing={fixedUnitSize * 35}
+          spacing={layerSpacings[layer]}
           color={fixtureColor}
         />
       );
     }
 
-    // Layer 3: 4 Reverse L-Shaped Units
+    // Layer 3: 4 L-Shaped Units
     if (layer === 3) {
       const positions = [
-        {
-          type: "ReverseL",
-          x: centerX - offsetValue,
-          y: centerY - offsetValue,
-          rotation: 270,
-        },
-        {
-          type: "ReverseL",
-          x: centerX - offsetValue,
-          y: centerY + offsetValue,
-          rotation: 180,
-        },
-        {
-          type: "ReverseL",
-          x: centerX + offsetValue,
-          y: centerY + offsetValue,
-          rotation: 90,
-        },
-        {
-          type: "ReverseL",
-          x: centerX + offsetValue,
-          y: centerY - offsetValue,
-          rotation: 0,
-        },
+        { x: centerX - offsetValue, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX - offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
       ];
 
       const position = positions[fixtureIndex];
-      if (position.type === "ReverseL") {
-        return (
-          <CustomTopLeftUnit
-            key={`CTL-${layer}-${fixtureIndex}`}
-            x={position.x}
-            y={position.y}
-            numElementsLong={3}
-            numElementsShort={2}
-            rotation={position.rotation}
-            spacing={fixedUnitSize * 35}
-            color={fixtureColor}
-          />
-        );
-      }
+      return (
+        <LShapedUnit
+          key={`L-${layer}-${fixtureIndex}`}
+          x={position.x}
+          y={position.y}
+          numElementsLong={3}
+          numElementsShort={2}
+          rotation={position.rotation}
+          spacing={layerSpacings[layer]}
+          color={fixtureColor}
+        />
+      );
     }
 
-    // Layer 4: 6 Fixtures (1 L-Shaped, 1 Reverse L-Shaped, 4 Linear Units)
+    // Layer 4: 4 Custom Top Left Units
     if (layer === 4) {
       const positions = [
-        {
-          type: "ReverseL",
-          x: centerX - offsetValue,
-          y: centerY - offsetValue,
-          rotation: 270,
-        },
-        { type: "Linear", x: centerX * 1.165, y: centerY - offsetValue, rotation: 0 },
-        {
-          type: "Linear",
-          x: centerX + offsetValue,
-          y: centerY - offsetValue / 1.59,
-          rotation: 90,
-        }, // Adjust upward by 10 units
-        {
-          type: "L",
-          x: centerX - offsetValue,
-          y: centerY + offsetValue,
-          rotation: 270,
-        },
-        { type: "Linear", x: centerX * 1.160, y: centerY + offsetValue, rotation: 180 },
-        {
-          type: "Linear",
-          x: centerX + offsetValue,
-          y: centerY + offsetValue / 1.59,
-          rotation: 90,
-        }, // Adjust downward by 10 units
+        { x: centerX - offsetValue, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX - offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
       ];
 
       const position = positions[fixtureIndex];
-      if (position.type === "L") {
-        return (
-          <LShapedUnit
-            key={`L-${layer}-${fixtureIndex}`}
-            x={position.x}
-            y={position.y}
-            numElementsLong={3}
-            numElementsShort={2}
-            rotation={position.rotation}
-            spacing={fixedUnitSize * 35}
-            color={fixtureColor}
-          />
-        );
-      } else if (position.type === "ReverseL") {
-        return (
-          <CustomTopLeftUnit
-            key={`CTL-${layer}-${fixtureIndex}`}
-            x={position.x}
-            y={position.y}
-            numElementsLong={3}
-            numElementsShort={2}
-            rotation={position.rotation}
-            spacing={fixedUnitSize * 35}
-            color={fixtureColor}
-          />
-        );
-      } else if (position.type === "Linear") {
-        return (
-          <LinearUnit
-            key={`linear-${layer}-${fixtureIndex}`}
-            x={position.x}
-            y={position.y}
-            numElements={3}
-            rotation={position.rotation}
-            spacing={fixedUnitSize * 35}
-            color={fixtureColor}
-          />
-        );
-      }
+      return (
+        <CustomTopLeftUnit
+          key={`CTL-${layer}-${fixtureIndex}`}
+          x={position.x}
+          y={position.y}
+          numElementsLong={3}
+          numElementsShort={2}
+          rotation={position.rotation}
+          spacing={layerSpacings[layer]}
+          color={fixtureColor}
+        />
+      );
     }
 
-    return null;
+    // Layer 5: 4 Custom Top Left Units
+    if (layer === 5) {
+      const positions = [
+        { x: centerX - offsetValue, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY - offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX - offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
+        { x: centerX + offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
+      ];
+
+      const position = positions[fixtureIndex];
+      return (
+        <CustomTopLeftUnit
+          key={`CTL-${layer}-${fixtureIndex}`}
+          x={position.x}
+          y={position.y}
+          numElementsLong={3}
+          numElementsShort={2}
+          rotation={position.rotation}
+          spacing={layerSpacings[layer]}
+          color={fixtureColor}
+        />
+      );
+    }
+
+    return null; // For layers beyond 5 (shouldn't happen with current calculateLayers)
   };
 
   // Generate fixtures based on layers
@@ -396,9 +343,6 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
       const fixture = determineFixturePlacement(layer, fixtureIndex);
       if (fixture) {
         fixtures.push(fixture);
-        console.log("selectedLayers:", selectedLayers);
-      console.log("optimizedLumensByLayer length:", optimizedLumensByLayer.length);
-
       }
     }
   }

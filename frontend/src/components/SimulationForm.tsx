@@ -122,65 +122,64 @@ const SimulationForm: React.FC<SimulationFormProps> = ({
     e.preventDefault();
     setError(null);
     setSimulationResult(null);
-
-    const floorWidth = parseFloat(formData.floor_width);
-    const floorLength = parseFloat(formData.floor_length);
+  
+    // Parse user inputs which are in feet
+    const floorWidthFeet = parseFloat(formData.floor_width);
+    const floorLengthFeet = parseFloat(formData.floor_length);
     const targetPPFD = parseFloat(formData.target_ppfd);
-
+  
+    // Convert feet to meters
+    const floorWidthMeters = floorWidthFeet * 0.3048;
+    const floorLengthMeters = floorLengthFeet * 0.3048;
+  
     // Basic validation
-    if (isNaN(floorWidth) || isNaN(floorLength) || isNaN(targetPPFD)) {
+    if (isNaN(floorWidthFeet) || isNaN(floorLengthFeet) || isNaN(targetPPFD)) {
       setError("Please enter valid numerical values for all fields.");
       return;
     }
-
+  
     setIsLoading(true);
-
+  
     try {
-      // Get the CSRF token
       const csrftoken = getCookie("csrftoken");
-
-      // Log the CSRF token for debugging
       console.log("CSRF Token:", csrftoken);
-
-      // Prepare the payload with all required fields
+  
+      // Prepare the payload using feet-converted values
       const payload = {
-        floor_width: floorWidth,
-        floor_length: floorLength,
+        floor_width: floorWidthFeet,
+        floor_length: floorLengthFeet,
         target_ppfd: targetPPFD,
         floor_height: FLOOR_HEIGHT,
         min_int: MIN_INT,
         max_int: MAX_INT,
         perimeter_reflectivity: 0.3,
       };
-
-      // Log the payload for debugging
+  
       console.log("Submitting form with payload:", payload);
-
-        // Call runSimulation and handle the returned Promise:
-        runSimulation(payload, csrftoken)
-            .then((simulationData) => {
-                console.log("Simulation completed successfully:", simulationData);
-                setSimulationResult(simulationData);
-                onSimulationComplete(simulationData);
-            })
-            .catch((error) => {
-                console.error("Simulation error:", error);
-                setError(error.message || "An unknown error occurred during simulation.");
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-
+  
+      runSimulation(payload, csrftoken)
+        .then((simulationData) => {
+          console.log("Simulation completed successfully:", simulationData);
+          setSimulationResult(simulationData);
+          onSimulationComplete(simulationData);
+        })
+        .catch((error) => {
+          console.error("Simulation error:", error);
+          setError(error.message || "An unknown error occurred during simulation.");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } catch (error) {
-        console.error("Error in handleSubmit:", error);
-        setError(
-            error instanceof Error
-                ? error.message
-                : "An unknown error occurred in handleSubmit."
-        );
-        setIsLoading(false);
+      console.error("Error in handleSubmit:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An unknown error occurred in handleSubmit."
+      );
+      setIsLoading(false);
     }
-};
+  };
 
   // Define getCookie here:
   function getCookie(name: string) {
@@ -205,7 +204,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({
         <form onSubmit={handleSubmit}>
           {/* Form inputs for floor_width, floor_length, target_ppfd */}
           <div>
-            <label htmlFor="floor_width">Floor Width (meters):</label>
+            <label htmlFor="floor_width">Floor Width (feet):</label>
             <input
               type="number"
               id="floor_width"
@@ -219,7 +218,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({
           </div>
 
           <div>
-            <label htmlFor="floor_length">Floor Length (meters):</label>
+            <label htmlFor="floor_length">Floor Length (feet):</label>
             <input
               type="number"
               id="floor_length"

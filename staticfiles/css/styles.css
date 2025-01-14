@@ -186,7 +186,7 @@ textarea {
 }
 
 button[type="submit"] {
-    background-color: #008CBA;
+    background-color: #00ACEE;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -255,7 +255,7 @@ button[type="submit"]:hover {
 /* Button Styles */
 .button {
     display: inline-block;
-    background-color: #008CBA;
+    background-color: #00ACEE;
     color: white;
     padding: 12px 25px;
     text-decoration: none;

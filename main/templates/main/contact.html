@@ -26,17 +26,34 @@
 
         <form method="post" action="{% url 'contact' %}" class="contact-form">
             {% csrf_token %}
+
             <div class="form-group">
-                <label for="name">Your Name:</label>
-                <input type="text" id="name" name="name" required>
+                <label for="{{ form.name.id_for_label }}">Your Name:</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="error">{{ form.name.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
-                <label for="email">Your Email:</label>
-                <input type="email" id="email" name="email" required>
+                <label for="{{ form.email.id_for_label }}">Your Email:</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="error">{{ form.email.errors }}</div>
+                {% endif %}
             </div>
             <div class="form-group">
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
+                <label for="{{ form.subject.id_for_label }}">Subject:</label>
+                {{ form.subject }}
+                {% if form.subject.errors %}
+                    <div class="error">{{ form.subject.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.message.id_for_label }}">Message:</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                    <div class="error">{{ form.message.errors }}</div>
+                {% endif %}
             </div>
             <button type="submit">Send Message</button>
         </form>
@@ -93,5 +110,11 @@
             });
         });
     </script>
+    <style>
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
 </body>
 </html>

@@ -36,7 +36,84 @@
             color: white;
             position: relative;
             z-index: 0;
-        }    </style>
+        }
+        
+        /* Info Box Styles */
+        .info-box-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .info-box {
+            background-color: #ffffff;
+            border: 5px solid #e8b923;
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+            width: 18%; /* Adjust as needed */
+            min-width: 150px; /* Minimum width of the boxes */
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+            border-radius: 10px;
+        }
+
+        .info-box:hover {
+            transform: translateY(-5px); /* Slightly raise the box */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+        }
+
+        .info-box h3 {
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .info-box-content {
+            display: none; /* Hidden by default */
+            margin-top: 10px;
+        }
+
+        .info-box.active .info-box-content {
+            display: block; /* Show content when active */
+        }
+
+        /* Styling for the Learn More button */
+        .info-box .learn-more-button {
+            background-color: #00acee; /* Button color */
+            color: white; /* Button text color */
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        .info-box .learn-more-button:hover {
+            background-color: #003380; /* Darker shade for hover effect */
+        }
+
+        /* Responsive design adjustments */
+        @media (max-width: 768px) {
+            .info-box {
+                width: 45%; /* Two boxes per row on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-box {
+                width: 95%; /* One box per row on very small screens */
+            }
+        }
+    </style>
 </head>
 <body>
     {% include 'main/navbar.html' %}
@@ -45,72 +122,97 @@
         <div class="hero hidden">
             <h1>Luminous Photonics</h1>
                 <h2>Revolutionizing Horticultural Lighting</h2>
-            <p>Optimizing Energy Utilization with Near-Perfect Lambertian Emission</p>
+            <p>Optimizing Energy Utilization with Homogeneous PAR Distribution</p>
         </div>
-
+        <div class="features">
         <div class="intro-text hidden">
             <p style="font-size: 20px;">
-                Welcome to <i style="color: #0047AB;">Luminous Photonics</i>, where we are pioneering the future of horticultural lighting. Our patented (<i>U.S. Patent #10687478</i>: <a  href="https://patents.google.com/patent/US10687478B2" target="_blank">Optimized LED Lighting Array for Horticultural Applications</a>), infinitely scalable, modularized lighting system achieves near-perfect Lambertian emission, dramatically improving energy efficiency and plant growth in controlled environments.
+                Welcome to <b><i style="color: #e8b923;">Luminous Photonics</i></b>, where we are pioneering the future of horticultural lighting. Our patented (<i>U.S. Patent #10687478</i>: <a  href="https://patents.google.com/patent/US10687478B2" target="_blank">Optimized LED Lighting Array for Horticultural Applications</a>), infinitely scalable, modularized lighting system achieves near-perfect homogeneous PAR distribution, dramatically improving energy efficiency and plant growth in controlled environments.
             </p>
-            <h1 style="color: #0047AB;">What is Lambertian emission?</h3>
-        <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content;">
-            <code>
-A Lambertian emission refers to a light emission pattern where the radiance (brightness) observed from a surface is constant regardless of the viewing angle, meaning the surface appears equally bright from any direction, following Lambert's cosine law which states that the intensity of emitted light is proportional to the cosine of the angle between the viewing direction and the surface normal; essentially, a perfectly diffuse light source emits light in a Lambertian pattern.
-        
-        &mdash; R. Paschotta, <cite><a href="https://www.rp-photonics.com/lambertian_emitters_and_scatterers.html">Lambertian Emitters and Scatterers</a></cite>, RP Photonics Encyclopedia. [Accessed Oct. 27, 2023].
-            </code>
-        </pre>
- 
-            <h2 style="color: #0047AB;">Why is achieving near-perfect Lambertian emission in a horticultural lighting system important?</h3>
-            <p> As previously mentioned, a perfectly diffuse light source emits light in a Lambertian pattern. A "<i>perfect diffuse light source</i>" refers to a light source that evenly distributes light in all directions, creating a soft, shadowless illumination with no discernible hotspots.</p>
-            <p>In horticultural applications, this results in every part of every leaf receiving the same intensity of light, effectively optimizing photosynthetic processes.</p>
         </div>
+        </div>
+<div class="two-col-section">
+            <h2 style="color: #e8b923;">What is homogeneous PAR distribution?</h2>
+            <p>
+A homogeneous photosynthetically active radiation (PAR) distribution refers to a situation where the intensity of light that plants can use for photosynthesis is evenly spread across a given area, meaning there is minimized variation in light levels from one location to another across the illuminated plane. This results in all plants in that area receiving the same amount of usable light for photosynthesis, or every part of every leaf receiving the same degree of light intensity.
+            </p>
 
+            <h2 style="color: #e8b923;">Why is achieving homogeneous PAR distribution in a horticultural lighting system important?</h2>
+            <p>In horticultural applications, this homogeneous PAR distribution results in every part of every leaf receiving the same intensity of light, effectively optimizing photosynthetic processes. This is elucidated in the academic literature:</p>
+<pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content; margin-bottom: 30px;">
+    <code>
+If the PPFD is spatially uniform at an appropriate level in a plant canopy regardless of the canopy's depth, the net photosynthetic rate of the whole plant canopy should increase significantly, and the decrease in net photosynthetic capacity of lower leaves due to their senescence may be prevented.
+
+— (Zhang et al., 2015; Joshi et al., 2017), <cite><a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">Zhang, X., He, D., Niu, G., Yan, Z., & Song, J. (2015). A Combination of Downward Lighting and Supplemental Upward Lighting Improves Plant Growth in a Closed Plant Factory with Artificial Lighting.</a> <i>Hortscience, 52</i>(6), 831-835.</cite>
+    </code>
+</pre>
+<pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content; margin-top: 20px;">
+    <code>
+A uniform light environment in a plant canopy has the following effects:
+(1) Geometrical relationships between the source (photosynthesizing parts) and sink (accumulating parts of translocated carbohydrates) of plants are changed; (2) All leaves of a plant canopy relatively equally act as producers of carbohydrates; (3) Senescence of lower leaves
+due to low PPFD is suppressed; and (4) Phytohormone balances in individual plants are changed.
+
+— (Kozai, 2022), <cite>Kozai, T. (2022). Role and characteristics of PFALs. In <i>Plant Factory Basics, Applications and Advances</i> (p. 46). Academic Press.</cite>
+    </code>
+</pre>
+</div>
+        <div class="info-box-container">
+            <div class="info-box" data-info="agentic-ai">
+                <h3>Agentic AI</h3>
+                <div class="info-box-content">
+                    <p>Our Agentic AI platform integrates real-time plant feedback with advanced automation. It continuously refines the light spectrum and intensity to optimize every aspect of plant growth, utilizing historical data and machine learning to enhance yields and resource efficiency.</p>
+                    <button class="learn-more-button">Learn More</button>
+                </div>
+            </div>
+            <div class="info-box" data-info="lighting-simulations">
+                <h3>Lighting Simulations</h3>
+                <div class="info-box-content">
+                    <p>We employ advanced lighting simulation software to model and optimize the distribution of photosynthetically active radiation (PAR). This ensures uniform light exposure across the plant canopy, enhancing photosynthetic efficiency and promoting even growth.</p>
+                    <button class="learn-more-button">Learn More</button>
+                </div>
+            </div>
+            <div class="info-box" data-info="ml-optimization">
+                <h3>ML Layer-Wise Optimization Algorithm</h3>
+                <div class="info-box-content">
+                    <p>Our machine learning algorithm optimizes the lighting system layer by layer, modulating the intensity of each layer to achieve homogeneous PAR distribution. This targeted approach ensures that each part of the plant canopy receives the ideal light conditions for growth and development.</p>
+                    <button class="learn-more-button">Learn More</button>
+                </div>
+            </div>
+            <div class="info-box" data-info="cooling-system">
+                <h3>Thermal Management</h3>
+                <div class="info-box-content">
+                    <p>Our state-of-the-art cooling system maintains optimal operating temperatures for the lighting elements, resuling in a maximum light output to energy input ratio. We utilize Computational Fluid Dynamics (CFD) and Finite Element Analysis (FEA) to validate the cooling system.</p>
+                    <button class="learn-more-button">Learn More</button>
+                </div>
+            </div>
+        </div>
+        <div class="fixture hidden">
+            <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" width="500" height="500" style="margin-bottom: 40px;">
+        </div>
         <div class="features">
-            <div class="feature hidden">
+            <div class="feature hidden" style="margin-top: 20px;">
                 <img src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon" width="100" height="100">
                 <h3>Unparalleled Energy Efficiency</h3>
                 <p>Reduce energy consumption while maximizing light output.</p>
             </div>
-            <div class="feature hidden">
+            <div class="feature hidden" style="margin-top: 20px;">
                 <img src="{% static 'main/images/recycle.png' %}" alt="Growth Icon" width="100" height="100">
                 <h3>Enhanced Plant Growth</h3>
                 <p>Promote healthier, more uniform plant development with optimized light distribution.</p>
             </div>
-            <div class="feature hidden">
+            <div class="feature hidden" style="margin-top: 20px;">
                 <img src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon" width="100" height="100">
                 <h3>Infinitely Scalable</h3>
                 <p>Adapt our system to any grow space, from small research setups to large commercial greenhouses.</p>
             </div>
         </div>
-
-        <div class="fixture hidden">
-            <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" width="500" height="500">
-        </div>
-        <div class="container">
-            <h1 style="color: #0047AB;">Achieving Perfect Plant Growth with our Agentic AI Platform</h2>
-            <h3 style="color: #0047AB;">Integration of Chlorophyll Fluorescence and Phosphorescence Sensors for Real-Time Adjustment</h3>
-            <p>Our system integrates <b>PAM fluorometry sensors</b> and <b>hyperspectral cameras</b> to provide real-time feedback on photosynthetic efficiency and stress conditions. The control module dynamically adjusts light spectrum and intensity based on the detected data, ensuring optimized plant growth and energy efficiency. For instance, if stress signals are detected, the system can modulate specific wavelengths like far-red or blue light to enhance plant health.</p>
-            <h3 style="color: #0047AB;">Autonomous Agentic Decision-Making with Historical Learning</h3>
-            <p>The lighting system incorporates an <b>agentic AI platform</b> that continuously learns from real-time inputs and historical data. The system autonomously adjusts lighting parameters based on plant signals, growth goals, and energy constraints. By utilizing machine learning, the system refines light recipes, achieving improved plant yields and resource efficiency over time. Our agentic AI platform builds upon uniform lighting principles by integrating real-time plant feedback with advanced automation. Through continuous multimodal data acquisition and intelligent decision-making, the system dynamically refines both spectrum and intensity to optimize every aspect of growth.</p>
-            <h3 style="color: #0047AB;">Multimodal Input Integration for Tailored Light Spectrum</h3>
-            <p>Our system synthesizes data from various sensors, including:</p>
-                <ul>
-                    <li>Chlorophyll fluorometers for photosynthetic efficiency</li>
-                    <li>Tensiometers for soil moisture</li>
-                    <li>CO₂ sensors for ambient CO₂ levels</li>
-                    <li>Infrared thermometers for leaf surface temperature</li>
-                    <li>Nutrient meters for EC, pH, and DO levels</li>
-                    <li>Porometers for stomatal conductance</li>
-                </ul>
-            <p>This multimodal input integration allows the system to create precise light recipes tailored to real-time environmental and plant needs, ensuring optimal growth at every stage.</p>
-            <h3 style="color: #0047AB;">Energy Optimization Through Adaptive Dimming</h3>
-            <p>The lighting array comprises <b>concentric square layers of CoB lighting elements</b>, in which separate layers are assigned specific degrees of intensity informed by our closed-form analytical physics/mathematical proof and lighting simulation software. This enables maximal uniformity and precise control of photon distribution, including <b>targeted treatments of user-defined non-uniformity</b> to introduce stress to the plant canopy for crop steering. Historical data gleaned from our agentic AI integration and advanced sensor technology informs the lighting system when reduced intensity suffices, autonomously adjusting the intensity while maintaining maximal uniformity. This minimizes power usage while maintaining optimized plant growth.</p>
+        <div class="image-container" style="text-align: center;">
+            <img src="{% static 'main/images/csnrect.png' %}" alt="Fixture" width="896" height="448" style="display: block; margin: 0 auto;">
         </div>
 
         <div class="cta hidden">
-            <h1 style="color: #0047AB">Learn More About the Science Behind our Revolutionary Technology</h1>
-            <a href="{% url 'technology' %}" class="button" style="border: 2px solid #000000;">Explore the Technology</a>
+            <h1 style="color: #e8b923">Learn More About the Science Behind our Revolutionary Technology</h1>
+            <a href="{% url 'technology' %}" class="button">Explore the Technology</a>
         </div>
     </div>
 
@@ -153,13 +255,12 @@ A Lambertian emission refers to a light emission pattern where the radiance (bri
             <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
         </a>
         <div class="cta hidden">
-            <h1 style="color: #0047AB">Observe our Cutting-Edge Research</h1>
-            <button id="pdfButton1" onclick="displayPDF('pdf1')" class="button">Closed-Form Analytical Proof (In-Progress)</button>
-            <button id="pdfButton2" onclick="displayPDF('pdf2')" class="button">White Paper (Complete)</button>
+            <h1 style="color: #e8b923">Observe our Cutting-Edge Research</h1>
+            <button id="pdfButton2" onclick="displayPDF('pdf2')" class="button">White Paper</button>
             <div id="pdfContainer"></div>
         </div>
     </div>
-      <script>
+    <script>
         function displayPDF(pdfName) {
           var pdfUrl;
           if (pdfName === 'pdf1') {
@@ -174,7 +275,77 @@ A Lambertian emission refers to a light emission pattern where the radiance (bri
         </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
+    <script>
+        // PDF.js viewer implementation
+        const url = "{% static 'main/images/whitepaper.pdf' %}";
+        let pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 1.5,
+            canvas = document.getElementById('pdfCanvas'),
+            ctx = canvas.getContext('2d');
+    
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+    
+        function renderPage(num) {
+          pageRendering = true;
+          pdfDoc.getPage(num).then(function(page) {
+            const viewport = page.getViewport({ scale: scale });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+    
+            const renderContext = {
+              canvasContext: ctx,
+              viewport: viewport
+            };
+            const renderTask = page.render(renderContext);
+    
+            renderTask.promise.then(function() {
+              pageRendering = false;
+              document.getElementById('pageNum').textContent = pageNum;
+              if (pageNumPending !== null) {
+                renderPage(pageNumPending);
+                pageNumPending = null;
+              }
+            });
+          });
+        }
+    
+        function queueRenderPage(num) {
+          if (pageRendering) {
+            pageNumPending = num;
+          } else {
+            renderPage(num);
+          }
+        }
+    
+        function onPrevPage() {
+          if (pageNum <= 1) return;
+          pageNum--;
+          queueRenderPage(pageNum);
+        }
+    
+        function onNextPage() {
+          if (pageNum >= pdfDoc.numPages) return;
+          pageNum++;
+          queueRenderPage(pageNum);
+        }
+    
+        document.getElementById('prevPage').addEventListener('click', onPrevPage);
+        document.getElementById('nextPage').addEventListener('click', onNextPage);
+    
+        document.getElementById('pdfButton2').addEventListener('click', function() {
+          document.getElementById('pdfViewerContainer').style.display = 'flex';
+          if (!pdfDoc) {
+            pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+              pdfDoc = pdfDoc_;
+              document.getElementById('pageCount').textContent = pdfDoc.numPages;
+              renderPage(pageNum);
+            });
+          }
+        });
+        </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Slick Carousel
@@ -246,7 +417,54 @@ A Lambertian emission refers to a light emission pattern where the radiance (bri
                     behavior: 'smooth'
                 });
             });
+
+            // Info Box Interactivity with Learn More Buttons
+            const infoBoxes = document.querySelectorAll('.info-box');
+            infoBoxes.forEach(box => {
+                box.addEventListener('click', function(event) {
+                    // If click is on the Learn More button, handle navigation
+                    if (event.target.classList.contains('learn-more-button')) {
+                        event.stopPropagation();  // Prevent parent click handler from firing
+                        const dataInfo = this.getAttribute('data-info');
+                        let targetUrl = '{% url "technology" %}';
+
+                        switch (dataInfo) {
+                            case 'agentic-ai':
+                                targetUrl += '#agentic-ai-section';
+                                break;
+                            case 'lighting-simulations':
+                                targetUrl += '#lighting-simulations-section';
+                                break;
+                            case 'ml-optimization':
+                                targetUrl += '#ml-optimization-section';
+                                break;
+                            case 'cooling-system':
+                                targetUrl += '#cooling-system-section';
+                                break;
+                        }
+
+                        window.location.href = targetUrl;
+                    } else {
+                        // Check if the clicked box is already active
+                        const isActive = this.classList.contains('active');
+
+                        // Close other info boxes only if the clicked box is not active
+                        if (!isActive) {
+                            infoBoxes.forEach(otherBox => {
+                                if (otherBox !== this) {
+                                    otherBox.classList.remove('active');
+                                }
+                            });
+                        }
+
+                        // Toggle active state on the clicked box
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+
+
         });
-    </script> 
+    </script>
 </body>
 </html>

@@ -1,19 +1,10 @@
 /* Base Styles */
-/*body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f8f8;
-    color: #333;
-}*/
-/* Fallback to Helvetica Neue and sans-serif */
-
 body {
     font-family: 'Avenir Next', 'Helvetica Neue', sans-serif; 
     margin: 0;
     padding: 0;
-    background-color: #f8f8f8;
-    color: #333;
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0;           /* Light text */
 }
 
 .container {
@@ -21,6 +12,26 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+}
+
+.two-col-section {
+    column-count: 2;
+    column-gap: 2rem; /* Adjust gap between columns as needed */
+    /* Optional: add padding or adjust width if necessary */
+  }
+  .columnpics {
+    column-count: 2;
+    column-gap: 2rem; /* Adjust gap between columns as needed */
+    /* Optional: add padding or adjust width if necessary */
+  }
+
+a {
+    color: #66afe9; /* Choose a lighter color */
+}
+
+a:hover {
+    color: #005f7a; /* Color on hover */
+    text-decoration: underline; /* Optional: underline on hover */
 }
 
 h1, h2, h3 {
@@ -31,15 +42,16 @@ p {
     line-height: 1.6;
 }
 
-/* --- Existing Navbar Styles (No Changes) --- */
 /* Navbar Styles */
 .navbar {
-    background-color: #333;
-    color: white;
+    background-color: #ffffff; /* Darker navbar */
+    color: #E31937;
+    border: 5px solid #e8b923;
+    border-radius: 5px;
     padding: 10px 0;
     margin-bottom: 20px;
-    position: relative; /* Add this if it's not already there */
-    z-index: 10;      /* Add this line to set a z-index */
+    position: relative;
+    z-index: 10;
 }
 
 .navbar .container {
@@ -50,7 +62,7 @@ p {
 
 .navbar-brand {
     font-weight: bold;
-    color: white;
+    color: #e8b923;
     text-decoration: none;
     font-size: 1.4em;
 }
@@ -67,20 +79,18 @@ p {
 }
 
 .nav-links a {
-    color: white;
+    color: #e8b923;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #0047AB;
+    color: #000000;
 }
-
-/* --- Additions for Mobile Responsiveness --- */
 
 /* Hamburger Button Styling */
 .hamburger {
-    display: none; /* Hide on larger screens */
+    display: none;
     cursor: pointer;
     background: none;
     border: none;
@@ -91,7 +101,7 @@ p {
     display: block;
     width: 25px;
     height: 3px;
-    background-color: white; /* Changed to white */
+    background-color: #e0e0e0;
     margin: 5px 0;
     transition: 0.4s;
 }
@@ -99,16 +109,16 @@ p {
 /* Media Query for Smaller Screens */
 @media (max-width: 768px) {
     .hamburger {
-        display: block; /* Show hamburger on smaller screens */
+        display: block;
     }
 
     .nav-links-container {
-        display: none; /* Initially hide the links */
+        display: none;
         width: 100%;
         position: absolute;
-        top: 80px; /* Adjust this value based on your logo's height*/
+        top: 80px;
         left: 0;
-        background-color: #333; /* Match navbar background */
+        background-color: #1f1f1f;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     }
 
@@ -129,7 +139,7 @@ p {
     .navbar .container {
         position: relative;
     }
-    /* Hamburger animation */
+
     .hamburger.active span:nth-child(1) {
         transform: rotate(-45deg) translate(-5px, 6px);
     }
@@ -149,7 +159,7 @@ p {
 }
 
 .section-title {
-    color: #0047AB;
+    color: #e8b923; /* Accent color */
     margin-bottom: 10px;
 }
 
@@ -176,28 +186,32 @@ input[type="email"],
 textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border: 1px solid #555;
     border-radius: 4px;
     box-sizing: border-box;
 }
+
+
 
 textarea {
     height: 150px;
 }
 
-button[type="submit"] {
-    background-color: #00ACEE;
-    color: white;
+[type="submit"] {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
     padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
+    border: 5px solid #e8b923;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
 }
-
+/*
 button[type="submit"]:hover {
-    background-color: #0077a3;
-}
+    background-color: #9f0000;
+}*/
 
 /* Contact Information Styles */
 .contact-info {
@@ -216,7 +230,7 @@ button[type="submit"]:hover {
     padding: 100px 20px;
     text-align: center;
     margin-bottom: 40px;
-    color: white;
+    color: #e0e0e0;
     position: relative;
     z-index: 0;
 }
@@ -250,13 +264,15 @@ button[type="submit"]:hover {
     line-height: 1.6;
     margin-bottom: 30px;
     text-align: center;
+    color: #000000;
 }
 
 /* Button Styles */
 .button {
     display: inline-block;
-    background-color: #00ACEE;
-    color: white;
+    background-color: #ffffff;
+    color: #000000;
+    border: 5px solid #e8b923;
     padding: 12px 25px;
     text-decoration: none;
     border-radius: 5px;
@@ -265,14 +281,13 @@ button[type="submit"]:hover {
     transition: background-color 0.3s ease;
 }
 
-.button:hover {
-    background-color: #0077A8;
-}
-
 /* Features Section Styles */
 .features {
     display: flex;
+    background-color: #ffffff;
     justify-content: space-around;
+    border: 5px solid #e8b923;
+    border-radius: 5px;
     margin-bottom: 40px;
     flex-wrap: wrap;
 }
@@ -291,12 +306,13 @@ button[type="submit"]:hover {
 
 .feature h3 {
     margin-bottom: 10px;
+    color: #e8b923;
 }
 
 .feature p {
     font-size: 0.9em;
     line-height: 1.5;
-    color: #555;
+    color: #000000; /* Lighter gray for dark theme */
 }
 
 /* Fixture Styles */
@@ -305,21 +321,21 @@ button[type="submit"]:hover {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 100%; /* Allow full width */
-    margin: 0 auto; /* Center the entire fixture div */
+    width: 100%;
+    margin: 0 auto;
 }
 
 .fixture img {
     max-width: 500px;
-    height: auto; /* Maintain aspect ratio */
+    height: auto;
     margin-bottom: 15px;
-    display: block; /* Treat image as block element */
+    display: block;
 }
 
 /* Media query for smaller screens (e.g., mobile) */
-@media (max-width: 768px) { /* Adjust breakpoint as needed */
+@media (max-width: 768px) {
     .fixture img {
-        max-width: 90%; /* Adjust as needed, could be 100% for full width */
+        max-width: 90%;
     }
 }
 
@@ -337,78 +353,56 @@ button[type="submit"]:hover {
 /* Image Container Styles */
 .image-container {
     display: flex;
-    align-items: center;
-    margin-top: 20px;
+    flex-wrap: wrap;           /* Allow wrapping on smaller screens */
+    justify-content: center;   /* Center images horizontally */
     gap: 10px;
+    margin-top: 20px;
 }
 
 .image-container img {
-    width: 48%; /* Adjust as needed */
-    border: 1px solid #ddd;
+    flex: 1 1 45%;            /* Allow images to grow/shrink, aiming for about 45% of container width each */
+    max-width: 45%;           /* Prevent images from exceeding 45% of container width */
+    height: auto;             /* Maintain aspect ratio */
+    border: 1px solid #555;
     border-radius: 4px;
     margin-bottom: 10px;
 }
-  
-  /* Style for the list item to separate it from the images */
-  .image-container li {
-    width: 100%; /* Make the list item take full width */
-    text-align: center; /* Center the text */
-    margin-top: 10px; /* Add some space above the text */
-    margin-bottom: 10px; /* Add some space below the text */
-  }
 
-
-
-/* Image Container Styles - Simplified */
-.image-container {
-    display: flex;
-    /* Remove justify-content: space-between; */
-    align-items: center;
-    margin-top: 20px;
-    gap: 10px;
+.image-container li {
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
 }
 
-.image-container img {
-    /* width: 48%; Remove or adjust as needed */
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    max-width: 100%; /* Add this to prevent image overflow */
-    height: auto;     /* Maintain aspect ratio */
-}
-
-/* Styles for the modular images section */
+/* Modular Images Section */
 .modular-images-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 800px; /* Limit width on desktop */
-    margin: 0 auto; /* Center the section */
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-/* Style for the image rows (for desktop) */
 .modular-images-section .image-row {
     display: flex;
-    justify-content: space-around; /* Or space-between, depending on desired spacing */
+    justify-content: space-around;
     align-items: center;
     width: 100%;
-    margin-top: 20px; /* Space between rows */
+    margin-top: 20px;
 }
 
-/* Style for the image containers */
 .modular-images-section .image-container {
-    width: 85%; /* Adjust as needed for spacing */
-    text-align: center; /* Center the image within the container */
+    width: 85%;
+    text-align: center;
 }
 
 .modular-images-section .image-container img {
-    max-width: 100%; /* Make images responsive */
+    max-width: 100%;
     height: auto;
     object-fit: cover;
 }
 
-/* Style for the h3 text */
 .modular-images-section .section-text {
     text-align: center;
     margin-top: 20px;
@@ -416,41 +410,41 @@ button[type="submit"]:hover {
     width: 100%;
 }
 
-/* Styles for mobile devices (adjust breakpoint as needed) */
+/* Mobile adjustments for modular images */
 @media (max-width: 768px) {
     .modular-images-section .image-row {
-        flex-wrap: wrap; /* Allow wrapping on mobile */
+        flex-wrap: wrap;
     }
-
     .modular-images-section .image-container {
-        width: 80%; /* Two columns on mobile */
+        width: 80%;
     }
     .modular-images-section .image-container img {
-        margin-bottom: 10px; /* Space between images on mobile */
+        margin-bottom: 10px;
         max-width: 100%;
     }
 }
-/* ... other styles ... */
 
+/* PDF Container Styles */
 #pdfContainer {
-    margin-top: 20px; /* Add some space between buttons and PDF */
-  }
-  
+    margin-top: 20px;
+}
 
-  .some-other-element + .image-container {
+.some-other-element + .image-container {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-  #pdfContainer iframe {
-    border: 1px solid #ccc;
-  }
+
+#pdfContainer iframe {
+    border: 1px solid #444;
+}
+
 .image-caption {
     text-align: center;
     font-size: smaller;
 }
 
-/* ... other styles ... */
+/* Hidden/Visible Animations */
 .hidden {
     opacity: 0;
     transform: translateY(20px);
@@ -464,7 +458,7 @@ button[type="submit"]:hover {
 
 img.lazy-load {
     opacity: 0;
-    transition: opacity 0.5s ease; /* Adjust timing as needed */
+    transition: opacity 0.5s ease;
 }
 
 img.lazy-load.visible {
@@ -473,18 +467,20 @@ img.lazy-load.visible {
 
 /* Code Block Styles */
 pre {
-    background-color: #f5f5f5; /* Light gray background */
-    padding: 10px;             /* Padding inside the block */
-    overflow-x: auto;         /* Add horizontal scroll if needed */
-    font-family: monospace;    /* Use a monospace font */
-    white-space: pre-wrap;    /* Preserve line breaks and wrap text */
-    max-width: 700px;         /* Example maximum width */
-    border: 1px solid #000000; /* Correct: Black border */
-    border-radius: 4px;     /* Add border-radius to pre element */
+    background-color: #1e1e1e;
+    padding: 10px;
+    overflow-x: auto;
+    font-family: monospace;
+    white-space: pre-wrap;
+    max-width: 700px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #c5c5c5;
 }
 pre code {
-    font-size: 0.9em;       /* Adjust font size if needed */
+    font-size: 0.9em;
 }
+
 /* Back to Top Button Styles */
 .back-to-top {
     position: fixed;
@@ -498,7 +494,7 @@ pre code {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s, visibility 0.4s;
-    z-index: 1000; /* Ensures the button appears above other elements */
+    z-index: 1000;
 }
 
 .back-to-top:hover {
@@ -510,13 +506,11 @@ pre code {
     vertical-align: middle;
 }
 
-/* Show the button when it has the 'show' class */
 .back-to-top.show {
     opacity: 1;
     visibility: visible;
 }
 
-/* Pulse Animation on Hover (Optional) */
 @keyframes pulse {
     0% {
         transform: scale(1);
@@ -533,7 +527,6 @@ pre code {
     animation: pulse 0.6s;
 }
 
-/* Responsive Adjustments for Back to Top Button */
 @media (max-width: 768px) {
     .back-to-top {
         bottom: 20px;
@@ -542,14 +535,14 @@ pre code {
     }
 }
 
-
 /* Responsive Video */
 .responsive-video {
     max-width: 100%;
     height: auto;
-    display: block; /* Prevents margin issues */
-    margin: 0 auto; /* Center the video */
+    display: block;
+    margin: 0 auto;
 }
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .hero {
@@ -572,139 +565,122 @@ pre code {
         width: 200px;
     }
 }
+
 /* Carousel Styling */
 .carousel-container {
-    width: 80%; /* Adjust as needed */
-    margin: 0 auto; /* Center the carousel */
-    overflow: visible; /* Important to allow arrows to be outside */
-  }
-  
-  .carousel .slick-slide {
-    padding: 0 10px; /* Adjust as needed for spacing between images */
+    width: 80%;
+    margin: 0 auto;
+    overflow: visible;
+}
+
+.carousel .slick-slide {
+    padding: 0 10px;
     text-align: center;
-  }
-  
-  .carousel img {
+}
+
+.carousel img {
     width: 100px;
     height: 100px;
     object-fit: cover;
     border-radius: 8px;
-    border: 2px solid #ddd;
+    border: 2px solid #555;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
     display: block;
-  }
-  
-  .carousel .slick-dots li button:before {
-    color: #0047AB;
+}
+
+.carousel .slick-dots li button:before {
+    color: #66afe9;
     font-size: 12px;
-  }
-  
-  .carousel .slick-dots li.slick-active button:before {
+}
+
+.carousel .slick-dots li.slick-active button:before {
     color: #005f7a;
-  }
-  
-  /* Adjust Slick Arrows */
-  .carousel .slick-prev:before,
-  .carousel .slick-next:before {
-    color: #0047AB;
-    font-size: 30px; /* Adjust arrow size as needed */
-    opacity: 1;
-    transition: color 0.3s ease;
-  }
-  
-  .carousel .slick-prev:hover:before,
-  .carousel .slick-next:hover:before {
-    color: #005f7a;
-  }
-  
-  /* Adjust Slick Arrows */
-  .carousel .slick-prev:before,
-  .carousel .slick-next:before {
-    color: #0047AB;
-    font-size: 40px; /* Increase arrow size (adjust as needed) */
+}
+
+.carousel .slick-prev:before,
+.carousel .slick-next:before {
+    color: #e8b923;
+    font-size: 40px;
     opacity: 1;
     transition: color 0.3s ease;
 }
 
-/* Positioning and Visibility of Arrows */
+.carousel .slick-prev:hover:before,
+.carousel .slick-next:hover:before {
+    color: #e8b923;
+}
+
 .carousel .slick-prev,
 .carousel .slick-next {
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;
-    /* Adjust the width and height to match the increased font-size */
-    width: 30px; 
+    width: 30px;
     height: 30px;
-    line-height: 30px; /* Should match the height */
+    line-height: 30px;
 }
-  /* Specific positioning for each arrow */
-  .carousel .slick-prev {
-    left: -55px; /* Adjust to position the left arrow */
-  }
-  
-  .carousel .slick-next {
-    right: -55px; /* Adjust to position the right arrow */
-  }
-  
-  /* Style for slick dots */
-  .carousel .slick-dots {
-    position: relative; /* Use relative positioning */
-    bottom: -10px; /* Adjust as necessary to reduce space below the carousel */
-    margin-top: 0px;
-  }
-  
-  /* Responsive Carousel Adjustments */
-  @media (max-width: 1024px) {
-    .carousel img {
-      width: 80px;
-      height: 80px;
-    }
-    .text-below-carousel {
-        margin-top: 50px; /* Adjust spacing as needed */
-        text-align: center; /* Center the text */
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .carousel img {
-      width: 60px;
-      height: 60px;
-    }
-  
-    .carousel .slick-prev {
-      left: -35px; /* Further adjust for smaller screens */
-    }
-  
-    .carousel .slick-next {
-      right: -35px; /* Further adjust for smaller screens */
-    }
-    .text-below-carousel {
-        margin-top: 50px; /* Adjust spacing as needed */
-        text-align: center; /* Center the text */
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .carousel img {
-      width: 50px;
-      height: 50px;
-    }
-  
-    .carousel .slick-prev {
-      left: -25px; /* Further adjust for very small screens */
-    }
-  
-    .carousel .slick-next {
-      right: -25px; /* Further adjust for very small screens */
-    }
-    .text-below-carousel {
-        margin-top: 50px; /* Adjust spacing as needed */
-        text-align: center; /* Center the text */
-    }
-  }
 
-  .text-below-carousel {
-    margin-top: 50px; /* Adjust spacing as needed */
-    text-align: center; /* Center the text */
+.carousel .slick-prev {
+    left: -55px;
+}
+
+.carousel .slick-next {
+    right: -55px;
+}
+
+.carousel .slick-dots {
+    position: relative;
+    bottom: -10px;
+    margin-top: 0px;
+}
+
+@media (max-width: 1024px) {
+    .carousel img {
+        width: 80px;
+        height: 80px;
+    }
+    .text-below-carousel {
+        margin-top: 50px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel img {
+        width: 60px;
+        height: 60px;
+    }
+    .carousel .slick-prev {
+        left: -35px;
+    }
+    .carousel .slick-next {
+        right: -35px;
+    }
+    .text-below-carousel {
+        margin-top: 50px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel img {
+        width: 50px;
+        height: 50px;
+    }
+    .carousel .slick-prev {
+        left: -25px;
+    }
+    .carousel .slick-next {
+        right: -25px;
+    }
+    .text-below-carousel {
+        margin-top: 50px;
+        text-align: center;
+    }
+}
+
+.text-below-carousel {
+    margin-top: 50px;
+    text-align: center;
 }

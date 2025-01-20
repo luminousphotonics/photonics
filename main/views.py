@@ -27,27 +27,31 @@ def contact(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
 
-            subject = f'New Contact Form Submission from {name}'
-            full_message = f'Name: {name}\nEmail: {email}\n\nMessage:\n{message}'
+            email_body = f"Name: {name}\nEmail: {email}\n\n{message}"
 
-            try:
-                send_mail(
-                    subject,
-                    full_message,
-                    email,  # From email
-                    [os.environ.get('EMAIL_HOST_USER')],  # To email
-                    fail_silently=False,
-                )
-                messages.success(request, 'Your message has been sent successfully!')
-                return redirect('contact')
-            except Exception as e:
-                messages.error(request, 'There was an error sending your message. Please try again later.')
+            send_mail(
+                subject,
+                email_body,
+                email,  # From email (form's email)
+                [settings.EMAIL_HOST_USER],  # To email (your email from settings)
+                fail_silently=False,  # Set to True in production after debugging
+            )
+
+            return redirect('contact_success')
+
+        else:
+            print(form.errors)
+
     else:
         form = ContactForm()
 
-    return render(request, 'main/contact.html', {'form': form})
+    return render(request, 'main/contact.html', {'form': form}) # Assuming your app is named 'main'
+
+def contact_success(request):
+    return render(request, 'main/contact_success.html')  # Correct path for 'main' app
 
 @csrf_exempt  # For testing; handle CSRF appropriately in production
 def run_simulation(request):
@@ -80,3 +84,6 @@ def run_simulation(request):
 
 def simulation_view(request):
     return render(request, 'main/simulation.html')
+
+def agenticai(request):
+    return render(request, 'main/agenticai.html')

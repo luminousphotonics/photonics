@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YNV5LYTT2C"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-YNV5LYTT2C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Contact Us - Luminous Photonics</title>
+</head>
+<body>
+    {% include 'main/navbar.html' %}
+
+    <div class="container">
+        <h1 style="color: #0047AB;">Achieving Perfect Plant Growth with our Agentic AI Platform</h1>
+        <h3 style="color: #0047AB;">Integration of Chlorophyll Fluorescence and Phosphorescence Sensors for Real-Time Adjustment</h3>
+        <p>Our system integrates <b>PAM fluorometry sensors</b> and <b>hyperspectral cameras</b> to provide real-time feedback on photosynthetic efficiency and stress conditions. The control module dynamically adjusts light spectrum and intensity based on the detected data, ensuring optimized plant growth and energy efficiency. For instance, if stress signals are detected, the system can modulate specific wavelengths like far-red or blue light to enhance plant health.</p>
+        <h3 style="color: #0047AB;">Autonomous Agentic Decision-Making with Historical Learning</h3>
+        <p>The lighting system incorporates an <b>agentic AI platform</b> that continuously learns from real-time inputs and historical data. The system autonomously adjusts lighting parameters based on plant signals, growth goals, and energy constraints. By utilizing machine learning, the system refines light recipes, achieving improved plant yields and resource efficiency over time. Our agentic AI platform builds upon uniform lighting principles by integrating real-time plant feedback with advanced automation. Through continuous multimodal data acquisition and intelligent decision-making, the system dynamically refines both spectrum and intensity to optimize every aspect of growth.</p>
+        <h3 style="color: #0047AB;">Multimodal Input Integration for Tailored Light Spectrum</h3>
+        <p>Our system synthesizes data from various sensors, including:</p>
+            <ul>
+                <li>Chlorophyll fluorometers for photosynthetic efficiency</li>
+                <li>Tensiometers for soil moisture</li>
+                <li>CO₂ sensors for ambient CO₂ levels</li>
+                <li>Infrared thermometers for leaf surface temperature</li>
+                <li>Nutrient meters for EC, pH, and DO levels</li>
+                <li>Porometers for stomatal conductance</li>
+            </ul>
+        <p>This multimodal input integration allows the system to create precise light recipes tailored to real-time environmental and plant needs, ensuring optimal growth at every stage.</p>
+        <h3 style="color: #0047AB;">Energy Optimization Through Adaptive Dimming</h3>
+        <p>The lighting array comprises <b>concentric square layers of CoB lighting elements</b>, in which separate layers are assigned specific degrees of intensity informed by our closed-form analytical physics/mathematical proof and lighting simulation software. This enables maximal uniformity and precise control of photon distribution, including <b>targeted treatments of user-defined non-uniformity</b> to introduce stress to the plant canopy for crop steering. Historical data gleaned from our agentic AI integration and advanced sensor technology informs the lighting system when reduced intensity suffices, autonomously adjusting the intensity while maintaining maximal uniformity. This minimizes power usage while maintaining optimized plant growth.</p>
+    </div>
+    
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTopBtn">
+        <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTopBtn = document.getElementById('backToTopBtn');
+
+            // Show the button when the user scrolls down 300px from the top
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+
+            // Smooth scroll to top when the button is clicked
+            backToTopBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Existing IntersectionObserver for '.hidden' elements
+            const elements = document.querySelectorAll('.hidden');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        entry.target.classList.remove('visible'); // Make the effect repeatable
+                    }
+                });
+            });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -87,3 +87,6 @@ def simulation_view(request):
 
 def agenticai(request):
     return render(request, 'main/agenticai.html')
+
+def cooling_system(request):
+    return render(request, 'main/cooling_system.html')

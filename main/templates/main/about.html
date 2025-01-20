@@ -22,14 +22,16 @@
     {% include 'main/navbar.html' %}
 
     <div class="container">
-        <h1>About Us</h1>
+        <h1 class="section-title">About Us</h1>
         <p>Learn more about the Luminous Photonics team, our mission, and our vision for the future of horticultural lighting.</p>
     </div>
     <!-- Back to Top Button -->
     <a href="#" class="back-to-top" id="backToTopBtn">
         <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
     </a>
-
+    <a href="/" class="home-button" id="homeButton">
+        <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
+     </a>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const backToTopBtn = document.getElementById('backToTopBtn');
@@ -42,7 +44,20 @@
                     backToTopBtn.classList.remove('show');
                 }
             });
+        // Home Button Functionality
+        const homeButton = document.getElementById('homeButton');
 
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+               homeButton.classList.add('show');
+            } else {
+                homeButton.classList.remove('show');
+            }
+        });
+        homeButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = "/";
+        });
             // Smooth scroll to top when the button is clicked
             backToTopBtn.addEventListener('click', function(e) {
                 e.preventDefault();

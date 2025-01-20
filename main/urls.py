@@ -11,4 +11,5 @@ urlpatterns = [
     path('api/simulation/', views.run_simulation, name='run_simulation'),
     path('simulation/', views.simulation_view, name='simulation_view'),
     path('agenticai/', views.agenticai, name='agenticai'),
+    path('coolingsystem/', views.cooling_system, name='cooling_system'),
 ]

@@ -21,7 +21,7 @@
     {% include 'main/navbar.html' %}
 
     <div class="container">
-        <h1>Contact Us</h1>
+        <h1 class="section-title">Contact Us</h1>
         <p>Get in touch with the Luminous Photonics team. We look forward to hearing from you!</p>
 
         <form method="post" action="{% url 'contact' %}" class="contact-form">
@@ -69,7 +69,9 @@
     <a href="#" class="back-to-top" id="backToTopBtn">
         <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
     </a>
-
+    <a href="/" class="home-button" id="homeButton">
+        <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
+     </a>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const backToTopBtn = document.getElementById('backToTopBtn');
@@ -91,7 +93,20 @@
                     behavior: 'smooth'
                 });
             });
+        // Home Button Functionality
+        const homeButton = document.getElementById('homeButton');
 
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+               homeButton.classList.add('show');
+            } else {
+                homeButton.classList.remove('show');
+            }
+        });
+        homeButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = "/";
+        });
             // Existing IntersectionObserver for '.hidden' elements
             const elements = document.querySelectorAll('.hidden');
 

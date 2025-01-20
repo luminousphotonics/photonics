@@ -32,8 +32,8 @@
     </head>    
 <body>
     {% include 'main/navbar.html' %}
-    <div class="container">
-        <h1 class="section-title">Technology</h1>
+    <div class="container" style="font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; border: 5px solid #e8b923; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h1 class="section-title" style="text-align: center;">Technology</h1>
         <p class="hidden">Explore the innovative technology behind Luminous Photonics' horticultural lighting solutions, based on our Uniform Photon Flux Principle (UPFP) for modular LED arrays.</p>
 
         <div class="section hidden">
@@ -86,7 +86,7 @@
                 </div>
             </div>
         <div class="section hidden" style="text-align: center;">
-            <h1 class="section-title">Visualizing Light Uniformity</h1>
+            <h1 class="section-title" id="ls">Visualizing Light Uniformity</h1>
             <p>
                 Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs compares a traditional or less optimized approach (right) with our UPFP-based solution (left).
             </p>
@@ -123,7 +123,7 @@
             </div>
             <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
-            <h2 class="section-title">Proprietary Machine Learning Algorithm</h2>
+            <h2 class="section-title" id="ml">Proprietary Machine Learning Algorithm</h2>
             <p>
                 Central to our Uniform Photon Flux Principle (UPFP) is a sophisticated machine learning algorithm that dynamically optimizes LED intensities to ensure uniform Photosynthetic Photon Flux Density (PPFD) across the grow area. Below are key components of our algorithm:
             </p>
@@ -133,57 +133,59 @@
                 The optimization function minimizes the Mean Absolute Deviation (MAD) of PPFD from the target value while adhering to energy constraints. Here's a snippet of how the objective function is defined:
             </p>
         
-            {% verbatim %}
-            <pre><code class="language-python">
-def objective_function(light_intensities, target_ppfd):
-    ppfd_values = calculate_ppfd(light_intensities)
-    mad = np.mean(np.abs(ppfd_values - target_ppfd))
-    energy_consumption = np.sum(light_intensities)
-    return mad + 0.3 * energy_consumption
-                </code></pre>
+            <div style="max-width: 800px; margin: 0 auto; padding: 10px;">
+                {% verbatim %}
+                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+        def objective_function(light_intensities, target_ppfd):
+            ppfd_values = calculate_ppfd(light_intensities)
+            mad = np.mean(np.abs(ppfd_values - target_ppfd))
+            energy_consumption = np.sum(light_intensities)
+            return mad + 0.3 * energy_consumption
+                        </code></pre>
                 {% endverbatim %}
-    
-                <p>
+            
+                <p style="text-align: left; margin-bottom: 1em;">
                     <strong>Explanation:</strong><br> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities. The objective is to minimize both MAD and energy usage while hitting the target PPFD, with energy consumption weighted by a factor of 0.3.
                 </p>
-    
+            
                 <h4 class="section-title">Intensity Calculation</h4>
-                <p>
+                <p style="text-align: left; margin-bottom: 1em;">
                     Light intensity at each measurement point is determined using the Lambertian emission model. This is appropriate as CoBs are near-perfect Lambertian emitters. Below is a snippet illustrating this calculation:
                 </p>
-    
+            
                 {% verbatim %}
-                <pre><code class="language-python">
-def lambertian_emission(intensity, distance, height):
-    if distance == 0:
-        return intensity
-    return (intensity * height) / ((distance ** 2 + height ** 2) ** 1.5)
-                </code></pre>
+                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+        def lambertian_emission(intensity, distance, height):
+            if distance == 0:
+                return intensity
+            return (intensity * height) / ((distance ** 2 + height ** 2) ** 1.5)
+                        </code></pre>
                 {% endverbatim %}
-    
-                <p>
+            
+                <p style="text-align: left; margin-bottom: 1em;">
                     <strong>Explanation:</strong><br> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
                 </p>
-    
+            
                 <h4 class="section-title">Optimization Process</h4>
-                <p>
+                <p style="text-align: left; margin-bottom: 1em;">
                     We utilize the Sequential Least Squares Programming (SLSQP) method from SciPy to perform the optimization. Here's how the optimization is initiated:
                 </p>
-    
+            
                 {% verbatim %}
-                <pre><code class="language-python">
-result = minimize(
-    objective_function,
-    initial_intensities,
-    args=(target_ppfd,),
-    method='SLSQP',
-    bounds=bounds,
-    constraints=constraints
-)
-                </code></pre>
+                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+        result = minimize(
+            objective_function,
+            initial_intensities,
+            args=(target_ppfd,),
+            method='SLSQP',
+            bounds=bounds,
+            constraints=constraints
+        )
+                        </code></pre>
                 {% endverbatim %}
+            </div>
     
-                <p>
+                <p style="text-align: left; margin-bottom: 1em;">
                     <strong>Explanation:</strong><br> The `minimize` function seeks the optimal light intensities for each concentric square layer of CoBs in our patented solution's LED arrangement that reduce the MAD, while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
                 </p>
     
@@ -211,20 +213,26 @@ result = minimize(
                 <p>
                     Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
                 </p>
-                    <b>Lambertian Emission Model:</b><br> We assume each LED emitter follows a Lambertian emission pattern (an appropriate light modeling strategy for CoB LEDs), where radiant intensity is modeled as \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]
-                    <b>Radiosity and Reflective Walls:</b><br> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), which is especially important in grow spaces as they tend to have highly reflective walls (\(\rho \approx 1\)).
+                    <b>Lambertian Emission Model:</b><br> We assume each LED emitter follows a Lambertian emission pattern (an appropriate light modeling strategy for CoB LEDs), where radiant intensity is modeled as: \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]
+                    <b>Radiosity and Reflective Walls:</b><br> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), which is especially important in grow spaces as they tend to have highly reflective walls (\(\rho \approx 1\)).<br><br>
                     <b>Optimization:</b><br> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.
                     <b>Degree of Uniformity (DOU):</b><br> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\] Our prototype numeric solutions have achieved DOU values exceeding 99%.
             </div>
+            
             <div class="section hidden" style="text-align: center;">
                 <h1 class="section-title">Experimental Validation</h1>
                 <p>
                     We are committed to rigorous experimental validation of our UPFP technology. We will be using Apogee Instruments spectroradiometers (PS series for lab testing and the MS-100 handheld for field testing) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
                 </p>
-                    <p>Measure total photon flux and PPFD distribution across the plant canopy.</p>
-                    <p>Corroborate our theoretical predictions with real-world data.</p>
-                    <p>Further refine our models and optimization algorithms.</p>
             </div>
+                <div class="align-list">
+                <ul>
+                    <li><b><p>Measure total photon flux and PPFD distribution across the plant canopy.</b></p></li>
+                    <li><b><p>Corroborate our theoretical predictions with real-world data.</b></p></li>
+                    <li><b><p>Further refine our models and optimization algorithms.</b></p></li>
+                </ul>
+                </div>
+            
                 <h1 class="section-title" style="text-align: center;">References</h1>
                 <ol>
                     <li><p>Zhang, G., <em>et al.</em>, 2015. A combination of downward lighting and upward lighting improves plant growth in plant factories. <em>Hortscience</em>, 50(8), 1126--1130.</p></li>
@@ -257,7 +265,9 @@ result = minimize(
         <a href="#" class="back-to-top" id="backToTopBtn">
             <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
         </a>
-    
+        <a href="/" class="home-button" id="homeButton">
+            <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
+         </a>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const backToTopBtn = document.getElementById('backToTopBtn');
@@ -279,7 +289,20 @@ result = minimize(
                         behavior: 'smooth'
                     });
                 });
-    
+            // Home Button Functionality
+            const homeButton = document.getElementById('homeButton');
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                homeButton.classList.add('show');
+                } else {
+                    homeButton.classList.remove('show');
+                }
+            });
+            homeButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = "/";
+            });
                 // Existing IntersectionObserver for '.hidden' elements
                 const elements = document.querySelectorAll('.hidden');
     

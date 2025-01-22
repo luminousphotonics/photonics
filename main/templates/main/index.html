@@ -47,9 +47,9 @@
 
     <div class="container">
         <div class="hero hidden">
-            <h1>Luminous Photonics</h1>
-                <h2>Revolutionizing Horticultural Lighting</h2>
-            <p>Optimizing Energy Utilization with Homogeneous PAR Distribution</p>
+            <h1 style="font-size: 60px;">Luminous Photonics</h1>
+                <h2 style="font-size: 32px;">Revolutionizing Horticultural Lighting</h2>
+            <p style="font-size: 24px;">Optimizing Energy Utilization with Homogeneous PAR Distribution</p>
         </div>
         <div class="features">
         <div class="intro-text hidden">
@@ -58,7 +58,7 @@
             </p>
         </div>
         </div>
-<div class="two-col-section" style="font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; border: 5px solid #e8b923; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+<div class="two-col-section hidden" style="font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; border: 5px solid #e8b923; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px;">
             <h2 style="color: #e8b923;">What is homogeneous PAR distribution?</h2>
             <p>
 A homogeneous photosynthetically active radiation (PAR) distribution refers to a situation where the intensity of light that plants can use for photosynthesis is evenly spread across a given area, meaning there is minimized variation in light levels from one location to another across the illuminated plane. This results in all plants in that area receiving the same amount of usable light for photosynthesis, or every part of every leaf receiving the same degree of light intensity.
@@ -84,7 +84,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
     </code>
 </pre>
 </div>
-        <div class="info-box-container">
+        <div class="info-box-container hidden">
             <div class="info-box" data-info="agentic-ai">
                 <h3>Agentic AI</h3>
                 <div class="info-box-content">
@@ -114,7 +114,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                 </div>
             </div>
         </div>
-        <div class="fixture hidden">
+        <div class="image-container hidden">
             <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" width="500" height="500" style="margin-bottom: 40px;" class="code-border">
         </div>
         <div class="features">
@@ -134,8 +134,8 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                 <p>Adapt our system to any grow space, from small research setups to large commercial greenhouses.</p>
             </div>
         </div>
-        <div class="image-container" style="text-align: center;">
-            <img src="{% static 'main/images/csnrect.png' %}" alt="Fixture" width="896" height="448" style="display: block; margin: 0 auto;">
+        <div class="image-container hidden" style="text-align: center;">
+            <img src="{% static 'main/images/csnrect.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
         </div>
 
         <div class="cta hidden">
@@ -237,22 +237,21 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                 adjustCarouselHeight();
             });
 
-            // Handle Visibility with IntersectionObserver
-            const elements = document.querySelectorAll('.hidden');
+            // Select elements you want to animate on scroll
+            const animElements = document.querySelectorAll('.hidden, .hero, .feature, .info-box, .cta');
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                    entry.target.classList.add('visible');
+                    // Do not unobserve, so animations can reoccur on re-entry
                     } else {
-                        entry.target.classList.remove('visible'); // Optional: Hide again when out of view
+                    entry.target.classList.remove('visible'); // Remove class when out of view
                     }
                 });
-            });
+                }, { threshold: 0.1 });
 
-            elements.forEach(element => {
-                observer.observe(element);
-            });
+            animElements.forEach(el => observer.observe(el));
 
             // Back to Top Button Functionality
             const backToTopBtn = document.getElementById('backToTopBtn');

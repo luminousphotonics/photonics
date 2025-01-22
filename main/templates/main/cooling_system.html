@@ -23,12 +23,12 @@
     <div class="container">
 
         <h1 style="color: #e8b923; text-align: center;">Cutting-Edge Cooling System</h1>
-        <div class="image-container">
-            <img class="hidden" src="{% static 'main/images/enclosure.fan.png' %}" alt="Enclosure - Fan" id="enc.fan">
-            <img class="hidden" src="{% static 'main/images/enclosure.vent.png' %}" alt="Enclosure - Vent" id="enc.vent">
-            <img class="hidden" src="{% static 'main/images/cooling.assembly(1).png' %}" alt="Cooling Assembly 1" id="cooling1">
-            <img class="hidden" src="{% static 'main/images/cooling.assembly(2).png' %}" alt="Cooling Assembly 2" id="cooling2">
-            <img class="hidden" src="{% static 'main/images/cooling.assembly(3).png' %}" alt="Cooling Assembly 3" id="cooling3">
+        <div class="image-container hidden">
+            <img src="{% static 'main/images/enclosure.fan.png' %}" alt="Enclosure - Fan" id="enc.fan">
+            <img src="{% static 'main/images/enclosure.vent.png' %}" alt="Enclosure - Vent" id="enc.vent">
+            <img src="{% static 'main/images/cooling.assembly(1).png' %}" alt="Cooling Assembly 1" id="cooling1">
+            <img src="{% static 'main/images/cooling.assembly(2).png' %}" alt="Cooling Assembly 2" id="cooling2">
+            <img src="{% static 'main/images/cooling.assembly(3).png' %}" alt="Cooling Assembly 3" id="cooling3">
         </div>
 <div class="cooling-system-synopsis" style="font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; border: 5px solid #e8b923; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 20px;">Synopsis of the High-Performance Air-Cooled System</h2>
@@ -98,7 +98,9 @@
     <a href="#" class="back-to-top" id="backToTopBtn">
         <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
     </a>
-
+    <a href="/" class="home-button" id="homeButton">
+        <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
+     </a>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const backToTopBtn = document.getElementById('backToTopBtn');
@@ -111,7 +113,16 @@
                     backToTopBtn.classList.remove('show');
                 }
             });
+            // Home Button Functionality
+            const homeButton = document.getElementById('homeButton');
 
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                homeButton.classList.add('show');
+                } else {
+                    homeButton.classList.remove('show');
+                }
+            });
             // Smooth scroll to top when the button is clicked
             backToTopBtn.addEventListener('click', function(e) {
                 e.preventDefault();

@@ -33,7 +33,7 @@
 <body>
     {% include 'main/navbar.html' %}
     <div class="container" style="font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; border: 5px solid #e8b923; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-        <h1 class="section-title" style="text-align: center;">Technology</h1>
+        <h1 class="section-title" style="text-align: center; font-size: 48px;">Technology</h1>
         <p class="hidden">Explore the innovative technology behind Luminous Photonics' horticultural lighting solutions, based on our Uniform Photon Flux Principle (UPFP) for modular LED arrays.</p>
 
         <div class="section hidden">
@@ -56,36 +56,36 @@
             <div class="modular-images-section hidden">
                 <h1 class="section-title">Infinitely Scalable Modularized System</h3>
                     <h3 class="section-text">With just 4 types of modular pieces, our horticultural lighting system can optimally cover any size square or rectangular space.</h3>
-                    <div class="image-container">
+                    <div class="image-container hidden">
                     <img src="{% static 'main/images/mod1.png' %}" alt="Modular Fixture #1" id="mod1-image" style="max-width: 47%">
                     <img src="{% static 'main/images/mod2.png' %}" alt="Modular Fixture #2" id="mod2-image" style="max-width: 47%">
                 </div>
-                <div class="image-container">
+                <div class="image-container hidden">
                     <img src="{% static 'main/images/mod3.png' %}" alt="Modular Fixture #3" id="mod3-image" style="max-width: 47%">
                     <img src="{% static 'main/images/mod4.png' %}" alt="Modular Assembly #1" id="mod4-image" style="max-width: 47%">
                 </div>
                 <h3 class="section-text">Our arrangement strategem continues ad infinitum...</h3>
-                <div class="image-container">
+                <div class="image-container hidden">
                     <img src="{% static 'main/images/csn.jpeg' %}" alt="CSN #1" id="csn-image" style="max-width: 65%">
                     <img src="{% static 'main/images/csn22.png' %}" alt="CSN #2" id="csn22-image" style="max-width: 65%">
                 </div>       
                 <h3 class="section-text">Infinite concnetric square layers can be added to create endless configurations of arrays.</h3>         
-                <div class="image-container">
+                <div class="image-container hidden">
                     <img src="{% static 'main/images/mod5.png' %}" alt="Modular Assembly #2" id="mod5-image" style="max-width: 45%">
                     <img src="{% static 'main/images/mod6.png' %}" alt="Modular Assembly #3" id="mod6-image" style="max-width: 45%">
                 </div>
             </div>       
-            <div class="section hidden" style="text-align: center;">
-                <h3 class="section-text">Here's an example of a 61-CoB lighting array.</h3>  
+            <div class="section hidden">
+                <h3 class="section-text" style="text-align: center;">Here's an example of a 61-CoB lighting array.</h3>  
                 <div class="image-container">
                     <img src="{% static 'main/images/fixture.png' %}" alt="Modular Assembly #4" id="mod7-image" width="500" height="500" style="display: block; margin: 0 auto;">
                 </div>
-                <h3 class="section-text">And with just 2 linear connector modules, two square lighting arrays can be conjoined to form a perfect rectangular lighting array.</h3>
-                <div class="image-container">
+                <h3 class="section-text" style="text-align: center;">And with just 2 linear connector modules, two square lighting arrays can be conjoined to form a perfect rectangular lighting array.</h3>
+                <div class="image-container hidden">
                     <img src="{% static 'main/images/csnrect.png' %}" alt="CSN Rect" id="csnrect-image" style="display: block; margin: 0 auto;">
                 </div>
             </div>
-        <div class="section hidden" style="text-align: center;">
+        <div class="section hidden">
             <h1 class="section-title" id="ls">Visualizing Light Uniformity</h1>
             <p>
                 Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs compares a traditional or less optimized approach (right) with our UPFP-based solution (left).
@@ -93,37 +93,37 @@
         
             <h2 class="section-title">Beam Profile</h2>
             <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the left demonstrates a more uniform beam spread with significantly reduced energy waste.</p>
-            <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/beam_profile_1.png' %}" alt="Beam Profile - Traditional" id="beam-profile-1">
-                <img class="hidden" src="{% static 'main/images/beam_profile_2.png' %}" alt="Beam Profile - UPFP" id="beam-profile-2">
+            <div class="image-container hidden">
+                <img src="{% static 'main/images/beam_profile_1.png' %}" alt="Beam Profile - Traditional" id="beam-profile-1">
+                <img src="{% static 'main/images/beam_profile_2.png' %}" alt="Beam Profile - UPFP" id="beam-profile-2">
             </div>
             <p class="image-caption">Figure 1: Comparison of Beam Profiles. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
             <h2 class="section-title">PPFD Surface Graphs</h2>
             <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the left exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target PPFD range).</p>
-            <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="PPFD Surface Graph - Traditional" id="ppfd-surface-1">
-                <img class="hidden" src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP" id="ppfd-surface-2">
+            <div class="image-container hidden">
+                <img src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="PPFD Surface Graph - Traditional" id="ppfd-surface-1">
+                <img src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP" id="ppfd-surface-2">
             </div>
             <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
             <h2 class="section-title">2D Variance Graphs</h2>
             <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (left) demonstrates significantly reduced variance in photon distribution, showcasing far superior uniformity.</p>
-            <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional" id="2d-variance-1">
-                <img class="hidden" src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP" id="2d-variance-2">
+            <div class="image-container hidden">
+                <img src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional" id="2d-variance-1">
+                <img src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP" id="2d-variance-2">
             </div>
             <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
             <h2 class="section-title">Heatmaps</h2>
             <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (left) displays a more consistent color across the growing area, signifying superior uniformity. While the competitor displays a pronounced concentration of photons toward the center of the illuminated area, as can be seen by the circular radiation pattern.</p>
-            <div class="image-container">
-                <img class="hidden" src="{% static 'main/images/heatmap_1.png' %}" alt="Heatmap - Traditional" id="heatmap-1">
-                <img class="hidden" src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP" id="heatmap-2">
+            <div class="image-container hidden">
+                <img src="{% static 'main/images/heatmap_1.png' %}" alt="Heatmap - Traditional" id="heatmap-1">
+                <img src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP" id="heatmap-2">
             </div>
             <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
         
-            <h2 class="section-title" id="ml">Proprietary Machine Learning Algorithm</h2>
+            <h2 class="section-title hidden" id="ml">Proprietary Machine Learning Algorithm</h2>
             <p>
                 Central to our Uniform Photon Flux Principle (UPFP) is a sophisticated machine learning algorithm that dynamically optimizes LED intensities to ensure uniform Photosynthetic Photon Flux Density (PPFD) across the grow area. Below are key components of our algorithm:
             </p>
@@ -133,9 +133,9 @@
                 The optimization function minimizes the Mean Absolute Deviation (MAD) of PPFD from the target value while adhering to energy constraints. Here's a snippet of how the objective function is defined:
             </p>
         
-            <div style="max-width: 800px; margin: 0 auto; padding: 10px;">
+            <div class="hdiden" style="max-width: 800px; margin: 0 auto; padding: 10px;">
                 {% verbatim %}
-                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
         def objective_function(light_intensities, target_ppfd):
             ppfd_values = calculate_ppfd(light_intensities)
             mad = np.mean(np.abs(ppfd_values - target_ppfd))
@@ -154,7 +154,7 @@
                 </p>
             
                 {% verbatim %}
-                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
         def lambertian_emission(intensity, distance, height):
             if distance == 0:
                 return intensity
@@ -172,7 +172,7 @@
                 </p>
             
                 {% verbatim %}
-                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
         result = minimize(
             objective_function,
             initial_intensities,
@@ -209,7 +209,7 @@
                 </div>
             </div>
             <div class="section hidden">
-                <h1 class="section-title" style="text-align: center;">Technical Details</h1>
+                <h1 class="section-title">Technical Details</h1>
                 <p>
                     Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
                 </p>
@@ -219,7 +219,7 @@
                     <b>Degree of Uniformity (DOU):</b><br> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\] Our prototype numeric solutions have achieved DOU values exceeding 99%.
             </div>
             
-            <div class="section hidden" style="text-align: center;">
+            <div class="section hidden">
                 <h1 class="section-title">Experimental Validation</h1>
                 <p>
                     We are committed to rigorous experimental validation of our UPFP technology. We will be using Apogee Instruments spectroradiometers (PS series for lab testing and the MS-100 handheld for field testing) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
@@ -233,7 +233,7 @@
                 </ul>
                 </div>
             
-                <h1 class="section-title" style="text-align: center;">References</h1>
+                <h1 class="section-title">References</h1>
                 <ol>
                     <li><p>Zhang, G., <em>et al.</em>, 2015. A combination of downward lighting and upward lighting improves plant growth in plant factories. <em>Hortscience</em>, 50(8), 1126--1130.</p></li>
                     <li><p>Joshi, J., Zhang, G., Shen, S., Supaibulwatana, K., Watanabe, C., Yamori, W., 2017. A combination of downward lighting and supplemental upward lighting improves plant growth in a closed plant factory with artificial lighting. <em>Hortscience</em> 52 (6), 831--835. <a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">https://doi.org/10.21273/HORTSCI11822-17</a></p></li>

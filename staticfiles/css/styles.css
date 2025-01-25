@@ -162,21 +162,7 @@ body {
   }  
   
   
-  /* Hover scaling for interactive items */
-  .info-box:hover,
-  .button:hover {
-    transform: scale(1.02);
-    transition: transform 0.3s ease;
-  }
 
-/* Info Box Styles */
-.info-box-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin-top: 20px;
-    margin-bottom: 40px;
-}
 
 .home-button {
     position: fixed;
@@ -197,20 +183,38 @@ body {
 
 .info-box {
     background-color: #ffffff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 15px;
     margin: 10px;
     text-align: center;
-    width: 18%; /* Adjust as needed */
-    min-width: 150px; /* Minimum width of the boxes */
+    width: 18%;
+    min-width: 150px;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
-    
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Arrange content vertically */
+    justify-content: center; /* Center vertically */
+}
+
+/* Hover scaling for interactive items */
+.info-box:hover,
+.button:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+/* Info Box Styles */
+.info-box-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 .info-box:hover {
-    transform: translateY(-5px); /* Slightly raise the box */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #F0F0F0;
 }
 
@@ -222,11 +226,16 @@ body {
 .info-box h2 {
     color: #0078BE;
     margin-bottom: 10px;
+    text-align: center; /* Center the h2 heading */
+    line-height: 1.2;
+    margin-bottom: 5px;
 }
 
 .info-box p {
     font-size: 0.9em;
     color: #333;
+    text-align: center; /* Center the paragraph text */
+    margin-top: 0;
 }
 
 .info-box-content {
@@ -240,19 +249,23 @@ body {
 
 /* Styling for the Learn More button */
 .info-box .learn-more-button {
-    background-color: #0078BE; /* Button color */
-    color: white; /* Button text color */
+    background-color: #0078BE;
+    color: white;
     border: none;
     padding: 10px 20px;
     margin-top: 10px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9em;
-    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    transition: background-color 0.3s ease;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 .info-box .learn-more-button:hover {
-    background-color: #003380; /* Darker shade for hover effect */
+    background-color: #003380;
 }
 
 /* Responsive design adjustments */
@@ -553,7 +566,7 @@ button[type="submit"]:hover {
 /* Intro Text Styles */
 .intro-text {
     font-size: 1.1em;
-    line-height: 1.6;
+    line-height: 1.2;
     margin-bottom: 30px;
     text-align: center;
     color: #000000;
@@ -625,7 +638,7 @@ button[type="submit"]:hover {
 
 .feature p {
     font-size: 1.1em;
-    line-height: 1.5;
+    line-height: 1.2;
     color: #000000; /* Lighter gray for dark theme */
 }
 
@@ -675,9 +688,21 @@ button[type="submit"]:hover {
     background-position: center;
     background-size: cover;
     display: flex;
+    justify-content: center; /* Center content horizontally */
     align-items: center;
-    min-height: 100vh; /* Ensure it takes at least full viewport height */
-    overflow: hidden; /* Prevent horizontal scroll if image is wider */
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative; /* For absolute positioning of overlay */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Adjust for desired darkness */
+    z-index: 1; /* Ensure overlay is above the background image */
 }
 
 .content-wrapper {
@@ -685,39 +710,108 @@ button[type="submit"]:hover {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 0;
+    height: 100%;
+    padding: 50px;
     box-sizing: border-box;
+    position: relative; /* Position relative to the .grey-background */
+    z-index: 2; /* Ensure content is above the overlay */
 }
 
 .image-container1 {
-    flex: 0 0 auto;
-    width: 50%; /* Adjust as needed */
-    padding-left: 5%;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 5%; /* Adjust position as needed */
+    transform: translateY(-50%);
+    width: 50%; /* Adjust width as needed */
+    transition: opacity 0.8s ease-in-out; /* Add a transition for the fade-in effect */
+}
+
+.image-container1.visible {
+    opacity: 1; /* Make the image container fully opaque */
 }
 
 .image-container1 img {
-    max-width: 100%; /* Adjust as needed */
+    max-width: 100%;
     height: auto;
     display: block;
-    margin: 0 auto;
-    transition: transform 0.3s ease; /* Smooth transition */
+    transition: transform 0.3s ease;
 }
 
 .info-panel {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6); /* Adjust transparency as needed */
     color: #ffffff;
-    padding: 20px 30px;
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    width: 35%; /* Adjust as needed */
-    margin-right: 15%;
-    max-width: 400px;
+    width: 40%; /* Adjust width as needed */
+    max-width: 300px;
+    z-index: 3; /* Ensure the info panel is above other elements */
+    position: relative; /* Position relative to the .grey-background */
+    left: 10%;
     opacity: 0;
-    transform: translateX(50px);
     transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: translateX(-50px);
+}
+
+.info-panel .panel-title {
+    font-size: 28px; /* Larger title */
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 15px; /* Space between title and list */
+    color: #0078BE; /* Adjust as needed */
+    text-align: left; /* Align title to the left */
+}
+.key-features-section {
+    margin-bottom: 20px; /* Space between the list and the button */
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-item {
+    margin-bottom: 10px; /* Space between list items */
+    font-size: 18px;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+}
+
+.feature-item::before {
+    content: '';
+    display: inline-block;
+    width: 12px; /* Adjust size as needed */
+    height: 12px; /* Adjust size as needed */
+    background-color: #0078BE; /* Adjust color as needed */
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.cta-section {
+    text-align: left; /* Align button to the left */
+}
+
+.learn-more-link {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.learn-more {
+    background-color: #0078BE; /* Adjust as needed */
+    color: #ffffff;
+    border: none;
+    padding: 12px 25px; /* Adjust padding as needed */
+    border-radius: 5px;
+    font-size: 18px; /* Adjust font size as needed */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.learn-more:hover {
+    background-color: #003380; /* Adjust as needed */
 }
 
 .info-panel.visible {
@@ -726,9 +820,8 @@ button[type="submit"]:hover {
 }
 
 .info-panel h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #ffffff;
+    font-size: 36px;
+    color: #0078BE;
 }
 
 .info-panel ul {
@@ -739,8 +832,8 @@ button[type="submit"]:hover {
 
 .info-panel ul li {
     margin-bottom: 8px;
-    font-size: 16px;
-    line-height: 1.4;
+    font-size: 20px;
+    line-height: 1.2;
     display: flex;
     align-items: center;
 }
@@ -757,11 +850,11 @@ button[type="submit"]:hover {
 
 .info-panel .learn-more {
     background-color: #0078BE;
-    color: #ffffff;
+    color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -775,7 +868,7 @@ button[type="submit"]:hover {
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateX(50px);
+        transform: translateX(-50px);
     }
     to {
         opacity: 1;
@@ -787,31 +880,47 @@ button[type="submit"]:hover {
     animation: slideIn 0.8s ease forwards;
 }
 
+
 /* Media Query for Mobile */
 @media (max-width: 768px) {
     .grey-background {
         background-size: cover; /* Maintain consistent background behavior */
         padding: 40px 5%;
+        min-height: auto;
     }
 
     .content-wrapper {
-        flex-direction: column;
+        flex-direction: column-reverse;
+        align-items: center; /* Center content on mobile */
     }
 
     .image-container1 {
+        position: relative;
         width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: -25px;
         padding-left: 0;
+        top: 0;
+        right: 0;
+        transform: none;
+        z-index: 3;
     }
 
     .image-container1 img {
-        max-width: 80%;
+        max-width: 100%;
     }
 
     .info-panel {
-        width: 90%;
+        width: 100%; /* Adjust as needed */
         max-width: none;
         margin-right: 0;
+        margin-left: 0;
+        z-index: 2;
+    }
+    .info-panel h3 {
+        text-align: center;
+    }
+    .info-panel ul {
+        padding-left: 25px;
     }
 }
 
@@ -1017,33 +1126,49 @@ pre code {
 
 /* Hero Section Styles */
 .hero {
-    position: relative; /* Important for z-index to work */
-    overflow: hidden; /* Hide any video overflow */
-    padding: 20px 5%;
+    position: relative;
+    overflow: hidden;
     box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40vh;
 }
 
-.hero video {
-    position: absolute; /* Take video out of normal flow */
+.video-overlay {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cover the entire container */
-    z-index: -1; /* Place video behind other content */
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Add box shadow */
 }
 
-/* Optional: Style for fallback image or placeholder */
-.video-placeholder {
-    background-image: var(--bg-image); /* Use the CSS variable here */
-    /* Styles for a placeholder image or background color */
+.hero video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
 }
 
 .hero h2 {
     font-size: 56px;
     font-weight: 600;
     color: #ffffff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adjust values as needed */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 2;
+}
+
+/* Optional: Style for fallback image or placeholder */
+.video-placeholder {
+    background-image: var(--bg-image); /* Use the CSS variable here */
+    /* Styles for a placeholder image or background color */
 }
 
 /* Responsive Styles */

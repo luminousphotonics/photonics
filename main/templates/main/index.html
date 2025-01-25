@@ -31,9 +31,9 @@
 
     <div class="container">
         <div class="hero hidden">
-            <video autoplay loop muted playsinline>
+            <div class="video-overlay"></div> <video autoplay loop muted playsinline>
                 <source src="{% static 'main/images/bannervid.mp4' %}" type="video/mp4">
-                </video>
+            </video>
             <h2>Revolutionizing Horticultural Lighting</h2>
         </div>
         <div>
@@ -99,22 +99,26 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
         </div>
         </div>
         <div class="grey-background" style="--bg-image: url('{% static 'main/images/handleaf.jpg' %}');">
-            <div class="content-wrapper">
+            <div class="overlay"></div> <div class="content-wrapper">
+                <div class="info-panel">
+                    <div class="key-features-section">
+                        <h3 class="panel-title">Key Features</h3>
+                        <ul class="feature-list">
+                            <li class="feature-item">Homogeneous PAR Distribution</li>
+                            <li class="feature-item">Optimized Energy Efficiency</li>
+                            <li class="feature-item">Infinitely Scalable</li>
+                            <li class="feature-item">Agentic AI Control</li>
+                            <li class="feature-item">Advanced Thermal Management</li>
+                        </ul>
+                    </div>
+                    <div class="cta-section">
+                        <a href="{% url 'technology' %}" class="learn-more-link">
+                            <button class="learn-more">Learn More</button>
+                        </a>
+                    </div>
+                </div>
                 <div class="image-container1">
                     <img src="{% static 'main/images/fixture.png' %}" alt="Fixture">
-                </div>
-                <div class="info-panel">
-                    <h3>Key Features</h3>
-                    <ul>
-                        <li>Homogeneous PAR Distribution</li>
-                        <li>Optimized Energy Efficiency</li>
-                        <li>Infinitely Scalable</li>
-                        <li>Agentic AI Control</li>
-                        <li>Advanced Thermal Management</li>
-                    </ul>
-                    <a href="{% url 'technology' %}" class="learn-more-link">
-                        <button class="learn-more">Learn More</button>
-                    </a>
                 </div>
             </div>
         </div>

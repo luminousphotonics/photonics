@@ -3,8 +3,36 @@ body {
     font-family: 'Avenir Next', 'Helvetica Neue', sans-serif; 
     margin: 0;
     padding: 0;
-    background-color: #1E1E1E; /* Dark background */
-    color: #e0e0e0;           /* Light text */
+    background-color: #F4F4F4; /* Light background */
+    color: #000000;           /* Black text */
+}
+
+/* Target all <h3> elements within the specific sections */
+.cooling-system-synopsis h3 {
+    color: #0078BE;
+    margin-bottom: 15px; /* Reduced margin-bottom */
+}
+
+/* Optional: Adjust margin-top of paragraphs or lists below the titles */
+.cooling-system-synopsis p,
+.cooling-system-synopsis ul {
+    margin-top: 15px; /* Reduced margin-top (adjust as needed) */
+}
+
+.grey-background {
+    /*background-color: #333333;*/
+    background-image: var(--bg-image); /* Use the CSS variable here */
+    padding: 20px 5%; /* Add padding to create space */
+    box-sizing: border-box; /* Include padding in the element's total width */
+    background-repeat: no-repeat;
+    background-size: cover; /* Zoom out to fit the entire image */
+}
+
+/* Media query for mobile devices (adjust breakpoint as needed) */
+@media (max-width: 768px) {
+    .grey-background {
+        background-size: contain; /* Zoom out to fit the entire image */
+    }
 }
 
 /* Dropdown container positioning */
@@ -104,8 +132,7 @@ body {
 
 .info-box {
     background-color: #ffffff;
-    border: 5px solid #e8b923;
-    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     padding: 15px;
     margin: 10px;
     text-align: center;
@@ -123,7 +150,12 @@ body {
 }
 
 .info-box h3 {
-    color: #000000;
+    color: #0078BE;
+    margin-bottom: 10px;
+}
+
+.info-box h2 {
+    color: #0078BE;
     margin-bottom: 10px;
 }
 
@@ -143,7 +175,7 @@ body {
 
 /* Styling for the Learn More button */
 .info-box .learn-more-button {
-    background-color: #00acee; /* Button color */
+    background-color: #0078BE; /* Button color */
     color: white; /* Button text color */
     border: none;
     padding: 10px 20px;
@@ -159,9 +191,22 @@ body {
 }
 
 /* Responsive design adjustments */
+/* General styles for the paragraph */
+.intro-paragraph {
+    max-width: 85%;
+    margin-left: 100px;
+    line-height: 1.2;
+    font-size: 35px; /* Default font size for larger screens */
+}
+
+/* Responsive design adjustments */
 @media (max-width: 768px) {
     .info-box {
         width: 45%; /* Two boxes per row on smaller screens */
+    }
+    .intro-paragraph {
+        font-size: 18px; /* Smaller font size on mobile */
+        margin-left: 20px; /* Reduced margin on mobile */
     }
 }
 
@@ -169,6 +214,8 @@ body {
     .info-box {
         width: 95%; /* One box per row on very small screens */
     }
+    /* You might not need separate styles for 480px, 
+        unless you want further adjustments */
 }
 
 .align-list {
@@ -218,16 +265,13 @@ p {
 }
 
 .code-border {
-    border: 5px solid #e8b923;
-    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* Existing Navbar Styles */
 .navbar {
     background-color: #ffffff;
     color: #E31937;
-    border: 5px solid #e8b923;
-    border-radius: 5px;
     padding: 10px 0;
     margin-bottom: 20px;
     position: relative;
@@ -371,7 +415,7 @@ p {
 }
 
 .section-title {
-    color: #e8b923; /* Accent color */
+    color: #0078BE; /* Accent color */
     margin-bottom: 10px;
 }
 
@@ -386,6 +430,8 @@ p {
 
 .form-group {
     margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border: none;
 }
 
 label {
@@ -398,11 +444,11 @@ input[type="email"],
 textarea {
     width: 100%;
     padding: 10px;
-    background-color: #2c2c2c;
+    background-color: #ffffff;
     color: #e0e0e0;
-    border: 1px solid #555;
-    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     box-sizing: border-box;
+    border: none;
 }
 
 
@@ -415,23 +461,26 @@ textarea {
     background-color: #ffffff;
     color: rgb(0, 0, 0);
     padding: 10px 20px;
-    border: 5px solid #e8b923;
-    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     cursor: pointer;
     font-size: 16px;
+    border: none;
 }
 
 button[type="submit"]:hover {
     background-color: #F0F0F0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* Contact Information Styles */
 .contact-info {
     margin-top: 40px;
+    line-height: 1.2;
 }
 
 .contact-info p {
     margin-bottom: 10px;
+    line-height: 1.2;
 }
 
 /* Hero Section Styles */
@@ -483,14 +532,16 @@ button[type="submit"]:hover {
 .button {
     display: inline-block;
     background-color: #ffffff;
-    color: #000000;
-    border: 5px solid #e8b923;
-    padding: 12px 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     text-decoration: none;
-    border-radius: 5px;
+    color: #0078BE;
     margin-top: 15px;
     font-weight: 500;
     transition: background-color 0.3s ease;
+    border: none;
+    font-size: 20px;   /* Increased font size */
+    padding: 15px 35px; /* Increased padding */
+    min-width: 180px;  /* Set a minimum width */
 }
 
 .button:hover {
@@ -516,8 +567,8 @@ button[type="submit"]:hover {
 .features {
     display: flex;
     background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     justify-content: space-around;
-    border: 5px solid #e8b923;
     border-radius: 5px;
     margin-bottom: 40px;
     flex-wrap: wrap;
@@ -535,13 +586,14 @@ button[type="submit"]:hover {
     margin-bottom: 15px;
 }
 
-.feature h3 {
+
+.feature h2 {
     margin-bottom: 10px;
-    color: #e8b923;
+    color: #0078BE;
 }
 
 .feature p {
-    font-size: 0.9em;
+    font-size: 1.1em;
     line-height: 1.5;
     color: #000000; /* Lighter gray for dark theme */
 }
@@ -591,12 +643,33 @@ button[type="submit"]:hover {
     overflow: visible;
 }
 
+.image-container1 {
+    display: flex;
+    flex-wrap: wrap;           /* Allow wrapping on smaller screens */
+    justify-content: left;   /* Center images horizontally */
+    gap: 10px;
+    margin-top: 20px;
+    overflow: visible;
+}
+.image-container1 img {
+    flex: 1 1 45%;            /* Allow images to grow/shrink, aiming for about 45% of container width each */
+    max-width: 45%;           /* Prevent images from exceeding 45% of container width */
+    height: auto;             /* Maintain aspect ratio */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.image-container1 img:hover {
+    transform: scale(1.1); /* Enlarge image by 10% on hover */
+    z-index: 2; /* Bring hovered image on top if overlapping occurs */
+}
+
 .image-container img {
     flex: 1 1 45%;            /* Allow images to grow/shrink, aiming for about 45% of container width each */
     max-width: 45%;           /* Prevent images from exceeding 45% of container width */
     height: auto;             /* Maintain aspect ratio */
-    border: 5px solid #e8b923;
-    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin-bottom: 10px;
     transition: transform 0.3s ease; /* Smooth transition */
 }
@@ -671,10 +744,6 @@ button[type="submit"]:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-#pdfContainer iframe {
-    border: 1px solid #444;
 }
 
 .image-caption {
@@ -806,45 +875,48 @@ pre code {
 
 /* Carousel Styling */
 .carousel-container {
-    width: 80%;
-    height: 80%;
+    width: 100%; /* Make the container full width */
     margin: 0 auto;
     overflow: visible;
     border-radius: 5px;
+    background-color: #232B3D;
+    padding: 20px 5%; /* Add padding to create space */
+    box-sizing: border-box; /* Include padding in the element's total width */
+}
+
+.carousel {
+    width: 90%; /* Adjust carousel width to fit within the padded container */
+    margin: auto;
 }
 
 .carousel .slick-slide {
     padding: 0 10px;
     text-align: center;
     overflow: visible;
+    background: transparent;
 }
 
 .carousel img {
     width: 100px;
     height: 100px;
     object-fit: cover;
-    border-radius: 8px;
-    border: 5px solid #e8b923;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin: 0 auto;
     display: block;
-    transition: transform 0.3s ease; /* Smooth transition */
     position: relative; /* Allows z-index adjustments */
 }
 
 .carousel img:hover {
     background-color: #F0F0F0;
-    transform: scale(1.1); /* Enlarge image by 10% on hover */
-    z-index: 10; /* Bring hovered image on top if overlapping occurs */
 }
 
 .carousel .slick-dots li button:before {
-    color: #66afe9;
+    color: #ccc; /* Light grey color for inactive dots */
     font-size: 12px;
 }
 
 .carousel .slick-dots li.slick-active button:before {
-    color: #005f7a;
+    color: #999; /* Slightly darker grey for the active dot (optional) */
 }
 
 .carousel .slick-prev:before,
@@ -853,20 +925,17 @@ pre code {
     font-size: 40px;
     opacity: 1;
     transition: transform 0.3s ease; /* Smooth transition */
+    background: transparent;
 }
 
 .carousel .slick-prev:hover:before,
 .carousel .slick-next:hover:before {
-    color: #e8b923;
-    transform: scale(1.1); /* Enlarge image by 10% on hover */
-    z-index: 2; /* Bring hovered image on top if overlapping occurs */
+    color: #CCCCCC;
 }
 
 .carousel .slick-prev,
 .carousel .slick-next {
     top: 50%;
-    transform: scale(1.1); /* Enlarge image by 10% on hover */
-    z-index: 10;
     width: 30px;
     height: 30px;
     line-height: 30px;
@@ -874,18 +943,17 @@ pre code {
 
 .carousel .slick-prev {
     left: -55px;
-    transition: transform 0.3s ease; /* Smooth transition */
 }
 
 .carousel .slick-next {
     right: -55px;
-    transition: transform 0.3s ease; /* Smooth transition */
 }
 
 .carousel .slick-dots {
     position: relative;
     bottom: -10px;
     margin-top: 0px;
+    background: transparent;
 }
 
 @media (max-width: 1024px) {

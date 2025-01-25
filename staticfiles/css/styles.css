@@ -7,6 +7,10 @@ body {
     color: #000000;           /* Black text */
 }
 
+.learn-more-link {
+    text-decoration: none; /* Remove underline */
+}
+
 /* FOOTER STYLES */
 .site-footer {
     background-color: #222; /* Dark background */
@@ -104,21 +108,7 @@ body {
     }
   }
 
-.grey-background {
-    /*background-color: #333333;*/
-    background-image: var(--bg-image); /* Use the CSS variable here */
-    padding: 20px 5%; /* Add padding to create space */
-    box-sizing: border-box; /* Include padding in the element's total width */
-    background-repeat: no-repeat;
-    background-size: cover; /* Zoom out to fit the entire image */
-}
 
-/* Media query for mobile devices (adjust breakpoint as needed) */
-@media (max-width: 768px) {
-    .grey-background {
-        background-size: contain; /* Zoom out to fit the entire image */
-    }
-}
 
 /* Dropdown container positioning */
 .dropdown {
@@ -171,16 +161,6 @@ body {
     animation: fadeSlideUp 0.8s ease-out forwards;
   }  
   
-  /* Parallax effect for hero */
-  .hero {
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    transition: transform 1s ease-out;
-  }
-  .hero.visible {
-    transform: scale(1.03);
-  }
   
   /* Hover scaling for interactive items */
   .info-box:hover,
@@ -569,41 +549,6 @@ button[type="submit"]:hover {
     line-height: 1.2;
 }
 
-/* Hero Section Styles */
-.hero {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 100px 20px;
-    text-align: center;
-    margin-bottom: 40px;
-    color: #e0e0e0;
-    position: relative;
-    z-index: 0;
-}
-
-.hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: -1;
-}
-
-.hero h1 {
-    font-size: 3em;
-    margin-bottom: 20px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.hero p {
-    font-size: 1.2em;
-    margin-bottom: 0;
-    line-height: 1.5;
-}
 
 /* Intro Text Styles */
 .intro-text {
@@ -720,6 +665,161 @@ button[type="submit"]:hover {
 }
 
 /* Image Container Styles */
+
+/* Existing styles for .image-container1 */
+
+.grey-background {
+    background-image: var(--bg-image);
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    min-height: 100vh; /* Ensure it takes at least full viewport height */
+    overflow: hidden; /* Prevent horizontal scroll if image is wider */
+}
+
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.image-container1 {
+    flex: 0 0 auto;
+    width: 50%; /* Adjust as needed */
+    padding-left: 5%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+.image-container1 img {
+    max-width: 100%; /* Adjust as needed */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.info-panel {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    width: 35%; /* Adjust as needed */
+    margin-right: 15%;
+    max-width: 400px;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.info-panel.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.info-panel h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.info-panel ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.info-panel ul li {
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+}
+
+.info-panel ul li::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #0078BE;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.info-panel .learn-more {
+    background-color: #0078BE;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.info-panel .learn-more:hover {
+    background-color: #003380;
+}
+
+/* Animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.info-panel {
+    animation: slideIn 0.8s ease forwards;
+}
+
+/* Media Query for Mobile */
+@media (max-width: 768px) {
+    .grey-background {
+        background-size: cover; /* Maintain consistent background behavior */
+        padding: 40px 5%;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+    }
+
+    .image-container1 {
+        width: 100%;
+        margin-bottom: 20px;
+        padding-left: 0;
+    }
+
+    .image-container1 img {
+        max-width: 80%;
+    }
+
+    .info-panel {
+        width: 90%;
+        max-width: none;
+        margin-right: 0;
+    }
+}
+
+.image-container1 img:hover {
+    transform: scale(1.1); /* Enlarge image by 10% on hover */
+    z-index: 2; /* Bring hovered image on top if overlapping occurs */
+}
+
 .image-container {
     display: flex;
     flex-wrap: wrap;           /* Allow wrapping on smaller screens */
@@ -727,28 +827,6 @@ button[type="submit"]:hover {
     gap: 10px;
     margin-top: 20px;
     overflow: visible;
-}
-
-.image-container1 {
-    display: flex;
-    flex-wrap: wrap;           /* Allow wrapping on smaller screens */
-    justify-content: left;   /* Center images horizontally */
-    gap: 10px;
-    margin-top: 20px;
-    overflow: visible;
-}
-.image-container1 img {
-    flex: 1 1 45%;            /* Allow images to grow/shrink, aiming for about 45% of container width each */
-    max-width: 45%;           /* Prevent images from exceeding 45% of container width */
-    height: auto;             /* Maintain aspect ratio */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 10px;
-    transition: transform 0.3s ease; /* Smooth transition */
-}
-
-.image-container1 img:hover {
-    transform: scale(1.1); /* Enlarge image by 10% on hover */
-    z-index: 2; /* Bring hovered image on top if overlapping occurs */
 }
 
 .image-container img {
@@ -936,13 +1014,46 @@ pre code {
     margin: 0 auto;
 }
 
+
+/* Hero Section Styles */
+.hero {
+    position: relative; /* Important for z-index to work */
+    overflow: hidden; /* Hide any video overflow */
+    padding: 20px 5%;
+    box-sizing: border-box;
+}
+
+.hero video {
+    position: absolute; /* Take video out of normal flow */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the entire container */
+    z-index: -1; /* Place video behind other content */
+}
+
+/* Optional: Style for fallback image or placeholder */
+.video-placeholder {
+    background-image: var(--bg-image); /* Use the CSS variable here */
+    /* Styles for a placeholder image or background color */
+}
+
+.hero h2 {
+    font-size: 56px;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adjust values as needed */
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     .hero {
         padding: 60px 20px;
     }
-    .hero h1 {
-        font-size: 2.5em;
+    .hero h2 {
+        font-size: 1.2em;
+        text-align: center;
     }
     .features {
         flex-direction: column;
@@ -965,7 +1076,7 @@ pre code {
     margin: 0 auto;
     overflow: visible;
     border-radius: 5px;
-    background-color: #232B3D;
+    background-color: #222222;
     padding: 20px 5%; /* Add padding to create space */
     box-sizing: border-box; /* Include padding in the element's total width */
 }
@@ -1016,7 +1127,7 @@ pre code {
 
 .carousel .slick-prev:hover:before,
 .carousel .slick-next:hover:before {
-    color: #CCCCCC;
+    color: #0078BE;
 }
 
 .carousel .slick-prev,

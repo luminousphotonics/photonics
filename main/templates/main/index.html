@@ -23,25 +23,6 @@
     <link rel="icon" type="image/x-icon" href="{% static 'main/images/favicon.ico' %}">
     <title>Luminous Photonics - Revolutionizing Horticultural Lighting</title>
     <style>
-        /* Hero Section Styles */
-        .hero {
-            background-image: url("{% static 'main/images/hero-bg.jpg' %}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding: 100px 20px;
-            max-height: 50%;
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-            position: relative;
-            z-index: 0;
-        }
-
-        .hero h2 {
-            font-size: 56px;
-            font-weight: 600; /* Or font-weight: 600; */
-        }
         
     </style>
 </head>
@@ -50,6 +31,9 @@
 
     <div class="container">
         <div class="hero hidden">
+            <video autoplay loop muted playsinline>
+                <source src="{% static 'main/images/bannervid.mp4' %}" type="video/mp4">
+                </video>
             <h2>Revolutionizing Horticultural Lighting</h2>
         </div>
         <div>
@@ -114,10 +98,25 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
             </div>
         </div>
         </div>
-        <div class="grey-background" style="--bg-image: url('{% static 'main/images/lightbulb.png' %}');">
-        <div class="image-container1 hidden" style="padding-top: 20px;">
-            <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" width="500" height="500" style="margin-bottom: 40px;">
-        </div>
+        <div class="grey-background" style="--bg-image: url('{% static 'main/images/handleaf.jpg' %}');">
+            <div class="content-wrapper">
+                <div class="image-container1">
+                    <img src="{% static 'main/images/fixture.png' %}" alt="Fixture">
+                </div>
+                <div class="info-panel">
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li>Homogeneous PAR Distribution</li>
+                        <li>Optimized Energy Efficiency</li>
+                        <li>Infinitely Scalable</li>
+                        <li>Agentic AI Control</li>
+                        <li>Advanced Thermal Management</li>
+                    </ul>
+                    <a href="{% url 'technology' %}" class="learn-more-link">
+                        <button class="learn-more">Learn More</button>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="features" style="padding-top: 20px;">
             <div class="feature hidden" style="margin-top: 20px;">
@@ -201,139 +200,158 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Slick Carousel
-            $('.carousel').slick({
-                dots: true,
-                infinite: true,
-                speed: 500,
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                adaptiveHeight: false,
-                autoplay: true,
-                autoplaySpeed: 3000,
-                arrows: true,
-                pauseOnHover: false,
-                centerMode: true,
-                variableWidth: false, // Ensure this is false
-            });
-
-            function adjustCarouselHeight() {
-                var maxHeight = 0;
-                $('.carousel .slick-slide').each(function() {
-                    if ($(this).height() > maxHeight) {
-                        maxHeight = $(this).height();
-                    }
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        </head>
+    <body>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize Slick Carousel
+                $('.carousel').slick({
+                    dots: true,
+                    infinite: true,
+                    speed: 500,
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    adaptiveHeight: false,
+                    autoplay: true,
+                    autoplaySpeed: 3000,
+                    arrows: true,
+                    pauseOnHover: false,
+                    centerMode: true,
+                    variableWidth: false, // Ensure this is false
                 });
-                $('.carousel').height(maxHeight);
-            }
-
-            // Adjust height on initialization
-            adjustCarouselHeight();
-
-            // Adjust height on window resize
-            $(window).on('resize', function() {
+    
+                function adjustCarouselHeight() {
+                    var maxHeight = 0;
+                    $('.carousel .slick-slide').each(function() {
+                        if ($(this).height() > maxHeight) {
+                            maxHeight = $(this).height();
+                        }
+                    });
+                    $('.carousel').height(maxHeight);
+                }
+    
+                // Adjust height on initialization
                 adjustCarouselHeight();
-            });
-
-            // Select elements you want to animate on scroll
-            const animElements = document.querySelectorAll('.hidden, .hero, .feature, .info-box, .cta');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    // Do not unobserve, so animations can reoccur on re-entry
+    
+                // Adjust height on window resize
+                $(window).on('resize', function() {
+                    adjustCarouselHeight();
+                });
+    
+                // Select elements you want to animate on scroll
+                const animElements = document.querySelectorAll('.hidden, .hero, .feature, .info-box, .cta');
+    
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Do not unobserve, so animations can reoccur on re-entry
+                        } else {
+                        entry.target.classList.remove('visible'); // Remove class when out of view
+                        }
+                    });
+                    }, { threshold: 0.1 });
+    
+                animElements.forEach(el => observer.observe(el));
+    
+                // Back to Top Button Functionality
+                const backToTopBtn = document.getElementById('backToTopBtn');
+    
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 300) {
+                        backToTopBtn.classList.add('show');
                     } else {
-                    entry.target.classList.remove('visible'); // Remove class when out of view
+                        backToTopBtn.classList.remove('show');
                     }
                 });
-                }, { threshold: 0.1 });
-
-            animElements.forEach(el => observer.observe(el));
-
-            // Back to Top Button Functionality
-            const backToTopBtn = document.getElementById('backToTopBtn');
-
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    backToTopBtn.classList.add('show');
-                } else {
-                    backToTopBtn.classList.remove('show');
-                }
-            });
-
-            backToTopBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
+    
+                backToTopBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                 });
-            });
-            // Home Button Functionality
-            const homeButton = document.getElementById('homeButton');
-
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                homeButton.classList.add('show');
-                } else {
-                    homeButton.classList.remove('show');
-                }
-            });
-            homeButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = "/";
-            });
-            
-            // Info Box Interactivity with Learn More Buttons
-            const infoBoxes = document.querySelectorAll('.info-box');
-            infoBoxes.forEach(box => {
-                box.addEventListener('click', function(event) {
-                    // If click is on the Learn More button, handle navigation
-                    if (event.target.classList.contains('learn-more-button')) {
-                        event.stopPropagation();  // Prevent parent click handler from firing
-                        const dataInfo = this.getAttribute('data-info');
-                        let targetUrl ='';
-
-                        switch (dataInfo) {
-                            case 'agentic-ai':
-                                targetUrl="{% url 'agenticai' %}"
-                                break;
-                            case 'lighting-simulations':
-                                targetUrl += "{% url 'technology' %}#ls";
-                                break;
-                            case 'ml-optimization':
-                                targetUrl += "{% url 'technology' %}#ml";
-                                break;
-                            case 'cooling-system':
-                                targetUrl += "{% url 'cooling_system' %}";
-                                break;
-                        }
-
-                        window.location.href = targetUrl;
+                // Home Button Functionality
+                const homeButton = document.getElementById('homeButton');
+    
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 300) {
+                    homeButton.classList.add('show');
                     } else {
-                        // Check if the clicked box is already active
-                        const isActive = this.classList.contains('active');
-
-                        // Close other info boxes only if the clicked box is not active
-                        if (!isActive) {
-                            infoBoxes.forEach(otherBox => {
-                                if (otherBox !== this) {
-                                    otherBox.classList.remove('active');
-                                }
-                            });
-                        }
-
-                        // Toggle active state on the clicked box
-                        this.classList.toggle('active');
+                        homeButton.classList.remove('show');
                     }
                 });
+                homeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = "/";
+                });
+    
+                // Info Box Interactivity with Learn More Buttons
+                const infoBoxes = document.querySelectorAll('.info-box');
+                infoBoxes.forEach(box => {
+                    box.addEventListener('click', function(event) {
+                        // If click is on the Learn More button, handle navigation
+                        if (event.target.classList.contains('learn-more-button')) {
+                            event.stopPropagation();  // Prevent parent click handler from firing
+                            const dataInfo = this.getAttribute('data-info');
+                            let targetUrl ='';
+    
+                            switch (dataInfo) {
+                                case 'agentic-ai':
+                                    targetUrl="{% url 'agenticai' %}"
+                                    break;
+                                case 'lighting-simulations':
+                                    targetUrl += "{% url 'technology' %}#ls";
+                                    break;
+                                case 'ml-optimization':
+                                    targetUrl += "{% url 'technology' %}#ml";
+                                    break;
+                                case 'cooling-system':
+                                    targetUrl += "{% url 'cooling_system' %}";
+                                    break;
+                            }
+    
+                            window.location.href = targetUrl;
+                        } else {
+                            // Check if the clicked box is already active
+                            const isActive = this.classList.contains('active');
+    
+                            // Close other info boxes only if the clicked box is not active
+                            if (!isActive) {
+                                infoBoxes.forEach(otherBox => {
+                                    if (otherBox !== this) {
+                                        otherBox.classList.remove('active');
+                                    }
+                                });
+                            }
+    
+                            // Toggle active state on the clicked box
+                            this.classList.toggle('active');
+                        }
+                    });
+                });
+                // Intersection Observer to trigger animation when info panel comes into view
+                const infoPanel = document.querySelector('.info-panel');
+    
+                const infoPanelObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            infoPanelObserver.unobserve(entry.target); // Stop observing once visible
+                        }
+                    });
+                }, { threshold: 0.2 }); // Adjust threshold as needed
+    
+                infoPanelObserver.observe(infoPanel);
             });
-
-
-        });
-    </script>
+        </script>
+        </body>
+    </html>
 {% include 'main/footer.html' %}
 </body>
 </html>

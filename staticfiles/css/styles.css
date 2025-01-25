@@ -7,17 +7,102 @@ body {
     color: #000000;           /* Black text */
 }
 
-/* Target all <h3> elements within the specific sections */
-.cooling-system-synopsis h3 {
-    color: #0078BE;
-    margin-bottom: 15px; /* Reduced margin-bottom */
+/* FOOTER STYLES */
+.site-footer {
+    background-color: #222; /* Dark background */
+    color: #eee; /* Light text */
+    padding: 60px 0;
+    font-family: "Avenir Next", sans-serif; /* Add this line */
 }
-
-/* Optional: Adjust margin-top of paragraphs or lists below the titles */
-.cooling-system-synopsis p,
-.cooling-system-synopsis ul {
-    margin-top: 15px; /* Reduced margin-top (adjust as needed) */
-}
+  
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  
+  .footer-column {
+    width: 30%; /* Adjust column width as needed */
+  }
+  
+  .footer-heading {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #fff; /* Slightly brighter color for headings */
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-links li {
+    margin-bottom: 12px;
+  }
+  
+  .footer-links a {
+    color: #eee;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out; /* Smooth color transition on hover */
+  }
+  
+  .footer-links a:hover {
+    color: #0078BE; /* Highlight color on hover */
+  }
+  
+  .social-links {
+    margin-top: 20px;
+  }
+  
+  .social-links a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px; /* Vertically center icon */
+    text-align: center;
+    border-radius: 50%;
+    background-color: #333;
+    color: #eee;
+    margin-right: 10px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .social-links a:hover {
+    background-color: #0078BE;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    border-top: 1px solid #444;
+    padding-top: 20px;
+  }
+  
+  /* Responsive Footer */
+  @media (max-width: 768px) {
+    .footer-column {
+      width: 45%; /* 2 columns on smaller screens */
+      margin-bottom: 30px;
+    }
+  
+    .footer-row {
+      justify-content: space-around; /* Adjust spacing for smaller screens */
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .footer-column {
+      width: 100%; /* 1 column on very small screens */
+      text-align: center;
+    }
+  
+    .social-links a {
+      margin: 0 5px; /* Adjust social icon spacing */
+    }
+  }
 
 .grey-background {
     /*background-color: #333333;*/
@@ -231,7 +316,7 @@ body {
 
 .two-col-section {
     column-count: 2;
-    column-gap: 1rem; /* Adjust gap between columns as needed */
+    column-gap: 1.5rem; /* Adjust gap between columns as needed */
     /* Optional: add padding or adjust width if necessary */
   }
 
@@ -258,10 +343,11 @@ a:hover {
 
 h1, h2, h3 {
     font-weight: 600;
+    line-height: 1.2;
 }
 
 p {
-    line-height: 1.6;
+    line-height: 1.2;
 }
 
 .code-border {
@@ -337,7 +423,7 @@ p {
     .dropdown-content a {
       font-size: 1.1em; /* or another size */
       color: #000000; /* desired text color */
-      background-color: #e8b923; /* desired background for dropdown items */
+      background-color: #F4F4F4; /* desired background for dropdown items */
     }
   }
 }

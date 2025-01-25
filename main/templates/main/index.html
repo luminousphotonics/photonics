@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
@@ -37,6 +37,11 @@
             position: relative;
             z-index: 0;
         }
+
+        .hero h2 {
+            font-size: 56px;
+            font-weight: 600; /* Or font-weight: 600; */
+        }
         
     </style>
 </head>
@@ -45,16 +50,14 @@
 
     <div class="container">
         <div class="hero hidden">
-            <h1 style="font-size: 60px;">Luminous Photonics</h1>
-            <h2 style="font-size: 32px;">Revolutionizing Horticultural Lighting</h2>
-            <p style="font-size: 24px;">Optimizing Energy Utilization with Homogeneous PAR Distribution</p>
+            <h2>Revolutionizing Horticultural Lighting</h2>
         </div>
         <div>
             <p class="intro-paragraph">
-                Welcome to <b><i style="color: #0078BE;">Luminous Photonics</i></b>, where we are pioneering the future of horticultural lighting. Our patented (<i>U.S. Patent #10687478</i>: <a  href="https://patents.google.com/patent/US10687478B2" target="_blank">Optimized LED Lighting Array for Horticultural Applications</a>), infinitely scalable, modularized lighting system achieves near-perfect homogeneous PAR distribution, dramatically improving energy efficiency and plant growth in controlled environments.
+                Welcome to <i style="color: #0078BE;">Luminous Photonics</i>, where we are pioneering the future of horticultural lighting. Our patented (<i>U.S. Patent #10687478</i>: <a  href="https://patents.google.com/patent/US10687478B2" target="_blank" style="font-size: 0.9em;">Optimized LED Lighting Array for Horticultural Applications</a>), infinitely scalable, modularized lighting system achieves near-perfect homogeneous PAR distribution, dramatically improving energy efficiency and plant growth in controlled environments.
             </p>
         </div>
-<div class="two-col-section hidden" style="font-family: 'Arial', sans-serif; line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px;">
+<div class="two-col-section hidden" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px;">
             <h2 style="color: #0078BE;">What is homogeneous PAR distribution?</h2>
             <p>
 A homogeneous photosynthetically active radiation (PAR) distribution refers to a situation where the intensity of light that plants can use for photosynthesis is evenly spread across a given area, meaning there is minimized variation in light levels from one location to another across the illuminated plane. This results in all plants in that area receiving the same amount of usable light for photosynthesis, or every part of every leaf receiving the same degree of light intensity.
@@ -331,5 +334,6 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
 
         });
     </script>
+{% include 'main/footer.html' %}
 </body>
 </html>

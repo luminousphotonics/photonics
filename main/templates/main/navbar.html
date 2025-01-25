@@ -22,7 +22,14 @@
               <a href="{% url 'cooling_system' %}">Thermal Management</a>
             </div>
           </li>
-          <li><a href="{% url 'applications' %}">Applications</a></li>
+          <li class="dropdown"> <a href="{% url 'applications' %}" class="dropbtn">Applications</a>
+            <div class="dropdown-content">
+              <a href="{% url 'cea' %}">Controlled Environment Agriculture (CEA)</a>
+              <a href="{% url 'applications' %}#bmp">Biomedical Photonics</a>
+              <a href="{% url 'applications' %}#acl">Architectural Lighting</a>
+              <a href="{% url 'applications' %}">Other Applications</a>
+            </div>
+          </li>
           <li><a href="{% url 'about' %}">About Us</a></li>
           <li><a href="{% url 'contact' %}">Contact</a></li>
         </ul>

@@ -12,4 +12,5 @@ urlpatterns = [
     path('simulation/', views.simulation_view, name='simulation_view'),
     path('agenticai/', views.agenticai, name='agenticai'),
     path('coolingsystem/', views.cooling_system, name='cooling_system'),
+    path('cea/', views.cooling_system, name='cea'),
 ]

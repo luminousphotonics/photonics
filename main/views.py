@@ -90,3 +90,6 @@ def agenticai(request):
 
 def cooling_system(request):
     return render(request, 'main/cooling_system.html')
+
+def cea(request):
+    return render(request, 'main/cea.html')

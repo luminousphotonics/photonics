@@ -15,6 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
     <title>Applications - Luminous Photonics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <script type="text/javascript" async
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
@@ -25,8 +26,7 @@
     <div class="container" style="font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         <h1 class="section-title" style="text-align: center;">Applications</h1>
         <p class="section-description hidden">Our Uniform Photon Flux Principle (UPFP) technology, while initially developed for horticultural lighting, has far-reaching implications across a variety of industries. The core principle of achieving uniform light distribution can be adapted and applied to numerous fields where precise and controlled illumination is essential.</p>
-        <div class="two-col-section">
-        <div class="section hidden">
+        <div class="section hidden" id="cea">
             <h2 class="section-title">Controlled-Environment Agriculture (CEA)</h2>
             <p>
                 UPFP technology revolutionizes indoor farming by optimizing light delivery to plants. This results in:
@@ -50,7 +50,7 @@
             </p>
         </div>
 
-        <div class="section hidden">
+        <div class="section hidden" id="acl">
             <h2 class="section-title">Architectural Lighting</h2>
             <p>
                 UPFP principles can be applied to design architectural lighting systems that provide:
@@ -75,7 +75,7 @@
             </p>
         </div>
 
-        <div class="section hidden">
+        <div class="section hidden" id="bmp">
             <h2 class="section-title">Biomedical Photonics</h2>
             <p>
                 Uniform light delivery is essential in various biomedical applications, including:
@@ -92,7 +92,7 @@
             <p>
                 UPFP can be employed in materials science research to:
                 <ul>
-                    <li>Study the effects of uniform light exposure on material properties and behavio.</li>
+                    <li>Study the effects of uniform light exposure on material properties and behavior.</li>
                     <li>Develop new light-activated materials and coatings.</li>
                     <li>Create controlled environments for materials testing and characterization under specific illumination conditions.</li>
                 </ul>
@@ -109,11 +109,11 @@
                 </ul>
             </p>
         </div>
-        <div class="section hidden" style="padding-bottom: 50px;">
+        <div class="section hidden">
             <h2 class="section-title">References</h2>
             <ol>
                 <li><p>Chen, L., Huang, Y. (2021). Adaptive Lighting Control in Bioreactors for Enhanced Cellular Productivity. <em>Journal of Biotechnology</em>, 345, 112--123.</p></li>
-                <li><p>Duffy, V. G., Figueiro, M. G. (2020). Personalized Lighting Systems for Enhanced Workplace Productivity. <em>Lighting Research \& Technology</em>, 52(3), 345--359.</p></li>
+                <li><p>Duffy, V. G., Figueiro, M. G. (2020). Personalized Lighting Systems for Enhanced Workplace Productivity. <em>Lighting Research & Technology</em>, 52(3), 345--359.</p></li>
                 <li><p>Garcia, M., Smith, T., Lee, J. (2019). Impact of Uniform Lighting on Tissue Engineering Outcomes. <em>Tissue Engineering Part A</em>, 25(10), 789--800.</p></li>
                 <li><p>Joshi, J., Zhang, G., Shen, S., Supaibulwatana, K., Watanabe, C., Yamori, W. (2017). A combination of downward lighting and supplemental upward lighting improves plant growth in a closed plant factory with artificial lighting. <em>Hortscience</em>, 52(6), 831--835.</p></li>
                 <li><p>Kozai, T. (2022). Role and characteristics of PFALs. <em>Plant Factory Basics, Applications and Advances</em>, 46. Academic Press.</p></li>
@@ -205,5 +205,6 @@
             });
         });
     </script>
+{% include 'main/footer.html' %}
 </body>
 </html>

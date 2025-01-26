@@ -2,6 +2,7 @@
 body {
     font-family: 'Avenir Next', 'Helvetica Neue', sans-serif; 
     margin: 0;
+    font-size: 20px;
     padding: 0;
     background-color: #F4F4F4; /* Light background */
     color: #000000;           /* Black text */
@@ -221,18 +222,20 @@ body {
 .info-box h3 {
     color: #0078BE;
     margin-bottom: 10px;
+    font-size: 20px;
 }
 
 .info-box h2 {
     color: #0078BE;
     margin-bottom: 10px;
+    font-size: 20px;
     text-align: center; /* Center the h2 heading */
     line-height: 1.2;
     margin-bottom: 5px;
 }
 
 .info-box p {
-    font-size: 0.9em;
+    font-size: 16px;
     color: #333;
     text-align: center; /* Center the paragraph text */
     margin-top: 0;
@@ -1050,7 +1053,9 @@ pre {
     background-color: #1e1e1e;
     padding: 10px;
     overflow-x: auto;
+    padding-top: 20px;
     font-family: monospace;
+    font-size: 16px;
     white-space: pre-wrap;
     max-width: 700px;
     border: 1px solid #444;

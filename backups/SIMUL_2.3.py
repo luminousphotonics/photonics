@@ -22,8 +22,6 @@ SETTINGS_FILE = 'settings.json'
 show_light_sources = True
 show_measurement_points = True
 
-CONVERSION_FACTOR = 0.0171
-
 # Function to calculate distance remains unchanged
 def calculate_distance(light_position, measurement_point):
     light_x, light_y = light_position
@@ -150,8 +148,10 @@ def prepare_heatmap_data():
     global floor_height, floor_width, light_sources, num_points
     global light_intensities, layer_intensities, min_int, max_int, measurement_points
     global average_intensity, total_intensity, lux, intensity_variance
-    global total_lumens, center_source
+    global total_lumens, center_source, conversion_factor
 
+
+    conversion_factor = 0.0171
     measurement_points = []
 
     # Get user-defined settings
@@ -394,7 +394,7 @@ def prepare_heatmap_data():
                 # Use LUX calculation instead of PPFD
                 lux_contribution = calculate_lux(light_intensities[light_index], horizontal_distance, light_z)
                 total_lux += lux_contribution
-    
+        
         intensity[point_index] = total_lux  # Update the intensity array with LUX values
 
     # --- Adaptive Calculation of Multiple Bounce Reflections ---
@@ -450,7 +450,7 @@ def prepare_heatmap_data():
     total_lumens_label = Label(root, text=f"Total Lumens: {total_lumens:.2f}")
     total_lumens_label.grid(row=27, column=5, columnspan=5)
 
-    average_intensity = np.mean(intensity) * CONVERSION_FACTOR
+    average_intensity = np.mean(intensity) * conversion_factor
     total_intensity = np.sum(intensity)
 
     # Calculate LUX instead of PPFD
@@ -539,6 +539,9 @@ def generate_heatmap(center_source):
     intensity_matrix = intensity.reshape((num_points_per_dim, num_points_per_dim))
     intensity_matrix = np.flip(intensity_matrix, axis=0)
 
+    # Multiply intensity by CONVERSION_FACTOR
+    intensity_matrix = intensity_matrix * conversion_factor
+
     # Plot the floor space
     plt.figure(figsize=(8, 8))
     plt.xlim(0, floor_width)
@@ -595,7 +598,7 @@ def generate_heatmap(center_source):
         plt.plot(measurement_xs, measurement_ys, 'r+', markersize=7, alpha=1.0)
 
     # Display summary texts
-    text = f'Total Lumens: {total_lumens}\nAverage LUX: {average_intensity:.2f}\nMean Absolute Deviation: {intensity_variance:.2f}'
+    text = f'Total Lumens: {total_lumens}\nAverage PPFD: {average_intensity * conversion_factor:.2f}\nMean Absolute Deviation: {intensity_variance * conversion_factor:.2f}'
     text_lines = text.split('\n')
 
     # Get the current axis

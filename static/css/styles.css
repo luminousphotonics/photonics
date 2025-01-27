@@ -887,25 +887,32 @@ button[type="submit"]:hover {
 /* Media Query for Mobile */
 @media (max-width: 768px) {
     .grey-background {
-        background-size: cover; /* Maintain consistent background behavior */
+        background-size: cover;
         padding: 40px 5%;
-        min-height: auto;
+        min-height: 650px; /* Increased from 500px */
+        background-position: center 70%; /* Adjust as needed */
+    }
+
+    .overlay {
+        min-height: inherit;
     }
 
     .content-wrapper {
         flex-direction: column-reverse;
-        align-items: center; /* Center content on mobile */
+        align-items: center;
+        min-height: inherit;
     }
 
     .image-container1 {
         position: relative;
         width: 100%;
-        margin-bottom: -25px;
+        margin-bottom: 0;
         padding-left: 0;
         top: 0;
         right: 0;
         transform: none;
         z-index: 3;
+        margin-top: 50px; /* Adjust as needed */
     }
 
     .image-container1 img {
@@ -913,17 +920,23 @@ button[type="submit"]:hover {
     }
 
     .info-panel {
-        width: 100%; /* Adjust as needed */
+        width: 100%;
         max-width: none;
         margin-right: 0;
         margin-left: 0;
         z-index: 2;
+        max-height: 250px; /* Adjust as needed */
+        padding-top: 20px;
+        padding-bottom: 20px;
+        overflow-y: auto;
     }
+
     .info-panel h3 {
         text-align: center;
     }
+
     .info-panel ul {
-        padding-left: 25px;
+        padding-left: 0px;
     }
 }
 

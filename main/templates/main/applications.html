@@ -126,85 +126,16 @@
         </div>
     </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const elements = document.querySelectorAll('.hidden');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    } else {
-                        entry.target.classList.remove('visible'); // Make the effect repeatable
-                    }
-                });
-            });
-
-            elements.forEach(element => {
-                observer.observe(element);
-            });
-        });
-    </script>
     <a href="#" class="back-to-top" id="backToTopBtn">
         <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
     </a>
     <a href="/" class="home-button" id="homeButton">
         <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
      </a>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const backToTopBtn = document.getElementById('backToTopBtn');
-
-            // Show the button when the user scrolls down 300px from the top
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    backToTopBtn.classList.add('show');
-                } else {
-                    backToTopBtn.classList.remove('show');
-                }
-            });
-
-            // Smooth scroll to top when the button is clicked
-            backToTopBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-        // Home Button Functionality
-        const homeButton = document.getElementById('homeButton');
-
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 300) {
-               homeButton.classList.add('show');
-            } else {
-                homeButton.classList.remove('show');
-            }
-        });
-        homeButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = "/";
-        });
-            // Existing IntersectionObserver for '.hidden' elements
-            const elements = document.querySelectorAll('.hidden');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    } else {
-                        entry.target.classList.remove('visible'); // Make the effect repeatable
-                    }
-                });
-            });
-
-            elements.forEach(element => {
-                observer.observe(element);
-            });
-        });
-    </script>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+ 
+     <script src="{% static 'js/scripts.js' %}"></script>
 {% include 'main/footer.html' %}
 </body>
 </html>

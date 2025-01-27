@@ -17,96 +17,122 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Cooling System - Luminous Photonics</title>
+
+    <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
 </head>
 <body>
     {% include 'main/navbar.html' %}
 
     <div class="container">
-
         <h1 style="color: #0078BE; text-align: center;">Cutting-Edge Cooling System</h1>
         <div class="image-container hidden">
-            <img src="{% static 'main/images/e1.png' %}" alt="Enclosure - Fan" id="enc.fan" loading="lazy">
-            <img src="{% static 'main/images/e2.png' %}" alt="Enclosure - Vent" id="enc.vent" loading="lazy">
-            <img src="{% static 'main/images/ca1.png' %}" alt="Cooling Assembly 1" id="cooling1" loading="lazy">
-            <img src="{% static 'main/images/ca2.png' %}" alt="Cooling Assembly 2" id="cooling2" loading="lazy">
-            <img src="{% static 'main/images/ca3.png' %}" alt="Cooling Assembly 3" id="cooling3" loading="lazy">
+            <picture>
+                <source srcset="{% static 'main/images/webp/e1.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/e1.png' %}" alt="Enclosure - Fan" id="enc.fan" loading="lazy">
+            </picture>
+            <picture>
+                <source srcset="{% static 'main/images/webp/e2.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/e2.png' %}" alt="Enclosure - Vent" id="enc.vent" loading="lazy">
+            </picture>
+            <picture>
+                <source srcset="{% static 'main/images/webp/ca1.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/ca1.png' %}" alt="Cooling Assembly 1" id="cooling1" loading="lazy">
+            </picture>
+            <picture>
+                <source srcset="{% static 'main/images/webp/ca2.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/ca2.png' %}" alt="Cooling Assembly 2" id="cooling2" loading="lazy">
+            </picture>
+            <picture>
+                <source srcset="{% static 'main/images/webp/ca3.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/ca3.png' %}" alt="Cooling Assembly 3" id="cooling3" loading="lazy">
+            </picture>
         </div>
-<div class="cooling-system-synopsis" style="font-family: 'Arial', sans-serif; line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <h2 style="color: #000000; border-bottom: 2px solid #000000; padding-bottom: 10px;">Synopsis of the High-Performance Air-Cooled System</h2>
 
-    <div class="core-components">
-        <h3 style="color: #0078BE;">Core Components</h3>
-        <ul style="list-style-type: none; padding-left: 0;">
-            <li>
-                <strong style="font-weight: bold; color: #2c3e50;">COB LEDs:</strong> Bridgelux BXRE-30E6500-C-83, driven at 1.05A, resulting in a maximum power consumption of approximately 53W per COB.
-            </li>
-            <li>
-                <strong style="font-weight: bold; color: #2c3e50;">CPU Cooler:</strong> Scythe Fuma 3, a high-performance single-tower air cooler with:
-                <ul style="list-style-type: disc; padding-left: 20px;">
-                    <li>Four 4x6mm fine-sintered copper heat pipes.</li>
-                    <li>High-density aluminum fin array.</li>
-                    <li>One Gen Kaze Flex II PWM fan (25mm) for optimized airflow and static pressure.</li>
+        <div class="cooling-system-synopsis" style="font-family: 'Arial', sans-serif; line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            <h2 style="color: #000000; border-bottom: 2px solid #000000; padding-bottom: 10px;">Synopsis of the High-Performance Air-Cooled System</h2>
+
+            <div class="core-components">
+                <h3 style="color: #0078BE;">Core Components</h3>
+                <ul>
+                    <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">COB LEDs:</strong> Bridgelux BXRE-30E6500-C-83, driven at 1.05A, resulting in a maximum power consumption of approximately 53W per COB.
+                    </li>
+                    <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">CPU Cooler:</strong> Scythe Fuma 3, a high-performance single-tower air cooler with:
+                        <ul>
+                            <li>Four 4x6mm fine-sintered copper heat pipes.</li>
+                            <li>High-density aluminum fin array.</li>
+                            <li>One Gen Kaze Flex II PWM fan (25mm) for optimized airflow and static pressure.</li>
+                        </ul>
+                    </li>
+                     <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">Thermal Interface Material:</strong> Frost X45 thermal paste with a very high thermal conductivity of 15.2 W/mK. This will ensure excellent heat transfer between the COB and the CPU cooler's baseplate.
+                    </li>
+                      <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">Enclosure:</strong> A custom-built enclosure made of aluminum that surrounds the COB assemblies and CPU coolers. The enclosure is as airtight as possible to maximize the efficiency of the ducted airflow.
+                    </li>
                 </ul>
-            </li>
-             <li>
-                <strong style="font-weight: bold; color: #2c3e50;">Thermal Interface Material:</strong> Frost X45 thermal paste with a very high thermal conductivity of 15.2 W/mK. This will ensure excellent heat transfer between the COB and the CPU cooler's baseplate.
-            </li>
-              <li>
-                <strong style="font-weight: bold; color: #2c3e50;">Enclosure:</strong> A custom-built enclosure made of aluminum that surrounds the COB assemblies and CPU coolers. The enclosure is as airtight as possible to maximize the efficiency of the ducted airflow.
-            </li>
-        </ul>
-    </div>
+            </div>
 
-    <div class="ducted-cooling">
-        <h3 style="color: #0078BE;">Ducted Forced-Air Cooling</h3>
-        <p>Two inline fans with high static pressure are positioned diagonally across from each other, disposed in the corners of the enclosure, and are attached to two bell mouth intake ports on the enclosure, which are also positioned diagonally across from each other in the corners of the enclosure. This positioning stratagem’s purpose is to form an “X” pattern airflow stream. These fans creates negative pressure inside the enclosure, drawing cool air across the heatsinks and expelling the hot air out of the system in a controlled manner. The multiple fans also add a layer of redundancy to the cooling system, in the event that one fan fails.</p>
+            <div class="ducted-cooling">
+                <h3 style="color: #0078BE;">Ducted Forced-Air Cooling</h3>
+                <p>Two inline fans with high static pressure are positioned diagonally across from each other, disposed in the corners of the enclosure, and are attached to two bell mouth intake ports on the enclosure, which are also positioned diagonally across from each other in the corners of the enclosure. This positioning stratagem’s purpose is to form an “X” pattern airflow stream. These fans create negative pressure inside the enclosure, drawing cool air across the heatsinks and expelling the hot air out of the system in a controlled manner. The multiple fans also add a layer of redundancy to the cooling system, in the event that one fan fails.</p>
+            </div>
+            <div class="intake-vents">
+                <h3 style="color: #0078BE;">Intake Vents</h3>
+                <p>The enclosure has bell-mouth intake vents (on the opposite sides of the exhaust, positioned diagonal to the exhaust ports, forming an “X” shaped airflow stream) equipped with dust filters to provide a source of fresh, clean air.</p>
+            </div>
+            <div class="design-principles">
+                <h3 style="color: #0078BE;">Key Design Principles</h3>
+                <ul>
+                    <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">Direct Mounting:</strong> The COBs will be directly mounted to a thin COB mounting interface plate made of copper that is mounted to the copper baseplate of the Scythe Fuma 3 coolers using a high-quality, thermally conductive adhesive (15.2 W/m·K). This eliminates intermediate layers and minimizes thermal resistance.
+                    </li>
+                     <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">Optimized Airflow:</strong> The ducted cooling system ensures that all airflow is directed through the heatsinks, preventing hot air recirculation and maximizing cooling efficiency.
+                    </li>
+                     <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">High Static Pressure:</strong> The use of high-static-pressure fans (both on the Fuma 3 and on the inline exhaust fans) is crucial for overcoming the airflow resistance of the enclosure, ducting, and the dense fin array of the heatsinks.
+                    </li>
+                     <li>
+                         <strong style="font-weight: bold; color: #2c3e50;">Dust Prevention:</strong> Dust filters on the intake vents minimize dust accumulation on the heatsink fins, maintaining cooling performance over time, increasing longevity of the system, and reducing maintenance.
+                    </li>
+                </ul>
+            </div>
+            <div class="performance-goals">
+                <h3 style="color: #0078BE;">Performance Goals</h3>
+                 <ul>
+                     <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">Target Junction Temperature (Tj):</strong> While our goal of reaching a 25°C Tj under full load is extremely challenging and theoretically impossible in a 25°C ambient environment, the system is designed to get as close as possible to that goal.
+                    </li>
+                    <li>
+                        <strong style="font-weight: bold; color: #2c3e50;">Realistic Tj Expectation:</strong> A more realistic target is a Tj in the low 30s°C under full load, which this system should be capable of achieving with careful construction and testing.
+                    </li>
+                </ul>
+            </div>
+        </div>
+            
+        <!-- Back to Top Button -->
+        <a href="#" class="back-to-top" id="backToTopBtn">
+            <picture>
+                <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+            </picture>
+        </a>
+        <a href="/" class="home-button" id="homeButton">
+            <picture>
+                <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
+             </picture>
+         </a>
+         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+     
+         <script src="{% static 'js/scripts.js' %}"></script>
     </div>
-    <div class="intake-vents">
-        <h3 style="color: #0078BE;">Intake Vents</h3>
-        <p>The enclosure has bell-mouth intake vents (on the opposite sides of the exhaust, positioned diagonal to the exhaust ports, forming an “X” shaped airflow stream) equipped with dust filters to provide a source of fresh, clean air.</p>
-    </div>
-        <div class="design-principles">
-        <h3 style="color: #0078BE;">Key Design Principles</h3>
-        <ul style="list-style-type: none; padding-left: 0;">
-            <li>
-                <strong style="font-weight: bold; color: #2c3e50;">Direct Mounting:</strong> The COBs will be directly mounted to a thin COB mounting interface plate made of copper that is mounted to the copper baseplate of the Scythe Fuma 3 coolers using a high-quality, thermally conductive adhesive (15.2 W/m·K). This eliminates intermediate layers and minimizes thermal resistance.
-            </li>
-             <li>
-                <strong style="font-weight: bold; color: #2c3e50;">Optimized Airflow:</strong> The ducted cooling system ensures that all airflow is directed through the heatsinks, preventing hot air recirculation and maximizing cooling efficiency.
-            </li>
-             <li>
-                <strong style="font-weight: bold; color: #2c3e50;">High Static Pressure:</strong> The use of high-static-pressure fans (both on the Fuma 3 and on the inline exhaust fans) is crucial for overcoming the airflow resistance of the enclosure, ducting, and the dense fin array of the heatsinks.
-            </li>
-             <li>
-                 <strong style="font-weight: bold; color: #2c3e50;">Dust Prevention:</strong> Dust filters on the intake vents minimize dust accumulation on the heatsink fins, maintaining cooling performance over time, increasing longevity of the system, and reducing maintenance.
-            </li>
-        </ul>
-    </div>
-    <div class="performance-goals">
-        <h3 style="color: #0078BE;">Performance Goals</h3>
-         <ul style="list-style-type: none; padding-left: 0;">
-             <li>
-                <strong style="font-weight: bold; color: #2c3e50;">Target Junction Temperature (Tj):</strong> While our goal of reaching a 25°C Tj under full load is extremely challenging and theoretically impossible in a 25°C ambient environment, the system is designed to get as close as possible to that goal.
-            </li>
-            <li>
-                <strong style="font-weight: bold; color: #2c3e50;">Realistic Tj Expectation:</strong> A more realistic target is a Tj in the low 30s°C under full load, which this system should be capable of achieving with careful construction and testing.
-            </li>
-        </ul>
-    </div>
-</div>
-    
-    <!-- Back to Top Button -->
-    <a href="#" class="back-to-top" id="backToTopBtn">
-        <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
-    </a>
-    <a href="/" class="home-button" id="homeButton">
-        <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
-     </a>
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
- 
-     <script src="{% static 'js/scripts.js' %}"></script>
-    </div>
-{% include 'main/footer.html' %}
+    {% include 'main/footer.html' %}
 </body>
 </html>

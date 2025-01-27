@@ -13,7 +13,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
+    <meta property="og:image" content="{% static 'main/images/webp/recycle.webp' %}" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
@@ -71,7 +71,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                     <p>Our Agentic AI platform integrates real-time plant feedback with advanced automation. It continuously refines the light spectrum and intensity to optimize every aspect of plant growth, utilizing historical data and machine learning to enhance yields and resource efficiency.</p>
                     <div class="cta-section1">
                         <a href="{% url 'agenticai' %}" class="learn-more-link">
-                            <button class="learn-more1">Learn More</button>
+                            <button class="learn-more">Learn More</button>
                         </a>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                     <p>We employ advanced lighting simulation software to model and optimize the distribution of photosynthetically active radiation (PAR). This ensures uniform light exposure across the plant canopy, enhancing photosynthetic efficiency and promoting even growth.</p>
                     <div class="cta-section1">
                         <a href="{% url 'technology' %}#ls" class="learn-more-link">
-                            <button class="learn-more1">Learn More</button>
+                            <button class="learn-more">Learn More</button>
                         </a>
                     </div>
                 </div>
@@ -93,7 +93,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                     <p>Our machine learning algorithm optimizes the lighting system layer by layer, modulating the intensity of each layer to achieve homogeneous PAR distribution. This targeted approach ensures that each part of the plant canopy receives the ideal light conditions for growth and development.</p>
                     <div class="cta-section1">
                         <a href="{% url 'technology' %}#ml" class="learn-more-link">
-                            <button class="learn-more1">Learn More</button>
+                            <button class="learn-more">Learn More</button>
                         </a>
                     </div>
                 </div>
@@ -104,14 +104,14 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                     <p>Our state-of-the-art cooling system maintains optimal operating temperatures for the lighting elements, resulting in a maximum light output to energy input ratio. We utilize Computational Fluid Dynamics (CFD) and Finite Element Analysis (FEA) to validate the cooling system.</p>
                     <div class="cta-section1">
                         <a href="{% url 'cooling_system' %}" class="learn-more-link">
-                            <button class="learn-more1">Learn More</button>
+                            <button class="learn-more">Learn More</button>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
         </div>
-        <div class="grey-background lazy-load-bg" data-bg="{% static 'main/images/handleaf.jpg' %}">
+        <div class="grey-background lazy-load-bg" data-bg="{% static 'main/images/webp/handleaf.webp' %}">
             <div class="overlay">
             <div class="content-wrapper">
                 <div class="info-panel">
@@ -132,7 +132,10 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                     </div>
                 </div>
                 <div class="image-container1">
-                    <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" loading="lazy">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/fixture.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" loading="lazy">
+                    </picture>
                 </div>
             </div>
         </div>
@@ -140,24 +143,36 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
  
         <div class="features" style="padding-top: 20px;">
             <div class="feature hidden" style="margin-top: 20px;">
-                <img data-src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon" width="100" height="100" class="lazy-load">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/low-price.webp' %}" type="image/webp">
+                    <img data-src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon" width="100" height="100" class="lazy-load">
+                </picture>
                 <h2>Unparalleled Energy Efficiency</h2>
                 <p>Reduce energy consumption while maximizing light output.</p>
             </div>
             <div class="feature hidden" style="margin-top: 20px;">
-                <img data-src="{% static 'main/images/recycle.png' %}" alt="Growth Icon" width="100" height="100" class="lazy-load">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/recycle.webp' %}" type="image/webp">
+                    <img data-src="{% static 'main/images/recycle.png' %}" alt="Growth Icon" width="100" height="100" class="lazy-load">
+                </picture>
                 <h2>Enhanced Plant Growth</h2>
                 <p>Promote healthier, more uniform plant development with optimized light distribution.</p>
             </div>
             <div class="feature hidden" style="margin-top: 20px;">
-                <img data-src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon" width="100" height="100" class="lazy-load">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/energy-system.webp' %}" type="image/webp">
+                    <img data-src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon" width="100" height="100" class="lazy-load">
+                </picture>
                 <h2>Infinitely Scalable</h2>
                 <p>Adapt our system to any grow space, from small research setups to large commercial greenhouses.</p>
             </div>
         </div>
         
         <div class="image-container hidden" style="text-align: center;">
-            <img src="{% static 'main/images/csnrect.png' %}" alt="Fixture" style="display: block; margin: 0 auto;" loading="lazy">
+            <picture>
+                <source srcset="{% static 'main/images/webp/csnrect.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/csnrect.png' %}" alt="Fixture" style="display: block; margin: 0 auto;" loading="lazy">
+            </picture>
         </div>
         <div class="cta hidden">
             <h1 style="color: #0078BE">Learn More About the Science Behind our Revolutionary Technology</h1>
@@ -167,47 +182,103 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
     <div class="carousel-container">
         <div class="carousel">
             <a href="{% url 'technology' %}#beam-profile-1">
-                <div><img data-src="{% static 'main/images/beam_profile_1.png' %}" alt="Carousel Image 1" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/beam_profile_1.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/beam_profile_1.png' %}" alt="Carousel Image 1" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#beam-profile-2">
-                <div><img data-src="{% static 'main/images/beam_profile_2.png' %}" alt="Carousel Image 2" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/beam_profile_2.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/beam_profile_2.png' %}" alt="Carousel Image 2" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#csn-image">
-                <div><img data-src="{% static 'main/images/csn.jpeg' %}" alt="Carousel Image 3" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/csn.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/csn.jpeg' %}" alt="Carousel Image 3" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#csn22-image">
-                <div><img data-src="{% static 'main/images/csn22.png' %}" alt="Carousel Image 4" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/csn22.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/csn22.png' %}" alt="Carousel Image 4" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#2d-variance-1">
-                <div><img data-src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="Carousel Image 5" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/2d_variance_graph_1.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="Carousel Image 5" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#2d-variance-2">
-                <div><img data-src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="Carousel Image 6" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/2d_variance_graph_2.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="Carousel Image 6" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#ppfd-surface-1">
-                <div><img data-src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="Carousel Image 7" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/ppfd_surface_graph_1.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="Carousel Image 7" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#ppfd-surface-2">
-                <div><img data-src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="Carousel Image 8" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/ppfd_surface_graph_2.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="Carousel Image 8" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#heatmap-1">
-                <div><img data-src="{% static 'main/images/heatmap_1.png' %}" alt="Carousel Image 9" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/heatmap_1.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/heatmap_1.png' %}" alt="Carousel Image 9" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
             <a href="{% url 'technology' %}#heatmap-2">
-                <div><img data-src="{% static 'main/images/heatmap_2.png' %}" alt="Carousel Image 10" width="100" height="100" class="lazy-load"></div>
+                <div>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/heatmap_2.webp' %}" type="image/webp">
+                        <img data-src="{% static 'main/images/heatmap_2.png' %}" alt="Carousel Image 10" width="100" height="100" class="lazy-load">
+                    </picture>
+                </div>
             </a>
         </div>
     </div>
     <div class="text-below-carousel">
         <a href="#" class="back-to-top" id="backToTopBtn">
-            <img data-src="{% static 'main/images/top-btn.png' %}" alt="Back to Top" class="lazy-load">
+            <picture>
+                <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
+                <img data-src="{% static 'main/images/top-btn.png' %}" alt="Back to Top" class="lazy-load">
+            </picture>
         </a>
         <a href="/" class="home-button" id="homeButton">
-            <img data-src="{% static 'main/images/home-btn.png' %}" alt="Home" class="lazy-load">
+            <picture>
+                <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
+                <img data-src="{% static 'main/images/home-btn.png' %}" alt="Home" class="lazy-load">
+            </picture>
         </a>
         <div class="cta hidden">
             <h1 style="color: #0078BE">Observe our Cutting-Edge Research</h1>
-            <button id="pdfButton2" onclick="openPDF()" class="button">White Paper</button>
+            <button id="pdfButton2" data-pdf-url="{% static 'main/images/White-Paper-2.0.pdf' %}" onclick="openPDF()" class="button">White Paper</button>
         </div>
     </div>
 

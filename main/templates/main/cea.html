@@ -18,27 +18,36 @@
     <!-- Link to external CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
 </head>
 <body>
     {% include 'main/navbar.html' %}
 
     <div class="container">
-        <div class="hero hidden">
-            <div class="video-overlay"></div> <video autoplay loop muted playsinline>
+        <!-- Hero Section with Video -->
+        <div class="hero hidden" style="position: relative; overflow: hidden;">
+            <div class="video-overlay"></div>
+            <video autoplay loop muted playsinline>
                 <source src="{% static 'main/images/bannervid.mp4' %}" type="video/mp4">
             </video>
             <h2>Controlled Environment Agriculture</h2>
         </div>
-        </div>
-    </div>
+
+        <!-- Introduction Section -->
         <div>
             <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <p class="intro-paragraph">
-                The Luminous Photonics team is passionate about <i style="color: #0078BE;">Controlled Environment Agriculture (CEA)</i>. Let's explore some key insights we've discovered through our holistic, science-driven approach for achieving the platonic ideal in horticultural lighting system design.
-            </p><br>
+                <p class="intro-paragraph">
+                    The Luminous Photonics team is passionate about <i style="color: #0078BE;">Controlled Environment Agriculture (CEA)</i>. Let's explore some key insights we've discovered through our holistic, science-driven approach for achieving the platonic ideal in horticultural lighting system design.
+                </p><br>
             </div>
         </div>
-            <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+
+        <!-- Key Elements Section -->
+        <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
             <p>
                 <h2 style="color: #0078BE;">Key Elements We Will Cover:</h2>
                 <ol>
@@ -48,22 +57,38 @@
             </p>
         </div>
 
+        <!-- Synergy With Offset Plant-Site Positioning Section -->
         <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
             <h1 class="section-title" style="text-align: center; font-size: 36px;">Synergy With Offset Plant-Site Positioning</h1>
             <p>Our innovative lighting system is particularly well-suited for use with offset plant-site spacing, a horticultural technique known to enhance space utilization. By strategically positioning plants within the interstices of the LED array, this system maximizes cross-illumination, optimizes photon absorption uniformity, and effectively addresses the critical issue of canopy penetration, ultimately promoting vigorous and uniform plant growth.</p>
             
+            <!-- Subsections with Images -->
             <h2 style="color: #0078BE;">Offset Plant-Site Spacing and its Relevance to Cannabis Cultivation</h2>
             <p>Offset plant-site spacing, as described by <a href="https://greenthumbgardeningsecrets.com/sidebar-offset-spacing/" target="_blank">Green Thumb Gardening Secrets</a>, involves staggering plants in successive rows such that each plant is positioned equidistant from its neighbors in all directions, forming an approximately circular optimal growing area for each plant. This approach is particularly advantageous for species like Cannabis sativa, which, due to their growth characteristics, can exhibit significant self-shading, leading to reduced light interception and diminished productivity in the lower canopy. As noted by <a href="https://greenthumbgardeningsecrets.com/sidebar-offset-spacing/" target="_blank">Green Thumb Gardening Secrets</a>, offset spacing is well-suited for "larger plants (e.g., broccoli, peppers, tomatoes) that need a lot of space and can easily shade each other out, significantly reducing productivity." This principle directly applies to Cannabis cultivation, where maximizing light exposure to the entire canopy is essential for optimal yield and cannabinoid production.</p>
+            
+            <!-- Images: plantsites.png and offsetplants.png -->
             <div class="image-container hidden" style="text-align: center;">
-                <img src="{% static 'main/images/plantsites.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/plantsites.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/plantsites.png' %}" alt="Plant Sites Layout" style="display: block; margin: 0 auto;">
+                </picture>
             </div>
             <div class="image-container hidden" style="text-align: center;">
-                <img src="{% static 'main/images/offsetplants.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/offsetplants.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/offsetplants.png' %}" alt="Offset Plant Spacing" style="display: block; margin: 0 auto;">
+                </picture>
             </div>
+
             <h2 style="color: #0078BE;">The Centered Square Number Sequence COB-SMD LED Array</h2>
             <p>The proposed lighting system utilizes a plurality of white-based, COB LEDs arranged according to a centered square number sequence, with colored SMD LED strips disposed along the frame of the modular fixtures which hold the COBs. This sequence dictates that the number of COB LEDs in each concentric square layer increases by four relative to the preceding layer (i.e., 1, 4, 8, 12, 16, ...). A control system allows for independent modulation of light intensity emitted by each concentric layer, for the purpose of maximizing uniformity in photon flux delivery. This specific arrangement, exemplified by a 61-COB array, is illustrated below:</p>
+            
+            <!-- Image: fixture(x).png -->
             <div class="image-container hidden" style="text-align: center; margin-bottom: 60px;">
-                <img src="{% static 'main/images/fixture(x).png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/fixture(x).webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/fixture(x).png' %}" alt="61-COB LED Array" style="display: block; margin: 0 auto;">
+                </picture>
             </div>
             
             <h2 style="color: #0078BE;">Synergistic Benefits of Offset Plant Spacing and Cross-Illumination</h2>
@@ -76,13 +101,25 @@
             
             <p><b>Conclusion:</b></p>
             <p>The centered square number sequence COB-SMD LED array represents a significant advancement in horticultural lighting technology, particularly for Cannabis cultivation utilizing offset plant-site spacing. By maximizing cross-illumination and thereby optimizing photon absorption uniformity, this system effectively addresses the challenge of canopy penetration, promoting vigorous, uniform growth, and potentially maximizing yield. This innovative approach, informed by established horticultural principles and tailored to the specific needs of Cannabis plants, offers a compelling solution for optimizing indoor cultivation. Further research and empirical testing will be crucial to fully quantify the benefits and optimize the system for various Cannabis cultivars and growing conditions.</p><br>
+
             <h1 class="section-title" style="text-align: center; font-size: 36px;">Solving the Scalability Problem</h1>
+            
+            <!-- Images: grid2.png and grid3.png -->
             <div class="image-container hidden" style="text-align: center;">
-                <img src="{% static 'main/images/grid2.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
-                <img src="{% static 'main/images/grid3.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/grid2.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/grid2.png' %}" alt="Grid Layout 2" style="display: block; margin: 0 auto;">
+                </picture>
+                <picture>
+                    <source srcset="{% static 'main/images/webp/grid3.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/grid3.png' %}" alt="Grid Layout 3" style="display: block; margin: 0 auto;">
+                </picture>
             </div>
-            <div class="image-container hidden" style="text-align: center; margin-bottom: 60px;">
-                <img src="{% static 'main/images/grid1.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
+            <div class="image-container hidden" style="text-align: center;">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/grid1.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/grid1.png' %}" alt="Grid Layout 3" style="display: block; margin: 0 auto;">
+                </picture>
             </div>
             <p>
                 As illustrated in these diagrams, the conventional approach of arranging standard fixed-frame fixtures in a grid presents a critical limitation: while some grow space dimensions allow for evenly spaced fixtures, others do not provide sufficient space to accommodate additional fixtures without compromising spacing. This forces growers to adopt uneven spacing to achieve optimal coverage, making it impossible to maintain consistent Photosynthetic Photon Flux Density (PPFD) targets across varying grow space dimensions.<br>
@@ -92,22 +129,46 @@
             </p>
             <p>Moreover, in scenarios where adding a full layer is not feasible due to less than 6 inches of available space, the intensity of the outermost layer can be adjusted to compensate. This flexibility ensures that consistent PPFD targets can still be achieved, even in constrained grow spaces. By decoupling fixture spacing from rigid dimensional constraints, this approach provides unparalleled adaptability and precision in lighting design.
             </p><br>
+
+            <!-- Images: csnrectgrid.png and fixture.png -->
             <div class="image-container hidden" style="text-align: center;">
-                <img src="{% static 'main/images/csnrectgrid.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
-                <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/csnrectgrid.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/csnrectgrid.png' %}" alt="CSN Rect Grid" style="display: block; margin: 0 auto;">
+                </picture>
+                <picture>
+                    <source srcset="{% static 'main/images/webp/fixture.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
+                </picture>
             </div>
         </div>
-    <!-- Back to Top Button -->
-    <a href="#" class="back-to-top" id="backToTopBtn">
-        <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
-    </a>
-    <a href="/" class="home-button" id="homeButton">
-        <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
-     </a>
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
- 
-     <script src="{% static 'js/scripts.js' %}"></script>
-{% include 'main/footer.html' %}
+
+        <!-- Call-to-Action Section -->
+        <div class="cta hidden" style="text-align: center; margin: 40px 0;">
+            <h1 style="color: #0078BE">Observe our Cutting-Edge Research</h1>
+            <button id="pdfButton2" data-pdf-url="{% static 'main/images/White-Paper-2.0.pdf' %}" onclick="openPDF()" class="button">White Paper</button>
+        </div>
+
+        <!-- Back to Top Button -->
+        <a href="#" class="back-to-top" id="backToTopBtn">
+            <picture>
+                <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+            </picture>
+        </a>
+        <a href="/" class="home-button" id="homeButton">
+            <picture>
+                <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
+                <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
+             </picture>
+         </a>
+
+        <!-- Scripts -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    
+        <script src="{% static 'js/scripts.js' %}"></script>
+    </div>
+    {% include 'main/footer.html' %}
 </body>
 </html>

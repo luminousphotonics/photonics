@@ -92,6 +92,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
     BASE_DIR / "frontend/build/static",
+    os.path.join(BASE_DIR, 'static/main/images/webp'),  # Add this line
 ]
 
 STATICFILES_FINDERS = [

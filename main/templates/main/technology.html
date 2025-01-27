@@ -20,12 +20,9 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
         
         <title>Technology - Luminous Photonics</title>
-        <style>
-            /* Add any additional styles or overrides here */
-            .modular-images-section .image-container {
-                justify-content: center; /* Center images in their container */
-            }
-        </style>
+   
+
+
         <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
@@ -55,205 +52,266 @@
         </div>
         <div class="container">
             <div class="modular-images-section hidden">
-                <h1 class="section-title">Infinitely Scalable Modularized System</h3>
-                    <h3 class="section-text">With just 4 types of modular pieces, our horticultural lighting system can optimally cover any size square or rectangular space.</h3>
-                    <div class="image-container hidden">
-                    <img src="{% static 'main/images/mod1.png' %}" alt="Modular Fixture #1" id="mod1-image" style="max-width: 47%" loading="lazy">
-                    <img src="{% static 'main/images/mod2.png' %}" alt="Modular Fixture #2" id="mod2-image" style="max-width: 47%" loading="lazy">
+                <h1 class="section-title">Infinitely Scalable Modularized System</h1>
+                <h3 class="section-text">With just 4 types of modular pieces, our horticultural lighting system can optimally cover any size square or rectangular space.</h3>
+                <div class="image-container hidden">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/mod1.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/mod1.png' %}" alt="Modular Fixture #1" id="mod1-image" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/mod2.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/mod2.png' %}" alt="Modular Fixture #2" id="mod2-image" loading="lazy">
+                    </picture>
                 </div>
                 <div class="image-container hidden">
-                    <img src="{% static 'main/images/mod3.png' %}" alt="Modular Fixture #3" id="mod3-image" style="max-width: 47%" loading="lazy">
-                    <img src="{% static 'main/images/mod4.png' %}" alt="Modular Assembly #1" id="mod4-image" style="max-width: 47%" loading="lazy">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/mod3.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/mod3.png' %}" alt="Modular Fixture #3" id="mod3-image" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/mod4.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/mod4.png' %}" alt="Modular Assembly #1" id="mod4-image" loading="lazy">
+                    </picture>
                 </div>
                 <h3 class="section-text">Our arrangement strategem continues ad infinitum...</h3>
                 <div class="image-container hidden">
-                    <img src="{% static 'main/images/csn.jpeg' %}" alt="CSN #1" id="csn-image" style="max-width: 65%" loading="lazy">
-                    <img src="{% static 'main/images/csn22.png' %}" alt="CSN #2" id="csn22-image" style="max-width: 65%" loading="lazy">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/csn.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/csn.jpeg' %}" alt="CSN #1" id="csn-image" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/csn22.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/csn22.png' %}" alt="CSN #2" id="csn22-image" loading="lazy">
+                    </picture>
                 </div>       
-                <h3 class="section-text">Infinite concnetric square layers can be added to create endless configurations of arrays.</h3>         
+                <h3 class="section-text">Infinite concentric square layers can be added to create endless configurations of arrays.</h3>         
                 <div class="image-container hidden">
-                    <img src="{% static 'main/images/mod5.png' %}" alt="Modular Assembly #2" id="mod5-image" style="max-width: 45%" loading="lazy">
-                    <img src="{% static 'main/images/mod6.png' %}" alt="Modular Assembly #3" id="mod6-image" style="max-width: 45%" loading="lazy">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/mod5.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/mod5.png' %}" alt="Modular Assembly #2" id="mod5-image" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/mod6.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/mod6.png' %}" alt="Modular Assembly #3" id="mod6-image" loading="lazy">
+                    </picture>
                 </div>
             </div>       
             <div class="section hidden">
                 <h3 class="section-text" style="text-align: center;">Here's an example of a 61-CoB lighting array.</h3>  
                 <div class="image-container">
-                    <img src="{% static 'main/images/fixture.png' %}" alt="Modular Assembly #4" id="mod7-image" width="500" height="500" style="display: block; margin: 0 auto;" loading="lazy">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/fixture.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/fixture.png' %}" alt="Modular Assembly #4" id="mod7-image" width="500" height="500" style="display: block; margin: 0 auto;" loading="lazy">
+                    </picture>
                 </div>
                 <h3 class="section-text" style="text-align: center;">And with just 2 linear connector modules, two square lighting arrays can be conjoined to form a perfect rectangular lighting array.</h3>
                 <div class="image-container hidden">
-                    <img src="{% static 'main/images/csnrect.png' %}" alt="CSN Rect" id="csnrect-image" style="display: block; margin: 0 auto;" loading="lazy">
-                </div>
-            </div>
-        <div class="section hidden">
-            <h1 class="section-title" id="ls">Visualizing Light Uniformity</h1>
-            <p>
-                Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs compares a traditional or less optimized approach (right) with our UPFP-based solution (left).
-            </p>
-        
-            <h2 class="section-title">Beam Profile</h2>
-            <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the left demonstrates a more uniform beam spread with significantly reduced energy waste.</p>
-            <div class="image-container hidden">
-                <img src="{% static 'main/images/beam_profile_1.png' %}" alt="Beam Profile - Traditional" id="beam-profile-1" loading="lazy">
-                <img src="{% static 'main/images/beam_profile_2.png' %}" alt="Beam Profile - UPFP" id="beam-profile-2" loading="lazy">
-            </div>
-            <p class="image-caption">Figure 1: Comparison of Beam Profiles. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
-        
-            <h2 class="section-title">PPFD Surface Graphs</h2>
-            <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the left exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target PPFD range).</p>
-            <div class="image-container hidden">
-                <img src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="PPFD Surface Graph - Traditional" id="ppfd-surface-1" loading="lazy">
-                <img src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP" id="ppfd-surface-2" loading="lazy">
-            </div>
-            <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
-        
-            <h2 class="section-title">2D Variance Graphs</h2>
-            <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (left) demonstrates significantly reduced variance in photon distribution, showcasing far superior uniformity.</p>
-            <div class="image-container hidden">
-                <img src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional" id="2d-variance-1" loading="lazy">
-                <img src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP" id="2d-variance-2" loading="lazy">
-            </div>
-            <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
-        
-            <h2 class="section-title">Heatmaps</h2>
-            <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (left) displays a more consistent color across the growing area, signifying superior uniformity. While the competitor displays a pronounced concentration of photons toward the center of the illuminated area, as can be seen by the circular radiation pattern.</p>
-            <div class="image-container hidden">
-                <img src="{% static 'main/images/heatmap_1.png' %}" alt="Heatmap - Traditional" id="heatmap-1" loading="lazy">
-                <img src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP" id="heatmap-2" loading="lazy">
-            </div>
-            <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
-        
-            <h2 class="section-title hidden" id="ml">Proprietary Machine Learning Algorithm</h2>
-            <p>
-                Central to our Uniform Photon Flux Principle (UPFP) is a sophisticated machine learning algorithm that dynamically optimizes LED intensities to ensure uniform Photosynthetic Photon Flux Density (PPFD) across the grow area. Below are key components of our algorithm:
-            </p>
-        
-            <h4 class="section-title">Optimization Function</h4>
-            <p>
-                The optimization function minimizes the Mean Absolute Deviation (MAD) of PPFD from the target value while adhering to energy constraints. Here's a snippet of how the objective function is defined:
-            </p>
-        
-            <div class="hdiden" style="max-width: 800px; margin: 0 auto; padding: 10px;">
-                {% verbatim %}
-                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
-        def objective_function(light_intensities, target_ppfd):
-            ppfd_values = calculate_ppfd(light_intensities)
-            mad = np.mean(np.abs(ppfd_values - target_ppfd))
-            energy_consumption = np.sum(light_intensities)
-            return mad + 0.3 * energy_consumption
-                        </code></pre>
-                {% endverbatim %}
-            
-                <p style="text-align: left; margin-bottom: 1em;">
-                    <strong>Explanation:</strong><br> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities. The objective is to minimize both MAD and energy usage while hitting the target PPFD, with energy consumption weighted by a factor of 0.3.
-                </p>
-            
-                <h4 class="section-title">Intensity Calculation</h4>
-                <p style="text-align: left; margin-bottom: 1em;">
-                    Light intensity at each measurement point is determined using the Lambertian emission model. This is appropriate as CoBs are near-perfect Lambertian emitters. Below is a snippet illustrating this calculation:
-                </p>
-            
-                {% verbatim %}
-                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
-        def lambertian_emission(intensity, distance, height):
-            if distance == 0:
-                return intensity
-            return (intensity * height) / ((distance ** 2 + height ** 2) ** 1.5)
-                        </code></pre>
-                {% endverbatim %}
-            
-                <p style="text-align: left; margin-bottom: 1em;">
-                    <strong>Explanation:</strong><br> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
-                </p>
-            
-                <h4 class="section-title">Optimization Process</h4>
-                <p style="text-align: left; margin-bottom: 1em;">
-                    We utilize the Sequential Least Squares Programming (SLSQP) method from SciPy to perform the optimization. Here's how the optimization is initiated:
-                </p>
-            
-                {% verbatim %}
-                    <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
-        result = minimize(
-            objective_function,
-            initial_intensities,
-            args=(target_ppfd,),
-            method='SLSQP',
-            bounds=bounds,
-            constraints=constraints
-        )
-                        </code></pre>
-                {% endverbatim %}
-            </div>
-    
-                <p style="text-align: left; margin-bottom: 1em;">
-                    <strong>Explanation:</strong><br> The `minimize` function seeks the optimal light intensities for each concentric square layer of CoBs in our patented solution's LED arrangement that reduce the MAD, while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
-                </p>
-    
-                <h4 class="section-title">Real-Time Adjustments</h4>
-                <p>
-                    An integral component of our agentic AI platform, our algorithm continuously monitors environmental data from integrated sensors. Based on real-time feedback, it dynamically recalibrates LED intensities to maintain optimal PPFD levels, ensuring consistent plant growth conditions.
-                </p>
-    
-                <h4 class="section-title">Benefits of Our Algorithm</h4>
-                <ul>
-                    <li><b>Precision:</b> Achieves PPFD uniformity with a Degree of Uniformity (DOU) exceeding > 99%.</li>
-                    <li><b>Energy Efficiency:</b> Minimizes energy waste by optimizing LED intensities.</li>
-                    <li><b>Scalability:</b> Easily adaptable to any grow space size and configuration.</li>
-                    <li><b>Adaptability:</b> Agentic AI: Responds to environmental changes, ensuring consistent plant growth conditions.</li>
-                </ul>
-                <h4 class="section-title">Interactive Demo</h4>
-                <p>
-                    Explore our optimization process through an interactive simulation. Adjust parameters such as floor dimensions and perimeter reflectivity to see how our algorithm adapts LED intensities to maintain uniform PPFD.
-                </p>
-                <div class="interactive-demo">
-                    <p>Interactive simulation coming soon!</p>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/csnrect.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/csnrect.png' %}" alt="CSN Rect" id="csnrect-image" style="display: block; margin: 0 auto;" loading="lazy">
+                    </picture>
                 </div>
             </div>
             <div class="section hidden">
-                <h1 class="section-title">Technical Details</h1>
+                <h1 class="section-title" id="ls">Visualizing Light Uniformity</h1>
                 <p>
-                    Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
+                    Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs compares a traditional or less optimized approach (right) with our UPFP-based solution (left).
                 </p>
-                    <b>Lambertian Emission Model:</b><br> We assume each LED emitter follows a Lambertian emission pattern (an appropriate light modeling strategy for CoB LEDs), where radiant intensity is modeled as: \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]
-                    <b>Radiosity and Reflective Walls:</b><br> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), which is especially important in grow spaces as they tend to have highly reflective walls (\(\rho \approx 1\)).<br><br>
-                    <b>Optimization:</b><br> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.
-                    <b>Degree of Uniformity (DOU):</b><br> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\] Our prototype numeric solutions have achieved DOU values exceeding 99%.
-            </div>
             
-            <div class="section hidden">
-                <h1 class="section-title">Experimental Validation</h1>
-                <p>
-                    We are committed to rigorous experimental validation of our UPFP technology. We will be using Apogee Instruments spectroradiometers (PS series for lab testing and the MS-100 handheld for field testing) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
-                </p>
-            </div>
-                <div class="align-list">
-                <ul>
-                    <li><b><p>Measure total photon flux and PPFD distribution across the plant canopy.</b></p></li>
-                    <li><b><p>Corroborate our theoretical predictions with real-world data.</b></p></li>
-                    <li><b><p>Further refine our models and optimization algorithms.</b></p></li>
-                </ul>
+                <h2 class="section-title">Beam Profile</h2>
+                <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the left demonstrates a more uniform beam spread with significantly reduced energy waste.</p>
+                <div class="image-container hidden">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/beam_profile_1.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/beam_profile_1.png' %}" alt="Beam Profile - Traditional" id="beam-profile-1" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/beam_profile_2.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/beam_profile_2.png' %}" alt="Beam Profile - UPFP" id="beam-profile-2" loading="lazy">
+                    </picture>
                 </div>
+                <p class="image-caption">Figure 1: Comparison of Beam Profiles. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
             
-                <h1 class="section-title">References</h1>
-                <ol>
-                    <li><p>Zhang, G., <em>et al.</em>, 2015. A combination of downward lighting and upward lighting improves plant growth in plant factories. <em>Hortscience</em>, 50(8), 1126--1130.</p></li>
-                    <li><p>Joshi, J., Zhang, G., Shen, S., Supaibulwatana, K., Watanabe, C., Yamori, W., 2017. A combination of downward lighting and supplemental upward lighting improves plant growth in a closed plant factory with artificial lighting. <em>Hortscience</em> 52 (6), 831--835. <a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">https://doi.org/10.21273/HORTSCI11822-17</a></p></li>
-                    <li><p>Kozai, T., 2022. Role and characteristics of PFALs. <em>Plant Factory Basics, Applications and Advances</em>, 46. Academic Press.</p></li>
-                    <li><p>Runkle, E., 2021. Hidden benefits of supplemental lighting. <em>Greenhouse Product News</em>, 42. <a href="https://gpnmag.com/article/hidden-benefits-of-supplemental-lighting/" target="_blank">https://gpnmag.com/article/hidden-benefits-of-supplemental-lighting/</a></p></li>
-                </ol>
+                <h2 class="section-title">PPFD Surface Graphs</h2>
+                <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the left exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target PPFD range).</p>
+                <div class="image-container hidden">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/ppfd_surface_graph_1.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="PPFD Surface Graph - Traditional" id="ppfd-surface-1" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/ppfd_surface_graph_2.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="PPFD Surface Graph - UPFP" id="ppfd-surface-2" loading="lazy">
+                    </picture>
+                </div>
+                <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
+            
+                <h2 class="section-title">2D Variance Graphs</h2>
+                <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (left) demonstrates significantly reduced variance in photon distribution, showcasing far superior uniformity.</p>
+                <div class="image-container hidden">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/2d_variance_graph_1.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional" id="2d-variance-1" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/2d_variance_graph_2.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP" id="2d-variance-2" loading="lazy">
+                    </picture>
+                </div>
+                <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
+            
+                <h2 class="section-title">Heatmaps</h2>
+                <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (left) displays a more consistent color across the growing area, signifying superior uniformity. While the competitor displays a pronounced concentration of photons toward the center of the illuminated area, as can be seen by the circular radiation pattern.</p>
+                <div class="image-container hidden">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/heatmap_1.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/heatmap_1.png' %}" alt="Heatmap - Traditional" id="heatmap-1" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/heatmap_2.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP" id="heatmap-2" loading="lazy">
+                    </picture>
+                </div>
+                <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
+            
+                <h2 class="section-title hidden" id="ml">Proprietary Machine Learning Algorithm</h2>
+                <p>
+                    Central to our Uniform Photon Flux Principle (UPFP) is a sophisticated machine learning algorithm that dynamically optimizes LED intensities to ensure uniform Photosynthetic Photon Flux Density (PPFD) across the grow area. Below are key components of our algorithm:
+                </p>
+            
+                <h4 class="section-title">Optimization Function</h4>
+                <p>
+                    The optimization function minimizes the Mean Absolute Deviation (MAD) of PPFD from the target value while adhering to energy constraints. Here's a snippet of how the objective function is defined:
+                </p>
+            
+                <div class="hdiden" style="max-width: 800px; margin: 0 auto; padding: 10px;">
+                    {% verbatim %}
+                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
+def objective_function(light_intensities, target_ppfd):
+    ppfd_values = calculate_ppfd(light_intensities)
+    mad = np.mean(np.abs(ppfd_values - target_ppfd))
+    energy_consumption = np.sum(light_intensities)
+    return mad + 0.3 * energy_consumption
+                        </code></pre>
+                    {% endverbatim %}
+                
+                    <p style="text-align: left; margin-bottom: 1em;">
+                        <strong>Explanation:</strong><br> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities. The objective is to minimize both MAD and energy usage while hitting the target PPFD, with energy consumption weighted by a factor of 0.3.
+                    </p>
+                
+                    <h4 class="section-title">Intensity Calculation</h4>
+                    <p style="text-align: left; margin-bottom: 1em;">
+                        Light intensity at each measurement point is determined using the Lambertian emission model. This is appropriate as CoBs are near-perfect Lambertian emitters. Below is a snippet illustrating this calculation:
+                    </p>
+                
+                    {% verbatim %}
+                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
+def lambertian_emission(intensity, distance, height):
+    if distance == 0:
+        return intensity
+    return (intensity * height) / ((distance ** 2 + height ** 2) ** 1.5)
+                        </code></pre>
+                    {% endverbatim %}
+                
+                    <p style="text-align: left; margin-bottom: 1em;">
+                        <strong>Explanation:</strong><br> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
+                    </p>
+                
+                    <h4 class="section-title">Optimization Process</h4>
+                    <p style="text-align: left; margin-bottom: 1em;">
+                        We utilize the Sequential Least Squares Programming (SLSQP) method from SciPy to perform the optimization. Here's how the optimization is initiated:
+                    </p>
+                
+                    {% verbatim %}
+                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
+result = minimize(
+    objective_function,
+    initial_intensities,
+    args=(target_ppfd,),
+    method='SLSQP',
+    bounds=bounds,
+    constraints=constraints
+)
+                        </code></pre>
+                    {% endverbatim %}
+                </div>
+    
+                    <p style="text-align: left; margin-bottom: 1em;">
+                        <strong>Explanation:</strong><br> The `minimize` function seeks the optimal light intensities for each concentric square layer of CoBs in our patented solution's LED arrangement that reduce the MAD, while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
+                    </p>
+    
+                    <h4 class="section-title">Real-Time Adjustments</h4>
+                    <p>
+                        An integral component of our agentic AI platform, our algorithm continuously monitors environmental data from integrated sensors. Based on real-time feedback, it dynamically recalibrates LED intensities to maintain optimal PPFD levels, ensuring consistent plant growth conditions.
+                    </p>
+    
+                    <h4 class="section-title">Benefits of Our Algorithm</h4>
+                    <ul>
+                        <li><b>Precision:</b> Achieves PPFD uniformity with a Degree of Uniformity (DOU) exceeding > 99%.</li>
+                        <li><b>Energy Efficiency:</b> Minimizes energy waste by optimizing LED intensities.</li>
+                        <li><b>Scalability:</b> Easily adaptable to any grow space size and configuration.</li>
+                        <li><b>Adaptability:</b> Agentic AI: Responds to environmental changes, ensuring consistent plant growth conditions.</li>
+                    </ul>
+                    <h4 class="section-title">Interactive Demo</h4>
+                    <p>
+                        Explore our optimization process through an interactive simulation. Adjust parameters such as floor dimensions and perimeter reflectivity to see how our algorithm adapts LED intensities to maintain uniform PPFD.
+                    </p>
+                    <div class="interactive-demo">
+                        <p>Interactive simulation coming soon!</p>
+                    </div>
+                </div>
+                <div class="section hidden">
+                    <h1 class="section-title">Technical Details</h1>
+                    <p>
+                        Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
+                    </p>
+                        <b>Lambertian Emission Model:</b><br> We assume each LED emitter follows a Lambertian emission pattern (an appropriate light modeling strategy for CoB LEDs), where radiant intensity is modeled as: \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]
+                        <b>Radiosity and Reflective Walls:</b><br> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), which is especially important in grow spaces as they tend to have highly reflective walls (\(\rho \approx 1\)).<br><br>
+                        <b>Optimization:</b><br> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.
+                        <b>Degree of Uniformity (DOU):</b><br> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\] Our prototype numeric solutions have achieved DOU values exceeding 99%.
+                </div>
+                
+                <div class="section hidden">
+                    <h1 class="section-title">Experimental Validation</h1>
+                    <p>
+                        We are committed to rigorous experimental validation of our UPFP technology. We will be using Apogee Instruments spectroradiometers (PS series for lab testing and the MS-100 handheld for field testing) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
+                    </p>
+                </div>
+                    <div class="align-list">
+                    <ul>
+                        <li><b><p>Measure total photon flux and PPFD distribution across the plant canopy.</b></p></li>
+                        <li><b><p>Corroborate our theoretical predictions with real-world data.</b></p></li>
+                        <li><b><p>Further refine our models and optimization algorithms.</b></p></li>
+                    </ul>
+                    </div>
+                
+                    <h1 class="section-title">References</h1>
+                    <ol>
+                        <li><p>Zhang, G., <em>et al.</em>, 2015. A combination of downward lighting and upward lighting improves plant growth in plant factories. <em>Hortscience</em>, 50(8), 1126--1130.</p></li>
+                        <li><p>Joshi, J., Zhang, G., Shen, S., Supaibulwatana, K., Watanabe, C., Yamori, W., 2017. A combination of downward lighting and supplemental upward lighting improves plant growth in a closed plant factory with artificial lighting. <em>Hortscience</em> 52 (6), 831--835. <a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">https://doi.org/10.21273/HORTSCI11822-17</a></p></li>
+                        <li><p>Kozai, T., 2022. Role and characteristics of PFALs. <em>Plant Factory Basics, Applications and Advances</em>, 46. Academic Press.</p></li>
+                        <li><p>Runkle, E., 2021. Hidden benefits of supplemental lighting. <em>Greenhouse Product News</em>, 42. <a href="https://gpnmag.com/article/hidden-benefits-of-supplemental-lighting/" target="_blank">https://gpnmag.com/article/hidden-benefits-of-supplemental-lighting/</a></p></li>
+                    </ol>
+                </div>
             </div>
-        </div>
-        <a href="#" class="back-to-top" id="backToTopBtn">
-            <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
-        </a>
-        <a href="/" class="home-button" id="homeButton">
-            <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
-         </a>
-         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-     
-         <script src="{% static 'js/scripts.js' %}"></script>
-    {% include 'main/footer.html' %}
-    </body>
-    </html>
+            <a href="#" class="back-to-top" id="backToTopBtn">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+                </picture>
+            </a>
+            <a href="/" class="home-button" id="homeButton">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
+                 </picture>
+             </a>
+             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+             <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+         
+             <script src="{% static 'js/scripts.js' %}"></script>
+        {% include 'main/footer.html' %}
+    </div>
+</body>
+</html>

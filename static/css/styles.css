@@ -931,7 +931,7 @@ button[type="submit"]:hover {
     transform: scale(1.1); /* Enlarge image by 10% on hover */
     z-index: 2; /* Bring hovered image on top if overlapping occurs */
 }
-
+/* Updated CSS to handle <picture> elements within Flexbox */
 .image-container {
     display: flex;
     flex-wrap: wrap;           /* Allow wrapping on smaller screens */
@@ -941,25 +941,40 @@ button[type="submit"]:hover {
     overflow: visible;
 }
 
-.image-container img {
-    flex: 1 1 45%;            /* Allow images to grow/shrink, aiming for about 45% of container width each */
-    max-width: 45%;           /* Prevent images from exceeding 45% of container width */
-    height: auto;             /* Maintain aspect ratio */
+.modular-images-section .image-container {
+    justify-content: center; /* Center images in their container */
+}
+
+/* Style for <picture> elements to behave like flex items */
+.image-container picture {
+    flex: 1 1 45%;            /* Allow pictures to grow/shrink, aiming for about 45% of container width each */
+    max-width: 45%;           /* Prevent pictures from exceeding 45% of container width */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin-bottom: 10px;
     transition: transform 0.3s ease; /* Smooth transition */
+    display: block;           /* Ensure <picture> takes up the defined flex space */
 }
 
-.image-container img:hover {
-    transform: scale(1.1); /* Enlarge image by 10% on hover */
-    z-index: 2; /* Bring hovered image on top if overlapping occurs */
+/* Hover effect for <picture> elements */
+.image-container picture:hover {
+    transform: scale(1.1); /* Enlarge picture by 10% on hover */
+    z-index: 2;             /* Bring hovered picture on top if overlapping occurs */
 }
 
+/* Ensure images within <picture> fill their container */
+.image-container picture img {
+    width: 100%;
+    height: auto;             /* Maintain aspect ratio */
+    display: block;           /* Remove bottom whitespace */
+}
+
+/* Style for list items within image containers, if any */
 .image-container li {
     width: 100%;
     text-align: center;
     margin: 10px 0;
 }
+
 
 /* Modular Images Section */
 .modular-images-section {

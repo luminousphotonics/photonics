@@ -1,5 +1,4 @@
 {% load static %}
-{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,15 +15,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
 
-    <!-- External CSS (not compressed) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
-    <!-- Compressed CSS -->
-    {% compress css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% endcompress %}
 
     <link rel="icon" type="image/x-icon" href="{% static 'main/images/favicon.ico' %}">
     <title>Luminous Photonics - Revolutionizing Horticultural Lighting</title>
@@ -215,15 +210,12 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
             <button id="pdfButton2" onclick="openPDF()" class="button">White Paper</button>
         </div>
     </div>
-    
-    <!-- External JS (not compressed) -->
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
-    <!-- Compressed JS -->
-    {% compress js %}
     <script src="{% static 'js/scripts.js' %}"></script>
-    {% endcompress %}
+
     </html>
     {% include 'main/footer.html' %}
 </body>

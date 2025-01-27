@@ -4,8 +4,8 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY')  # Use environment variable for production
-DEBUG = False  # Set to False in production
+SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'luminous-photonics.onrender.com',
@@ -15,6 +15,8 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
+SECURE_SSL_REDIRECT = False
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -23,7 +25,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'main.apps.MainConfig',
-    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "photonics.wsgi.application"
 
+# Database (using SQLite for now)
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -88,18 +90,16 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Add this line
+    BASE_DIR / "static",
     BASE_DIR / "frontend/build/static",
 ]
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 ]
 
-COMPRESS_ENABLED = True
-COMPRESS_CSS_FILTERS = ['compressor.filters.cssmin.CSSMinFilter']
-COMPRESS_JS_FILTERS = ['compressor.filters.jsmin.JSMinFilter']
+
+WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

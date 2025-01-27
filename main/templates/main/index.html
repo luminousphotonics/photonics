@@ -1,4 +1,5 @@
 {% load static %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,25 +15,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
+
+    <!-- External CSS (not compressed) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
+    <!-- Compressed CSS -->
+    {% compress css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    
+    {% endcompress %}
+
     <link rel="icon" type="image/x-icon" href="{% static 'main/images/favicon.ico' %}">
     <title>Luminous Photonics - Revolutionizing Horticultural Lighting</title>
-    <style>
-        
-    </style>
 </head>
 <body>
     {% include 'main/navbar.html' %}
 
     <div class="container">
         <div class="hero hidden">
-            <div class="video-overlay"></div> <video autoplay loop muted playsinline>
-                <source src="{% static 'main/images/bannervid.mp4' %}" type="video/mp4">
+            <div class="video-overlay"></div>
+            <video autoplay loop muted playsinline class="lazy-load">
+                <source data-src="{% static 'main/images/bannervid.mp4' %}" type="video/mp4">
             </video>
             <h2>Revolutionizing Horticultural Lighting</h2>
         </div>
@@ -41,65 +45,80 @@
                 Welcome to <i style="color: #0078BE;">Luminous Photonics</i>, where we are pioneering the future of horticultural lighting. Our patented (<i>U.S. Patent #10687478</i>: <a  href="https://patents.google.com/patent/US10687478B2" target="_blank" style="font-size: 0.9em;">Optimized LED Lighting Array for Horticultural Applications</a>), infinitely scalable, modularized lighting system achieves near-perfect homogeneous PAR distribution, dramatically improving energy efficiency and plant growth in controlled environments.
             </p>
         </div>
-<div class="two-col-section hidden" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px;">
+        <div class="two-col-section hidden" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px;">
             <h2 style="color: #0078BE;">What is homogeneous PAR distribution?</h2>
             <p>
-A homogeneous photosynthetically active radiation (PAR) distribution refers to a situation where the intensity of light that plants can use for photosynthesis is evenly spread across a given area, meaning there is minimized variation in light levels from one location to another across the illuminated plane. This results in all plants in that area receiving the same amount of usable light for photosynthesis, or every part of every leaf receiving the same degree of light intensity.
+                A homogeneous photosynthetically active radiation (PAR) distribution refers to a situation where the intensity of light that plants can use for photosynthesis is evenly spread across a given area, meaning there is minimized variation in light levels from one location to another across the illuminated plane. This results in all plants in that area receiving the same amount of usable light for photosynthesis, or every part of every leaf receiving the same degree of light intensity.
             </p>
-
             <h2 style="color: #0078BE;">Why is achieving homogeneous PAR distribution in a horticultural lighting system important?</h2>
             <p>In horticultural applications, this homogeneous PAR distribution results in every part of every leaf receiving the same intensity of light, effectively optimizing photosynthetic processes. This is elucidated in the academic literature:</p>
-    <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content;">
-    <code>
+            <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content;">
+                <code>
 If the PPFD is spatially uniform at an appropriate level in a plant canopy regardless of the canopy's depth, the net photosynthetic rate of the whole plant canopy should increase significantly, and the decrease in net photosynthetic capacity of lower leaves due to their senescence may be prevented.
 
 — (Zhang et al., 2015; Joshi et al., 2017), <cite><a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">Zhang, X., He, D., Niu, G., Yan, Z., & Song, J. (2015). A Combination of Downward Lighting and Supplemental Upward Lighting Improves Plant Growth in a Closed Plant Factory with Artificial Lighting.</a> <i>Hortscience, 52</i>(6), 831-835.</cite>
-    </code>
-</pre>
-
-<pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content; margin-top: 20px;">
-    <code>
+                </code>
+            </pre>
+            <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content; margin-top: 20px;">
+                <code>
 A uniform light environment in a plant canopy has the following effects:
 (1) Geometrical relationships between the source (photosynthesizing parts) and sink (accumulating parts of translocated carbohydrates) of plants are changed; (2) All leaves of a plant canopy relatively equally act as producers of carbohydrates; (3) Senescence of lower leaves
 due to low PPFD is suppressed; and (4) Phytohormone balances in individual plants are changed.
 
 — (Kozai, 2022), <cite>Kozai, T. (2022). Role and characteristics of PFALs. In <i>Plant Factory Basics, Applications and Advances</i> (p. 46). Academic Press.</cite>
-    </code>
-</pre>
-</div>
+                </code>
+            </pre>
+        </div>
         <div class="info-box-container hidden">
             <div class="info-box" data-info="agentic-ai">
                 <h2>Agentic AI</h2>
                 <div class="info-box-content">
                     <p>Our Agentic AI platform integrates real-time plant feedback with advanced automation. It continuously refines the light spectrum and intensity to optimize every aspect of plant growth, utilizing historical data and machine learning to enhance yields and resource efficiency.</p>
-                    <button class="learn-more-button">Learn More</button>
+                    <div class="cta-section1">
+                        <a href="{% url 'agenticai' %}" class="learn-more-link">
+                            <button class="learn-more1">Learn More</button>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="info-box" data-info="lighting-simulations">
                 <h2>Lighting Simulations</h2>
                 <div class="info-box-content">
                     <p>We employ advanced lighting simulation software to model and optimize the distribution of photosynthetically active radiation (PAR). This ensures uniform light exposure across the plant canopy, enhancing photosynthetic efficiency and promoting even growth.</p>
-                    <button class="learn-more-button">Learn More</button>
+                    <div class="cta-section1">
+                        <a href="{% url 'technology' %}#ls" class="learn-more-link">
+                            <button class="learn-more1">Learn More</button>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="info-box" data-info="ml-optimization">
                 <h2>ML Layer-Wise Optimization Algorithm</h2>
                 <div class="info-box-content">
                     <p>Our machine learning algorithm optimizes the lighting system layer by layer, modulating the intensity of each layer to achieve homogeneous PAR distribution. This targeted approach ensures that each part of the plant canopy receives the ideal light conditions for growth and development.</p>
-                    <button class="learn-more-button">Learn More</button>
+                    <div class="cta-section1">
+                        <a href="{% url 'technology' %}#ml" class="learn-more-link">
+                            <button class="learn-more1">Learn More</button>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="info-box" data-info="cooling-system">
                 <h2>Thermal Management</h2>
                 <div class="info-box-content">
-                    <p>Our state-of-the-art cooling system maintains optimal operating temperatures for the lighting elements, resuling in a maximum light output to energy input ratio. We utilize Computational Fluid Dynamics (CFD) and Finite Element Analysis (FEA) to validate the cooling system.</p>
-                    <button class="learn-more-button">Learn More</button>
+                    <p>Our state-of-the-art cooling system maintains optimal operating temperatures for the lighting elements, resulting in a maximum light output to energy input ratio. We utilize Computational Fluid Dynamics (CFD) and Finite Element Analysis (FEA) to validate the cooling system.</p>
+                    <div class="cta-section1">
+                        <a href="{% url 'cooling_system' %}" class="learn-more-link">
+                            <button class="learn-more1">Learn More</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
         </div>
-        <div class="grey-background" style="--bg-image: url('{% static 'main/images/handleaf.jpg' %}');">
-            <div class="overlay"></div> <div class="content-wrapper">
+        <div class="grey-background lazy-load-bg" data-bg="{% static 'main/images/handleaf.jpg' %}">
+            <div class="overlay">
+            <div class="content-wrapper">
                 <div class="info-panel">
                     <div class="key-features-section">
                         <h3 class="panel-title">Key Features</h3>
@@ -118,31 +137,33 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                     </div>
                 </div>
                 <div class="image-container1">
-                    <img src="{% static 'main/images/fixture.png' %}" alt="Fixture">
+                    <img src="{% static 'main/images/fixture.png' %}" alt="Fixture" loading="lazy">
                 </div>
             </div>
         </div>
+        </div>
+ 
         <div class="features" style="padding-top: 20px;">
             <div class="feature hidden" style="margin-top: 20px;">
-                <img src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon" width="100" height="100">
+                <img data-src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon" width="100" height="100" class="lazy-load">
                 <h2>Unparalleled Energy Efficiency</h2>
                 <p>Reduce energy consumption while maximizing light output.</p>
             </div>
             <div class="feature hidden" style="margin-top: 20px;">
-                <img src="{% static 'main/images/recycle.png' %}" alt="Growth Icon" width="100" height="100">
+                <img data-src="{% static 'main/images/recycle.png' %}" alt="Growth Icon" width="100" height="100" class="lazy-load">
                 <h2>Enhanced Plant Growth</h2>
                 <p>Promote healthier, more uniform plant development with optimized light distribution.</p>
             </div>
             <div class="feature hidden" style="margin-top: 20px;">
-                <img src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon" width="100" height="100">
+                <img data-src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon" width="100" height="100" class="lazy-load">
                 <h2>Infinitely Scalable</h2>
                 <p>Adapt our system to any grow space, from small research setups to large commercial greenhouses.</p>
             </div>
         </div>
+        
         <div class="image-container hidden" style="text-align: center;">
-            <img src="{% static 'main/images/csnrect.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
+            <img src="{% static 'main/images/csnrect.png' %}" alt="Fixture" style="display: block; margin: 0 auto;" loading="lazy">
         </div>
-
         <div class="cta hidden">
             <h1 style="color: #0078BE">Learn More About the Science Behind our Revolutionary Technology</h1>
             <a href="{% url 'technology' %}" class="button">Explore the Technology</a>
@@ -151,211 +172,59 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
     <div class="carousel-container">
         <div class="carousel">
             <a href="{% url 'technology' %}#beam-profile-1">
-                <div><img src="{% static 'main/images/beam_profile_1.png' %}" alt="Carousel Image 1" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/beam_profile_1.png' %}" alt="Carousel Image 1" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#beam-profile-2">
-                <div><img src="{% static 'main/images/beam_profile_2.png' %}" alt="Carousel Image 2" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/beam_profile_2.png' %}" alt="Carousel Image 2" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#csn-image">
-                <div><img src="{% static 'main/images/csn.jpeg' %}" alt="Carousel Image 3" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/csn.jpeg' %}" alt="Carousel Image 3" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#csn22-image">
-                <div><img src="{% static 'main/images/csn22.png' %}" alt="Carousel Image 4" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/csn22.png' %}" alt="Carousel Image 4" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#2d-variance-1">
-                <div><img src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="Carousel Image 5" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="Carousel Image 5" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#2d-variance-2">
-                <div><img src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="Carousel Image 6" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="Carousel Image 6" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#ppfd-surface-1">
-                <div><img src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="Carousel Image 7" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="Carousel Image 7" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#ppfd-surface-2">
-                <div><img src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="Carousel Image 8" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="Carousel Image 8" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#heatmap-1">
-                <div><img src="{% static 'main/images/heatmap_1.png' %}" alt="Carousel Image 9" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/heatmap_1.png' %}" alt="Carousel Image 9" width="100" height="100" class="lazy-load"></div>
             </a>
             <a href="{% url 'technology' %}#heatmap-2">
-                <div><img src="{% static 'main/images/heatmap_2.png' %}" alt="Carousel Image 10" width="100" height="100"></div>
+                <div><img data-src="{% static 'main/images/heatmap_2.png' %}" alt="Carousel Image 10" width="100" height="100" class="lazy-load"></div>
             </a>
         </div>
     </div>
     <div class="text-below-carousel">
         <a href="#" class="back-to-top" id="backToTopBtn">
-            <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+            <img data-src="{% static 'main/images/top-btn.png' %}" alt="Back to Top" class="lazy-load">
         </a>
         <a href="/" class="home-button" id="homeButton">
-            <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
-         </a>
+            <img data-src="{% static 'main/images/home-btn.png' %}" alt="Home" class="lazy-load">
+        </a>
         <div class="cta hidden">
             <h1 style="color: #0078BE">Observe our Cutting-Edge Research</h1>
             <button id="pdfButton2" onclick="openPDF()" class="button">White Paper</button>
         </div>
     </div>
     
-    <script>
-        function openPDF() {
-          const pdfUrl = "{% static 'main/images/whitepaper.pdf' %}";
-          window.open(pdfUrl, '_blank');
-        }
-      </script>
+    <!-- External JS (not compressed) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
-    {% load static %}
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        </head>
-    <body>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Initialize Slick Carousel
-                $('.carousel').slick({
-                    dots: true,
-                    infinite: true,
-                    speed: 500,
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                    adaptiveHeight: false,
-                    autoplay: true,
-                    autoplaySpeed: 3000,
-                    arrows: true,
-                    pauseOnHover: false,
-                    centerMode: true,
-                    variableWidth: false, // Ensure this is false
-                });
-    
-                function adjustCarouselHeight() {
-                    var maxHeight = 0;
-                    $('.carousel .slick-slide').each(function() {
-                        if ($(this).height() > maxHeight) {
-                            maxHeight = $(this).height();
-                        }
-                    });
-                    $('.carousel').height(maxHeight);
-                }
-    
-                // Adjust height on initialization
-                adjustCarouselHeight();
-    
-                // Adjust height on window resize
-                $(window).on('resize', function() {
-                    adjustCarouselHeight();
-                });
-    
-                // Select elements you want to animate on scroll
-                const animElements = document.querySelectorAll('.hidden, .hero, .feature, .info-box, .cta');
-    
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        // Do not unobserve, so animations can reoccur on re-entry
-                        } else {
-                        entry.target.classList.remove('visible'); // Remove class when out of view
-                        }
-                    });
-                    }, { threshold: 0.1 });
-    
-                animElements.forEach(el => observer.observe(el));
-    
-                // Back to Top Button Functionality
-                const backToTopBtn = document.getElementById('backToTopBtn');
-    
-                window.addEventListener('scroll', function() {
-                    if (window.scrollY > 300) {
-                        backToTopBtn.classList.add('show');
-                    } else {
-                        backToTopBtn.classList.remove('show');
-                    }
-                });
-    
-                backToTopBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                });
-                // Home Button Functionality
-                const homeButton = document.getElementById('homeButton');
-    
-                window.addEventListener('scroll', function() {
-                    if (window.scrollY > 300) {
-                    homeButton.classList.add('show');
-                    } else {
-                        homeButton.classList.remove('show');
-                    }
-                });
-                homeButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    window.location.href = "/";
-                });
-    
-                // Info Box Interactivity with Learn More Buttons
-                const infoBoxes = document.querySelectorAll('.info-box');
-                infoBoxes.forEach(box => {
-                    box.addEventListener('click', function(event) {
-                        // If click is on the Learn More button, handle navigation
-                        if (event.target.classList.contains('learn-more-button')) {
-                            event.stopPropagation();  // Prevent parent click handler from firing
-                            const dataInfo = this.getAttribute('data-info');
-                            let targetUrl ='';
-    
-                            switch (dataInfo) {
-                                case 'agentic-ai':
-                                    targetUrl="{% url 'agenticai' %}"
-                                    break;
-                                case 'lighting-simulations':
-                                    targetUrl += "{% url 'technology' %}#ls";
-                                    break;
-                                case 'ml-optimization':
-                                    targetUrl += "{% url 'technology' %}#ml";
-                                    break;
-                                case 'cooling-system':
-                                    targetUrl += "{% url 'cooling_system' %}";
-                                    break;
-                            }
-    
-                            window.location.href = targetUrl;
-                        } else {
-                            // Check if the clicked box is already active
-                            const isActive = this.classList.contains('active');
-    
-                            // Close other info boxes only if the clicked box is not active
-                            if (!isActive) {
-                                infoBoxes.forEach(otherBox => {
-                                    if (otherBox !== this) {
-                                        otherBox.classList.remove('active');
-                                    }
-                                });
-                            }
-    
-                            // Toggle active state on the clicked box
-                            this.classList.toggle('active');
-                        }
-                    });
-                });
-                // Intersection Observer to trigger animation when info panel comes into view
-                const infoPanel = document.querySelector('.info-panel');
-    
-                const infoPanelObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            infoPanelObserver.unobserve(entry.target); // Stop observing once visible
-                        }
-                    });
-                }, { threshold: 0.2 }); // Adjust threshold as needed
-    
-                infoPanelObserver.observe(infoPanel);
-            });
-        </script>
-        </body>
+    <!-- Compressed JS -->
+    {% compress js %}
+    <script src="{% static 'js/scripts.js' %}"></script>
+    {% endcompress %}
     </html>
-{% include 'main/footer.html' %}
+    {% include 'main/footer.html' %}
 </body>
 </html>

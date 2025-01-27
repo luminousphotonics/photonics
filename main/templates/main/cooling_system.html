@@ -25,11 +25,11 @@
 
         <h1 style="color: #0078BE; text-align: center;">Cutting-Edge Cooling System</h1>
         <div class="image-container hidden">
-            <img src="{% static 'main/images/e1.png' %}" alt="Enclosure - Fan" id="enc.fan">
-            <img src="{% static 'main/images/e2.png' %}" alt="Enclosure - Vent" id="enc.vent">
-            <img src="{% static 'main/images/ca1.png' %}" alt="Cooling Assembly 1" id="cooling1">
-            <img src="{% static 'main/images/ca2.png' %}" alt="Cooling Assembly 2" id="cooling2">
-            <img src="{% static 'main/images/ca3.png' %}" alt="Cooling Assembly 3" id="cooling3">
+            <img src="{% static 'main/images/e1.png' %}" alt="Enclosure - Fan" id="enc.fan" loading="lazy">
+            <img src="{% static 'main/images/e2.png' %}" alt="Enclosure - Vent" id="enc.vent" loading="lazy">
+            <img src="{% static 'main/images/ca1.png' %}" alt="Cooling Assembly 1" id="cooling1" loading="lazy">
+            <img src="{% static 'main/images/ca2.png' %}" alt="Cooling Assembly 2" id="cooling2" loading="lazy">
+            <img src="{% static 'main/images/ca3.png' %}" alt="Cooling Assembly 3" id="cooling3" loading="lazy">
         </div>
 <div class="cooling-system-synopsis" style="font-family: 'Arial', sans-serif; line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <h2 style="color: #000000; border-bottom: 2px solid #000000; padding-bottom: 10px;">Synopsis of the High-Performance Air-Cooled System</h2>
@@ -104,6 +104,34 @@
      </a>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+                // Lazy Loading for Images and Videos
+                const lazyMedia = document.querySelectorAll(".lazy-load");
+        
+                const lazyLoad = (target) => {
+                    const io = new IntersectionObserver((entries, observer) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                const element = entry.target;
+                                if (element.tagName === "IMG") {
+                                    element.src = element.dataset.src;
+                                    element.classList.add("visible"); // Add visible class for fade-in effect
+                                } else if (element.tagName === "VIDEO") {
+                                    const source = element.querySelector("source");
+                                    source.src = source.dataset.src;
+                                    element.load();
+                                    element.classList.add("visible"); // Add visible class for fade-in effect
+                                }
+                                observer.unobserve(element); // Stop observing after loading
+                            }
+                        });
+                    });
+        
+                    io.observe(target);
+                };
+        
+                lazyMedia.forEach(lazyLoad);
+
             const backToTopBtn = document.getElementById('backToTopBtn');
 
             // Show the button when the user scrolls down 300px from the top

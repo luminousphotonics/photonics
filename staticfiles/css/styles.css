@@ -817,6 +817,28 @@ button[type="submit"]:hover {
     background-color: #003380; /* Adjust as needed */
 }
 
+.learn-more1-link {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.learn-more1 {
+    background-color: #0078BE; /* Adjust as needed */
+    color: #ffffff;
+    border: none;
+    justify-content: center;
+    padding: 12px 25px; /* Adjust padding as needed */
+    border-radius: 5px;
+    font-size: 18px; /* Adjust font size as needed */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.learn-more1:hover {
+    background-color: #003380; /* Adjust as needed */
+}
+
 .info-panel.visible {
     opacity: 1;
     transform: translateX(0);

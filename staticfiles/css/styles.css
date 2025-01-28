@@ -720,27 +720,6 @@ button[type="submit"]:hover {
     z-index: 2; /* Ensure content is above the overlay */
 }
 
-.image-container1 {
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: 5%; /* Adjust position as needed */
-    transform: translateY(-50%);
-    width: 50%; /* Adjust width as needed */
-    transition: opacity 0.8s ease-in-out; /* Add a transition for the fade-in effect */
-}
-
-.image-container1.visible {
-    opacity: 1; /* Make the image container fully opaque */
-}
-
-.image-container1 img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    transition: transform 0.3s ease;
-}
-
 .info-panel {
     background-color: rgba(0, 0, 0, 0.6); /* Adjust transparency as needed */
     color: #ffffff;
@@ -944,6 +923,83 @@ button[type="submit"]:hover {
     transform: scale(1.1); /* Enlarge image by 10% on hover */
     z-index: 2; /* Bring hovered image on top if overlapping occurs */
 }
+
+.image-container1 {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 5%; /* Adjust position as needed */
+    transform: translateY(-50%);
+    width: 50%; /* Adjust width as needed */
+    transition: opacity 0.8s ease-in-out; /* Add a transition for the fade-in effect */
+}
+
+.image-container1.visible {
+    opacity: 1; /* Make the image container fully opaque */
+}
+
+.image-container1 img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* Style for <picture> elements to behave like flex items */
+.image-container2 picture {
+    flex: 1 1 45%;            /* Allow pictures to grow/shrink, aiming for about 45% of container width each */
+    max-width: 85%;           /* Prevent pictures from exceeding 45% of container width */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    transition: transform 0.3s ease; /* Smooth transition */
+    display: block;           /* Ensure <picture> takes up the defined flex space */
+}
+
+/* Hover effect for <picture> elements */
+.image-container2 picture:hover {
+    transform: scale(1.1); /* Enlarge picture by 10% on hover */
+    z-index: 2;             /* Bring hovered picture on top if overlapping occurs */
+}
+
+/* Ensure images within <picture> fill their container */
+.image-container2 picture img {
+    width: 100%;
+    height: auto;             /* Maintain aspect ratio */
+    display: block;           /* Remove bottom whitespace */
+}
+
+.image-container3 {
+    display: flex;
+    flex-wrap: wrap;           /* Allow wrapping on smaller screens */
+    justify-content: center;   /* Center images horizontally */
+    gap: 10px;
+    margin-top: 20px;
+    overflow: visible;
+}
+
+/* Style for <picture> elements to behave like flex items */
+.image-container3 picture {
+    flex: 1 1 45%;            /* Allow pictures to grow/shrink, aiming for about 45% of container width each */
+    max-width: 85%;           /* Prevent pictures from exceeding 45% of container width */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    transition: transform 0.3s ease; /* Smooth transition */
+    display: block;           /* Ensure <picture> takes up the defined flex space */
+}
+
+/* Hover effect for <picture> elements */
+.image-container3 picture:hover {
+    transform: scale(1.1); /* Enlarge picture by 10% on hover */
+    z-index: 2;             /* Bring hovered picture on top if overlapping occurs */
+}
+
+/* Ensure images within <picture> fill their container */
+.image-container3 picture img {
+    width: 100%;
+    height: auto;             /* Maintain aspect ratio */
+    display: block;           /* Remove bottom whitespace */
+}
+
 /* Updated CSS to handle <picture> elements within Flexbox */
 .image-container {
     display: flex;

@@ -32,9 +32,9 @@
     {% include 'main/navbar.html' %}
     <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         <h1 class="section-title" style="text-align: center; font-size: 48px;">Technology</h1>
-        <p class="hidden">Explore the innovative technology behind Luminous Photonics' horticultural lighting solutions, based on our Uniform Photon Flux Principle (UPFP) for modular LED arrays.</p>
+        <p>Explore the innovative technology behind Luminous Photonics' horticultural lighting solutions, based on our Uniform Photon Flux Principle (UPFP) for modular LED arrays.</p>
 
-        <div class="section hidden">
+        <div>
             <h2 class="section-title">Uniform Photon Flux Principle (UPFP)</h2>
             <p>
                 Our research has led to the development of the Uniform Photon Flux Principle (UPFP), a groundbreaking approach to optimizing Photosynthetic Photon Flux Density (PPFD) distribution in controlled-environment agriculture.
@@ -51,7 +51,7 @@
             </p>
         </div>
         <div class="container">
-            <div class="modular-images-section hidden">
+            <div class="modular-images-section">
                 <h1 class="section-title">Infinitely Scalable Modularized System</h1>
                 <h3 class="section-text">With just 4 types of modular pieces, our horticultural lighting system can optimally cover any size square or rectangular space.</h3>
                 <div class="image-container hidden">
@@ -75,13 +75,13 @@
                     </picture>
                 </div>
                 <h3 class="section-text">Our arrangement strategem continues ad infinitum...</h3>
-                <div class="image-container hidden">
+                <div class="image-container3 hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/csn.webp' %}" type="image/webp">
                         <img src="{% static 'main/images/csn.jpeg' %}" alt="CSN #1" id="csn-image" loading="lazy">
                     </picture>
                 </div>       
-                <div class ="image-container hiden">
+                <div class ="image-container3 hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/csn22.webp' %}" type="image/webp">
                         <img src="{% static 'main/images/csn22.png' %}" alt="CSN #2" id="csn22-image" loading="lazy">
@@ -99,7 +99,7 @@
                     </picture>
                 </div>
             </div>       
-            <div class="section hidden">
+            <div>
                 <h3 class="section-text" style="text-align: center;">Here's an example of a 61-CoB lighting array.</h3>  
                 <div class="image-container">
                     <picture>
@@ -108,14 +108,14 @@
                     </picture>
                 </div>
                 <h3 class="section-text" style="text-align: center;">And with just 2 linear connector modules, two square lighting arrays can be conjoined to form a perfect rectangular lighting array.</h3>
-                <div class="image-container hidden">
+                <div class="image-container3 hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/csnrect.webp' %}" type="image/webp">
                         <img src="{% static 'main/images/csnrect.png' %}" alt="CSN Rect" id="csnrect-image" style="display: block; margin: 0 auto;" loading="lazy">
                     </picture>
                 </div>
             </div>
-            <div class="section hidden">
+            <div>
                 <h1 class="section-title" id="ls">Visualizing Light Uniformity</h1>
                 <p>
                     Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs compares a traditional or less optimized approach (right) with our UPFP-based solution (left).
@@ -136,7 +136,7 @@
                 <p class="image-caption">Figure 1: Comparison of Beam Profiles. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
             
                 <h2 class="section-title">PPFD Surface Graphs</h2>
-                <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange rectangle shows the target PPFD range. Note how the UPFP-based graph on the left exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target PPFD range).</p>
+                <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange square shows the target PPFD range. Note how the UPFP-based graph on the left exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target PPFD range).</p>
                 <div class="image-container hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/ppfd_surface_graph_1.webp' %}" type="image/webp">
@@ -164,7 +164,7 @@
                 <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
             
                 <h2 class="section-title">Heatmaps</h2>
-                <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (left) displays a more consistent color across the growing area, signifying superior uniformity. While the competitor displays a pronounced concentration of photons toward the center of the illuminated area, as can be seen by the circular radiation pattern.</p>
+                <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (left) displays a more consistent color across the growing area, signifying superior uniformity. The competitor displays a pronounced concentration of photons toward the center of the illuminated area, as can be seen by the circular radiation pattern.</p>
                 <div class="image-container hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/heatmap_1.webp' %}" type="image/webp">
@@ -177,71 +177,128 @@
                 </div>
                 <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
             
-                <h2 class="section-title hidden" id="ml">Proprietary Machine Learning Algorithm</h2>
+                <h2 class="section-title" id="ml">Proprietary Machine Learning Algorithm</h2>
                 <p>
-                    Central to our Uniform Photon Flux Principle (UPFP) is a sophisticated machine learning algorithm that dynamically optimizes LED intensities to ensure uniform Photosynthetic Photon Flux Density (PPFD) across the grow area. Below are key components of our algorithm:
+                    Central to our Uniform Photon Flux Principle (UPFP) is a sophisticated, agentic AI-driven machine learning algorithm that dynamically optimizes LED intensities to ensure uniform Photosynthetic Photon Flux Density (PPFD) across the grow area. This algorithm leverages real-time data from integrated environmental sensors to fine-tune the output of each concentric layer in our centered square number sequence LED arrangement. By adjusting the intensity of each layer, we achieve unprecedented uniformity, maximizing light utilization and plant growth. Below are key components of our algorithm:
                 </p>
             
-                <h4 class="section-title">Optimization Function</h4>
+                <h4 class="section-title">Objective Function</h4>
                 <p>
-                    The optimization function minimizes the Mean Absolute Deviation (MAD) of PPFD from the target value while adhering to energy constraints. Here's a snippet of how the objective function is defined:
+                    The objective function aims to minimize the Root Mean Squared Error (RMSE) of the Photosynthetic Photon Flux Density (PPFD) distribution while ensuring the mean intensity meets the target PPFD. It also penalizes deviations from the target intensity for each layer and incorporates a penalty for overshooting the target PPFD. Here's a snippet of how the objective function is defined:
                 </p>
-            
-                <div class="hdiden" style="max-width: 800px; margin: 0 auto; padding: 10px;">
+                
+                <div style="max-width: 800px; margin: 0 auto; padding: 10px;">
                     {% verbatim %}
-                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
-def objective_function(light_intensities, target_ppfd):
-    ppfd_values = calculate_ppfd(light_intensities)
-    mad = np.mean(np.abs(ppfd_values - target_ppfd))
-    energy_consumption = np.sum(light_intensities)
-    return mad + 0.3 * energy_consumption
-                        </code></pre>
-                    {% endverbatim %}
-                
-                    <p style="text-align: left; margin-bottom: 1em;">
-                        <strong>Explanation:</strong><br> This function calculates the MAD between the current PPFD distribution and the target PPFD. It also considers the total energy consumption by summing up the light intensities. The objective is to minimize both MAD and energy usage while hitting the target PPFD, with energy consumption weighted by a factor of 0.3.
-                    </p>
-                
-                    <h4 class="section-title">Intensity Calculation</h4>
-                    <p style="text-align: left; margin-bottom: 1em;">
-                        Light intensity at each measurement point is determined using the Lambertian emission model. This is appropriate as CoBs are near-perfect Lambertian emitters. Below is a snippet illustrating this calculation:
-                    </p>
-                
-                    {% verbatim %}
-                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
-def lambertian_emission(intensity, distance, height):
-    if distance == 0:
-        return intensity
-    return (intensity * height) / ((distance ** 2 + height ** 2) ** 1.5)
-                        </code></pre>
-                    {% endverbatim %}
-                
-                    <p style="text-align: left; margin-bottom: 1em;">
-                        <strong>Explanation:</strong><br> This function computes the radiant intensity at a given point based on the distance from the light source and the height of the LED. It ensures that the intensity diminishes appropriately with distance, following the Lambertian emission characteristics.
-                    </p>
-                
-                    <h4 class="section-title">Optimization Process</h4>
-                    <p style="text-align: left; margin-bottom: 1em;">
-                        We utilize the Sequential Least Squares Programming (SLSQP) method from SciPy to perform the optimization. Here's how the optimization is initiated:
-                    </p>
-                
-                    {% verbatim %}
-                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border hidden"><code class="language-python">
-result = minimize(
-    objective_function,
-    initial_intensities,
-    args=(target_ppfd,),
-    method='SLSQP',
-    bounds=bounds,
-    constraints=constraints
-)
+                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+def objective_function(light_intensities_by_layer, floor_width, floor_length, height_from_floor,
+                        target_ppfd, perimeter_reflectivity, measurement_points, layer_weights, phase=1):
+    active_layers = determine_active_layers(floor_width, floor_length)
+    adjusted_intensities = list(light_intensities_by_layer)
+    for i in range(active_layers, len(adjusted_intensities)):
+        adjusted_intensities[i] = 0.0
+
+    _, rmse, mean_intensity = calculate_intensity_and_rmse(
+        floor_width, floor_length, height_from_floor, adjusted_intensities, 
+        perimeter_reflectivity, measurement_points
+    )
+
+    if mean_intensity <= target_ppfd:
+        ppfd_penalty = (target_ppfd - mean_intensity) ** 2
+    else:
+        overshoot_multiplier = 300
+        ppfd_penalty = overshoot_multiplier * (mean_intensity - target_ppfd) ** 2
+
+    intensity_dev_penalty = 0
+    for i in range(active_layers):
+        intensity = adjusted_intensities[i]
+        target_intensity = (MAX_LUMENS / LUMENS_TO_PPFD_CONVERSION) * layer_weights[i]
+        intensity_dev_penalty += (intensity - target_intensity)**2
+
+    rmse_scaled = rmse * 0.6
+    ppfd_penalty_scaled = ppfd_penalty * 0.2 if phase == 1 else 0
+    intensity_dev_penalty_scaled = intensity_dev_penalty * 0.2
+
+    objective_value = rmse_scaled + ppfd_penalty_scaled + intensity_dev_penalty_scaled
+    return objective_value
                         </code></pre>
                     {% endverbatim %}
                 </div>
-    
-                    <p style="text-align: left; margin-bottom: 1em;">
-                        <strong>Explanation:</strong><br> The `minimize` function seeks the optimal light intensities for each concentric square layer of CoBs in our patented solution's LED arrangement that reduce the MAD, while respecting predefined bounds and constraints. The SLSQP method efficiently handles both equality and inequality constraints, making it suitable for our optimization needs.
-                    </p>
+                
+                <h4 class="section-title">Intensity Calculation</h4>
+                <p>
+                    The intensity calculation involves computing the PPFD at each measurement point on the floor. It accounts for both direct light from the light sources and reflected light from the perimeter walls. The Lambertian emission model is used to calculate the light intensity at a given distance. Here's a snippet of how the PPFD is calculated:
+                </p>
+                
+                <div style="max-width: 800px; margin: 0 auto; padding: 10px;">
+                    {% verbatim %}
+                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+def calculate_ppfd_at_point(point, light_sources, light_intensities_by_layer, height_from_floor):
+    total_ppfd = 0
+    for layer_index, layer_sources in enumerate(light_sources):
+        if layer_index < len(light_intensities_by_layer):
+            layer_intensity = light_intensities_by_layer[layer_index]
+            for source in layer_sources:
+                distance = math.sqrt(
+                    (source[0] - point[0]) ** 2 +
+                    (source[1] - point[1]) ** 2 +
+                    height_from_floor ** 2
+                )
+                total_ppfd += lambertian_emission(layer_intensity, distance, height_from_floor)
+    return total_ppfd
+                        </code></pre>
+                    {% endverbatim %}
+                </div>
+                
+                <h4 class="section-title">Optimization Process</h4>
+                <p>
+                    The optimization process uses the Sequential Least Squares Programming (SLSQP) method to minimize the objective function. It adjusts the light intensities for each layer while respecting bounds and constraints. The process ensures that the PPFD distribution is as uniform as possible and close to the target value. Here's a snippet of the optimization process:
+                </p>
+                
+                <div style="max-width: 800px; margin: 0 auto; padding: 10px;">
+                    {% verbatim %}
+                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
+def optimize_lighting(floor_width, floor_length, height_from_floor,
+                        initial_intensities_by_layer, target_ppfd, 
+                        perimeter_reflectivity, measurement_points, verbose=False):
+
+    active_layers = determine_active_layers(floor_width, floor_length)
+
+    bounds = []
+    for i in range(NUM_LAYERS):
+        if i < active_layers:
+            bounds.append((MIN_LUMENS / LUMENS_TO_PPFD_CONVERSION, MAX_LUMENS / LUMENS_TO_PPFD_CONVERSION))
+        else:
+            bounds.append((0, 0))
+
+    initial_guess = initial_intensities_by_layer
+    constraints = []
+
+    layer_weights = [0.2, 0.4, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0, 1.0, 1.0]
+
+    result = minimize(
+        objective_function,
+        initial_guess,
+        args=(
+            floor_width,
+            floor_length,
+            height_from_floor,
+            target_ppfd,
+            perimeter_reflectivity,
+            measurement_points,
+            layer_weights,
+            1
+        ),
+        method='SLSQP',
+        bounds=bounds,
+        constraints=constraints,
+        options={'maxiter': 2000, 'disp': verbose, 'ftol': 1e-6},
+    )
+
+    optimized_intensities = result.x
+    return optimized_intensities
+                        </code></pre>
+                    {% endverbatim %}
+                </div>
     
                     <h4 class="section-title">Real-Time Adjustments</h4>
                     <p>
@@ -253,7 +310,7 @@ result = minimize(
                         <li><b>Precision:</b> Achieves PPFD uniformity with a Degree of Uniformity (DOU) exceeding > 99%.</li>
                         <li><b>Energy Efficiency:</b> Minimizes energy waste by optimizing LED intensities.</li>
                         <li><b>Scalability:</b> Easily adaptable to any grow space size and configuration.</li>
-                        <li><b>Adaptability:</b> Agentic AI: Responds to environmental changes, ensuring consistent plant growth conditions.</li>
+                        <li><b>Adaptability:</b> Responds to environmental changes, ensuring consistent plant growth conditions.</li>
                     </ul>
                     <h4 class="section-title">Interactive Demo</h4>
                     <p>
@@ -262,19 +319,51 @@ result = minimize(
                     <div class="interactive-demo">
                         <p>Interactive simulation coming soon!</p>
                     </div>
+                    <div class="image-container2 hidden" style="text-align: center; margin-bottom: 30px;">
+                        <picture>
+                            <source srcset="{% static 'main/images/webp/simulation-min.webp' %}" type="image/webp">
+                            <img src="{% static 'main/images/simulation-min.png' %}" alt="Simulation Demo" style="display: block; margin: 0 auto;">
+                        </picture>
+                    </div>
                 </div>
-                <div class="section hidden">
-                    <h1 class="section-title">Technical Details</h1>
-                    <p>
-                        Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
-                    </p>
-                        <b>Lambertian Emission Model:</b><br> We assume each LED emitter follows a Lambertian emission pattern (an appropriate light modeling strategy for CoB LEDs), where radiant intensity is modeled as: \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]
-                        <b>Radiosity and Reflective Walls:</b><br> We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), which is especially important in grow spaces as they tend to have highly reflective walls (\(\rho \approx 1\)).<br><br>
-                        <b>Optimization:</b><br> We employ a Lagrange multiplier-based approach to minimize the Mean Absolute Deviation (MAD) of PPFD from the target value, subject to constraints on target PPFD and non-negative LED intensities.
-                        <b>Degree of Uniformity (DOU):</b><br> We quantify uniformity using the DOU metric: \[\text{DOU} = 100 \times \left(1 - \frac{\text{MAD}}{\text{PPFD}_{\text{avg}}}\right)\] Our prototype numeric solutions have achieved DOU values exceeding 99%.
+                <div>
+                    <div class="section hidden">
+                        <h1 class="section-title">Technical Details</h1>
+                        <p>
+                            Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
+                        </p>
+                        <b>Lambertian Emission Model:</b><br> 
+                        We assume each LED emitter follows a Lambertian emission pattern (an appropriate light modeling strategy for CoB LEDs), where radiant intensity is modeled as: 
+                        \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]
+                        <b>Radiosity and Reflective Walls:</b><br> 
+                        We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), which is especially important in grow spaces as they tend to have highly reflective walls (\(\rho \approx 1\)).<br><br>
+                        <b>Root Mean Squared Error (RMSE) Calculation:</b><br>
+                        RMSE is a standard measure of the differences between values predicted by a model and the actual values observed. In our case, it quantifies the deviation of the PPFD distribution from the target PPFD. It is calculated as follows:
+                        \[
+                        \text{RMSE} = \sqrt{\frac{\sum_{i=1}^{n} (P_i - T)^2}{n}}
+                        \]
+                        where:
+                        <ul>
+                            <li>\(P_i\) is the predicted PPFD at the \(i\)-th measurement point.</li>
+                            <li>\(T\) is the target PPFD.</li>
+                            <li>\(n\) is the total number of measurement points.</li>
+                        </ul>
+                        A lower RMSE indicates a higher degree of uniformity, as it signifies that the predicted PPFD values are closer to the target PPFD across all measurement points.
+                        <br><br>
+                        <b>Degree of Uniformity (DOU):</b><br> 
+                        We quantify uniformity using the DOU metric, which is based on Root Mean Squared Error (RMSE): 
+                        \[
+                        \text{DOU} = 100 \times \left(1 - \frac{\text{RMSE}}{\text{PPFD}_{\text{avg}}}\right)
+                        \] 
+                        where:
+                        <ul>
+                            <li>\(\text{RMSE}\) is the Root Mean Squared Error of the PPFD distribution.</li>
+                            <li>\(\text{PPFD}_{\text{avg}}\) is the average PPFD across all measurement points.</li>
+                        </ul>
+                        Our prototype numeric solutions have achieved DOU values exceeding 99%.
+                    </div>
                 </div>
-                
-                <div class="section hidden">
+                <div>
                     <h1 class="section-title">Experimental Validation</h1>
                     <p>
                         We are committed to rigorous experimental validation of our UPFP technology. We will be using Apogee Instruments spectroradiometers (PS series for lab testing and the MS-100 handheld for field testing) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:

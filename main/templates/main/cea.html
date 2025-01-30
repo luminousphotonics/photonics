@@ -32,7 +32,7 @@
         <div class="hero hidden" style="position: relative; overflow: hidden;">
             <div class="video-overlay"></div>
             <video autoplay loop muted playsinline>
-                <source src="{% static 'main/images/bannervid.mp4' %}" type="video/mp4">
+                <source src="{% static 'main/images/tomatocut.mp4' %}" type="video/mp4">
             </video>
             <h2>Controlled Environment Agriculture</h2>
         </div>
@@ -60,10 +60,13 @@
         <!-- Synergy With Offset Plant-Site Positioning Section -->
         <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
             <h1 class="section-title" style="text-align: center; font-size: 36px;">Synergy With Offset Plant-Site Positioning</h1>
-            <p>Our innovative lighting system is particularly well-suited for use with offset plant-site spacing, a horticultural technique known to enhance space utilization. By strategically positioning plants within the interstices of the LED array, this system maximizes cross-illumination, optimizes photon absorption uniformity, and effectively addresses the critical issue of canopy penetration, ultimately promoting vigorous and uniform plant growth.</p>
-            
-            <!-- Subsections with Images -->
-            <h2 style="color: #0078BE;">Offset Plant-Site Spacing and its Relevance to Cannabis Cultivation</h2>
+            <p>Our innovative lighting system is particularly well-suited for use with offset plant-site spacing, a horticultural technique known to enhance space utilization. By strategically positioning plants within the interstices of the LED array, this system maximizes multi-directional cross-illumination, optimizes photon absorption uniformity, and effectively addresses the critical issue of canopy penetration, ultimately promoting vigorous and uniform plant growth.</p>
+            <div class="image-container hidden" style="text-align: center;">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/offsetplants.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/offsetplants.png' %}" alt="Offset Plant Spacing" style="display: block; margin: 0 auto;">
+                </picture>
+            </div>            
             <p>Offset plant-site spacing, as described by <a href="https://greenthumbgardeningsecrets.com/sidebar-offset-spacing/" target="_blank">Green Thumb Gardening Secrets</a>, involves staggering plants in successive rows such that each plant is positioned equidistant from its neighbors in all directions, forming an approximately circular optimal growing area for each plant. This approach is particularly advantageous for species like Cannabis sativa, which, due to their growth characteristics, can exhibit significant self-shading, leading to reduced light interception and diminished productivity in the lower canopy. As noted by <a href="https://greenthumbgardeningsecrets.com/sidebar-offset-spacing/" target="_blank">Green Thumb Gardening Secrets</a>, offset spacing is well-suited for "larger plants (e.g., broccoli, peppers, tomatoes) that need a lot of space and can easily shade each other out, significantly reducing productivity." This principle directly applies to Cannabis cultivation, where maximizing light exposure to the entire canopy is essential for optimal yield and cannabinoid production.</p>
             
             <!-- Images: plantsites.png and offsetplants.png -->
@@ -71,12 +74,6 @@
                 <picture>
                     <source srcset="{% static 'main/images/webp/plantsites.webp' %}" type="image/webp">
                     <img src="{% static 'main/images/plantsites.png' %}" alt="Plant Sites Layout" style="display: block; margin: 0 auto;">
-                </picture>
-            </div>
-            <div class="image-container hidden" style="text-align: center;">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/offsetplants.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/offsetplants.png' %}" alt="Offset Plant Spacing" style="display: block; margin: 0 auto;">
                 </picture>
             </div>
 
@@ -103,10 +100,8 @@
             </div>
             <p><b>Enhanced Canopy Penetration:</b><br> Cross-illumination significantly improves light penetration into the lower canopy. By delivering light from multiple directions, this approach minimizes shading and ensures that lower leaves receive sufficient photosynthetically active radiation (PAR), optimizing the photosynthetic processes of the plant canopy.</p>
             <p><b>Uniform Photon Absorption:</b><br> Beyond simply delivering photons uniformly across the illuminated plane, the cross-illumination effect optimizes the uniformity of photon absorption by the plant canopy. This is crucial because the three-dimensional structure of the plant and the angle of incidence of light significantly affect light absorption. By illuminating the plant from all angles, this system ensures a more homogenous distribution of light absorption throughout the canopy.</p>
-            <p><b>Improved Growth and Yield:</b><br> Enhanced light penetration and uniform photon absorption contribute to improved photosynthetic efficiency, leading to more uniform growth, reduced internodal elongation, and potentially higher yields of both biomass and secondary metabolites, such as cannabinoids and terpenes, in Cannabis.</p>
-            
-            <p><b>Conclusion:</b></p>
-            <p>The centered square number sequence COB-SMD LED array represents a significant advancement in horticultural lighting technology, particularly for Cannabis cultivation utilizing offset plant-site spacing. By maximizing cross-illumination and thereby optimizing photon absorption uniformity, this system effectively addresses the challenge of canopy penetration, promoting vigorous, uniform growth, and potentially maximizing yield. This innovative approach, informed by established horticultural principles and tailored to the specific needs of Cannabis plants, offers a compelling solution for optimizing indoor cultivation. Further research and empirical testing will be crucial to fully quantify the benefits and optimize the system for various Cannabis cultivars and growing conditions.</p><br>
+<p><b>Improved Growth and Yield:</b><br> Enhanced light penetration and uniform photon absorption contribute to improved photosynthetic efficiency, leading to more uniform growth, reduced internodal elongation, and potentially higher yields of both biomass and secondary metabolites, such as cannabinoids and terpenes in Cannabis [1], and flavonoids and phenolic compounds in various other plant species [2].</p>
+<p><b>Conclusion:</b><br>The centered square number sequence COB-SMD LED array represents a significant advancement in horticultural lighting technology, particularly for Cannabis cultivation utilizing offset plant-site spacing. By maximizing cross-illumination and thereby optimizing photon absorption uniformity, this system effectively addresses the challenge of canopy penetration, promoting vigorous, uniform growth, and potentially maximizing yield. This innovative approach, informed by established horticultural principles, offers a compelling solution for optimizing indoor cultivation for a vast variety of plant species. Further research and empirical testing will be crucial to fully quantify the benefits and optimize the system for various plants and growing conditions.</p><br>
 
             <h1 class="section-title" style="text-align: center; font-size: 36px;">Solving the Scalability Problem</h1>
             
@@ -157,6 +152,12 @@
                     <img src="{% static 'main/images/csnrectgrid.png' %}" alt="Fixture" style="display: block; margin: 0 auto;">
                 </picture>
             </div>
+<!-- You can add a References section like this at the end of your HTML document -->
+<h2 style="color: #0078BE;">References:</h2>
+<ol>
+  <li>Chandra, S., Lata, H., Khan, I. A., & ElSohly, M. A. (2008). Photosynthetic response of Cannabis sativa L. to variations in photosynthetic photon flux densities, temperature and CO2 conditions. *Physiology and Molecular Biology of Plants*, *14*(4), 299-306.</li>
+  <li>Treutter, D. (2010). Managing phenol contents in crop plants by phytochemical farming and breeding—relevance to human health. *International journal of molecular sciences*, *11*(2), 911-941.</li>
+</ol>
         </div>
 
         <!-- Call-to-Action Section -->

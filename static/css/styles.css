@@ -891,11 +891,13 @@ button[type="submit"]:hover {
         right: 0;
         transform: none;
         z-index: 3;
-        margin-top: 50px; /* Adjust as needed */
+        margin-top: 0px; /* Adjust as needed */
     }
 
     .image-container1 img {
         max-width: 100%;
+        margin-bottom: 80px;
+        margin-right: 40px;
     }
 
     .info-panel {

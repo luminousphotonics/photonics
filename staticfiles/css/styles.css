@@ -639,6 +639,11 @@ button[type="submit"]:hover {
     color: #0078BE;
 }
 
+.feature h3 {
+    margin-bottom: 10px;
+    color: #0078BE;
+}
+
 .feature p {
     font-size: 1.1em;
     line-height: 1.2;
@@ -863,63 +868,78 @@ button[type="submit"]:hover {
 }
 
 
-/* Media Query for Mobile */
+/* Media Query for Tablets and Smaller (max-width: 768px) */
 @media (max-width: 768px) {
     .grey-background {
-        background-size: cover;
-        padding: 40px 5%;
-        min-height: 650px; /* Increased from 500px */
-        background-position: center 70%; /* Adjust as needed */
-    }
-
-    .overlay {
-        min-height: inherit;
-    }
-
-    .content-wrapper {
-        flex-direction: column-reverse;
-        align-items: center;
-        min-height: inherit;
-    }
-
-    .image-container1 {
-        position: relative;
-        width: 100%;
-        margin-bottom: 0;
-        padding-left: 0;
-        top: 0;
-        right: 0;
-        transform: none;
-        z-index: 3;
-        margin-top: 0px; /* Adjust as needed */
-    }
-
-    .image-container1 img {
-        max-width: 100%;
-        margin-bottom: 80px;
-        margin-right: 40px;
-    }
-
-    .info-panel {
-        width: 100%;
-        max-width: none;
-        margin-right: 0;
-        margin-left: 0;
-        z-index: 2;
-        max-height: 250px; /* Adjust as needed */
-        padding-top: 20px;
-        padding-bottom: 20px;
-        overflow-y: auto;
-    }
-
-    .info-panel h3 {
-        text-align: center;
-    }
-
-    .info-panel ul {
-        padding-left: 0px;
-    }
-}
+         background-size: cover;
+         padding: 40px 5%;
+         min-height: 650px; /* Increased from 500px */
+         background-position: center 70%; /* Adjust as needed */
+     }
+     .content-wrapper {
+         flex-direction: column-reverse; /* Stack elements vertically, image first */
+         align-items: center;
+         justify-content: flex-start; /* Align to the top */
+         padding: 20px;
+     }
+ 
+     .image-container1 {
+         width: 100%;
+         max-width: 500px;
+         margin-top: 0px; /* Reset margin-top */
+         margin-left: 0;    /* Center horizontally */
+         margin-right: 0;   /* Center horizontally */
+         padding-bottom: 150px;
+         padding-right: 30px;
+     }
+ 
+     .image-container1 img {
+         margin-bottom: 0;
+         height: auto;
+     }
+ 
+     .info-panel {
+         width: 100%;
+         max-width: none;
+         margin-right: 40px;
+         margin-left: 0;
+         z-index: 2;
+         max-height: none; /* Remove max-height */
+         padding-top: 20px; /* Reduced padding */
+         overflow-y: visible; /* Allow content to overflow */
+         margin-bottom: 20px; /*Add margin bottom to create gap between info panel and image container*/
+         text-align: center;
+     }
+ 
+     .info-panel h3 {
+         text-align: center;
+     }
+ 
+     .info-panel ul {
+         padding-left: 0;
+         text-align: left; /* Align list items to the left, but keep panel centered */
+         display: inline-block; /* Important for centering a left-aligned list */
+ 
+     }
+ }
+ 
+ /* Media Query for Smaller Mobile Devices (max-width: 480px) */
+ @media (max-width: 480px) {
+    .grey-background {
+         background-size: cover;
+         padding: 40px 5%;
+         min-height: 650px; /* Increased from 500px */
+         background-position: center 70%; /* Adjust as needed */
+     }
+     .image-container1 {
+         width: 100%;
+         margin-top: 0; /* Further adjustment might not be needed */
+         margin-left: 0;  /* Center horizontally */
+     }
+     .content-wrapper{
+         padding: 0;
+     }
+ }
 
 .image-container1 img:hover {
     transform: scale(1.1); /* Enlarge image by 10% on hover */

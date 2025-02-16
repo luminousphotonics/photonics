@@ -594,6 +594,24 @@ button[type="submit"]:hover {
 .button:hover {
     background-color: #F0F0F0;
 }
+
+/* styles.css */
+.dive-deeper-button {
+    display: inline-block; /*  Allows setting width, padding, etc. */
+    padding: 12px 25px;
+    background-color: #0078BE;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    border: none;
+}
+
+.dive-deeper-button:hover {
+    background-color: #F0F0F0;
+    text-decoration: none; /* Remove the underline that may appear */
+}
   /* Media query for mobile devices */
   @media (max-width: 768px) {
 

@@ -93,3 +93,6 @@ def cooling_system(request):
 
 def cea(request):
     return render(request, 'main/cea.html')
+
+def lighting_simulation(request):
+    return render(request, 'main/lighting_simulation.html')

@@ -1,45 +1,51 @@
 {% load static %}
 <nav class="navbar">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'index' %}">
-        <img src="{% static 'main/images/luminous-photonics-removebg.png' %}" alt="Luminous Photonics Logo" height="90">
-      </a>
-  
-      <button class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-  
-      <div class="nav-links-container">
-        <ul class="nav-links">
-          <li class="dropdown">
-            <a href="{% url 'technology' %}" class="dropbtn">Technology</a>
-            <div class="dropdown-content">
-              <a href="{% url 'agenticai' %}">Agentic AI</a>
-              <a href="{% url 'technology' %}#ls">Lighting Simulations</a>
-              <a href="{% url 'technology' %}#ml">Optimization Algorithm</a>
-              <a href="{% url 'cooling_system' %}">Thermal Management</a>
-            </div>
-          </li>
-          <li class="dropdown"> <a href="{% url 'applications' %}" class="dropbtn">Applications</a>
-            <div class="dropdown-content">
-              <a href="{% url 'cea' %}">Controlled Environment Agriculture (CEA)</a>
-              <a href="{% url 'applications' %}">Other Applications</a>
-            </div>
-          </li>
-          <li><a href="{% url 'about' %}">About Us</a></li>
-          <li><a href="{% url 'contact' %}">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>  
-<script>
-    const hamburger = document.querySelector(".hamburger");
-    const navLinksContainer = document.querySelector(".nav-links-container");
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'index' %}">
+      <img src="{% static 'main/images/luminous-photonics-removebg.png' %}" alt="Luminous Photonics Logo" height="90">
+    </a>
 
-    hamburger.addEventListener("click", () => {
-        navLinksContainer.classList.toggle("active");
-        hamburger.classList.toggle("active");
-    });
+    {% if show_search_bar %}
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search...">
+      <button id="searchBtn" class="search-btn" type="button">
+        <i class="fa fa-search"></i>
+      </button>
+      <div id="searchResults" class="search-results"></div>
+    </div>
+    {% endif %}
+
+    <button class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-links-container">
+      <ul class="nav-links">
+        <li class="dropdown">
+          <a href="{% url 'technology' %}" class="dropbtn">Technology</a>
+          <div class="dropdown-content">
+            <a href="{% url 'lighting_simulation' %}">Lighting Simulation</a>
+            <a href="{% url 'technology' %}#ml">Optimization Algorithm</a>
+            <a href="{% url 'cooling_system' %}">Thermal Management</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="{% url 'blog' %}" class="dropbtn">Blog</a>
+        </li>
+        <li><a href="{% url 'about' %}">About Us</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<script>
+  // Hamburger toggle functionality
+  const hamburger = document.querySelector(".hamburger");
+  const navLinksContainer = document.querySelector(".nav-links-container");
+  hamburger.addEventListener("click", () => {
+    navLinksContainer.classList.toggle("active");
+    hamburger.classList.toggle("active");
+  });
 </script>

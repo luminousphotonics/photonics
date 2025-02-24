@@ -15,8 +15,8 @@ def index(request):
 def technology(request):
     return render(request, 'main/technology.html')
 
-def applications(request):
-    return render(request, 'main/applications.html')
+def blog(request):
+    return render(request, 'main/blog.html')
 
 def about(request):
     return render(request, 'main/about.html')

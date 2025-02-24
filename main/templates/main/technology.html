@@ -21,6 +21,21 @@
         
         <title>Technology - Luminous Photonics</title>
    
+        <style>
+        .equation {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+        .equation-block {
+             background-color: #f0f8ff; /* Light blue background */
+            border: 1px solid #add8e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow-x: auto; /* For long equations */
+        }
+        </style>
 
 
         <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -52,7 +67,7 @@
         </div>
         <div class="container">
             <div class="modular-images-section">
-                <h1 class="section-title">Infinitely Scalable Modularized System</h1>
+                <h1 class="section-title" id="modular">Infinitely Scalable Modularized System</h1>
                 <h3 class="section-text">With just 4 types of modular pieces, our horticultural lighting system can optimally cover any size square or rectangular space.</h3>
                 <div class="image-container hidden">
                     <picture>
@@ -180,141 +195,153 @@
                 <div style="text-align: center; margin-top: 20px;">
                     <a href="{% url 'lighting_simulation' %}" class="dive-deeper-button">Dive Deeper into the Simulation</a>
                 </div>
-                <h2 class="section-title" id="ml">Proprietary Machine Learning Algorithm</h2>
+                <h2 class="section-title" id="ml">Machine Learning Optimization for Enhanced Uniformity</h2>
                 <p>
-                    Central to our Uniform Photon Flux Principle (UPFP) is a sophisticated, agentic AI-driven machine learning algorithm that dynamically optimizes LED intensities to ensure uniform Photosynthetic Photon Flux Density (PPFD) across the grow area. This algorithm leverages real-time data from integrated environmental sensors to fine-tune the output of each concentric layer in our centered square number sequence LED arrangement. By adjusting the intensity of each layer, we achieve unprecedented uniformity, maximizing light utilization and plant growth. Below are key components of our algorithm:
-                </p>
-            
-                <h4 class="section-title">Objective Function</h4>
-                <p>
-                    The objective function aims to minimize the Root Mean Squared Error (RMSE) of the Photosynthetic Photon Flux Density (PPFD) distribution while ensuring the mean intensity meets the target PPFD. It also penalizes deviations from the target intensity for each layer and incorporates a penalty for overshooting the target PPFD. Here's a snippet of how the objective function is defined:
+                    Complementing our physics-based radiosity simulation, we employ a sophisticated machine learning (ML) algorithm to further refine and optimize the luminous flux settings of our LED arrays. This optimization process leverages the accuracy of the radiosity model to achieve unprecedented levels of PPFD uniformity and energy efficiency. The ML algorithm is *not* a replacement for the radiosity simulation; it's an additional layer of optimization that uses the radiosity simulation as its "ground truth."
                 </p>
                 
-                <div style="max-width: 800px; margin: 0 auto; padding: 10px;">
-                    {% verbatim %}
-                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
-def objective_function(light_intensities_by_layer, floor_width, floor_length, height_from_floor,
-                        target_ppfd, perimeter_reflectivity, measurement_points, layer_weights, phase=1):
-    active_layers = determine_active_layers(floor_width, floor_length)
-    adjusted_intensities = list(light_intensities_by_layer)
-    for i in range(active_layers, len(adjusted_intensities)):
-        adjusted_intensities[i] = 0.0
-
-    _, rmse, mean_intensity = calculate_intensity_and_rmse(
-        floor_width, floor_length, height_from_floor, adjusted_intensities, 
-        perimeter_reflectivity, measurement_points
-    )
-
-    if mean_intensity <= target_ppfd:
-        ppfd_penalty = (target_ppfd - mean_intensity) ** 2
-    else:
-        overshoot_multiplier = 300
-        ppfd_penalty = overshoot_multiplier * (mean_intensity - target_ppfd) ** 2
-
-    intensity_dev_penalty = 0
-    for i in range(active_layers):
-        intensity = adjusted_intensities[i]
-        target_intensity = (MAX_LUMENS / LUMENS_TO_PPFD_CONVERSION) * layer_weights[i]
-        intensity_dev_penalty += (intensity - target_intensity)**2
-
-    rmse_scaled = rmse * 0.6
-    ppfd_penalty_scaled = ppfd_penalty * 0.2 if phase == 1 else 0
-    intensity_dev_penalty_scaled = intensity_dev_penalty * 0.2
-
-    objective_value = rmse_scaled + ppfd_penalty_scaled + intensity_dev_penalty_scaled
-    return objective_value
-                        </code></pre>
-                    {% endverbatim %}
-                </div>
-                
-                <h4 class="section-title">Intensity Calculation</h4>
+                <h3 class="subsubsection-title">3.1. Parameterization</h3>
                 <p>
-                    The intensity calculation involves computing the PPFD at each measurement point on the floor. It accounts for both direct light from the light sources and reflected light from the perimeter walls. The Lambertian emission model is used to calculate the light intensity at a given distance. Here's a snippet of how the PPFD is calculated:
+                    The optimization algorithm works with a 15-element parameter vector, representing the following:
+                </p>
+                <ul class="section-list">
+                     <li><b>COB Layer Intensities (elements 0-5):</b> The luminous flux (in lumens) for each of the six COB LED layers in our diamond pattern arrangement.</li>
+                     <li><b>LED Strip Group Intensities (elements 6-10):</b>  The luminous flux for groups of LED strips.  These groups correspond to the COB layers, allowing for coordinated control.</li>
+                    <li><b>Corner COB Intensities (elements 11-14):</b> The luminous flux for the four corner COB LEDs in the outermost layer.</li>
+                </ul>
+                
+                <h3 class="subsubsection-title">3.2. Objective Function</h3>
+                <p>
+                   The optimization algorithm's goal is to find the set of parameters (LED intensities) that *minimize* an objective function.  This function quantifies how "good" a particular set of intensities is. We aim to minimize the Root Mean Squared Error (RMSE) between the simulated PPFD and a target PPFD, while also incorporating constraints to ensure realistic and desirable results. The objective function is defined as:
                 </p>
                 
-                <div style="max-width: 800px; margin: 0 auto; padding: 10px;">
-                    {% verbatim %}
-                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
-def calculate_ppfd_at_point(point, light_sources, light_intensities_by_layer, height_from_floor):
-    total_ppfd = 0
-    for layer_index, layer_sources in enumerate(light_sources):
-        if layer_index < len(light_intensities_by_layer):
-            layer_intensity = light_intensities_by_layer[layer_index]
-            for source in layer_sources:
-                distance = math.sqrt(
-                    (source[0] - point[0]) ** 2 +
-                    (source[1] - point[1]) ** 2 +
-                    height_from_floor ** 2
-                )
-                total_ppfd += lambertian_emission(layer_intensity, distance, height_from_floor)
-    return total_ppfd
-                        </code></pre>
-                    {% endverbatim %}
-                </div>
-                
-                <h4 class="section-title">Optimization Process</h4>
-                <p>
-                    The optimization process uses the Sequential Least Squares Programming (SLSQP) method to minimize the objective function. It adjusts the light intensities for each layer while respecting bounds and constraints. The process ensures that the PPFD distribution is as uniform as possible and close to the target value. Here's a snippet of the optimization process:
-                </p>
-                
-                <div style="max-width: 800px; margin: 0 auto; padding: 10px;">
-                    {% verbatim %}
-                        <pre style="background-color: #f0f0f0; padding: 10px; overflow-x: auto;" class="code-border"><code class="language-python">
-def optimize_lighting(floor_width, floor_length, height_from_floor,
-                        initial_intensities_by_layer, target_ppfd, 
-                        perimeter_reflectivity, measurement_points, verbose=False):
-
-    active_layers = determine_active_layers(floor_width, floor_length)
-
-    bounds = []
-    for i in range(NUM_LAYERS):
-        if i < active_layers:
-            bounds.append((MIN_LUMENS / LUMENS_TO_PPFD_CONVERSION, MAX_LUMENS / LUMENS_TO_PPFD_CONVERSION))
-        else:
-            bounds.append((0, 0))
-
-    initial_guess = initial_intensities_by_layer
-    constraints = []
-
-    layer_weights = [0.2, 0.4, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0, 1.0, 1.0]
-
-    result = minimize(
-        objective_function,
-        initial_guess,
-        args=(
-            floor_width,
-            floor_length,
-            height_from_floor,
-            target_ppfd,
-            perimeter_reflectivity,
-            measurement_points,
-            layer_weights,
-            1
-        ),
-        method='SLSQP',
-        bounds=bounds,
-        constraints=constraints,
-        options={'maxiter': 2000, 'disp': verbose, 'ftol': 1e-6},
-    )
-
-    optimized_intensities = result.x
-    return optimized_intensities
-                        </code></pre>
-                    {% endverbatim %}
-                </div>
-    
-                    <h4 class="section-title">Real-Time Adjustments</h4>
-                    <p>
-                        An integral component of our agentic AI platform, our algorithm continuously monitors environmental data from integrated sensors. Based on real-time feedback, it dynamically recalibrates LED intensities to maintain optimal PPFD levels, ensuring consistent plant growth conditions.
+                <div class="equation-block">
+                    <p class="equation">
+                        \[ \text{Objective} = w_{rmse} \cdot \text{RMSE} + w_{penalty} \cdot \text{Penalty} \]
                     </p>
-    
-                    <h4 class="section-title">Benefits of Our Algorithm</h4>
-                    <ul>
-                        <li><b>Precision:</b> Achieves PPFD uniformity with a Degree of Uniformity (DOU) exceeding > 99%.</li>
-                        <li><b>Energy Efficiency:</b> Minimizes energy waste by optimizing LED intensities.</li>
-                        <li><b>Scalability:</b> Easily adaptable to any grow space size and configuration.</li>
-                        <li><b>Adaptability:</b> Responds to environmental changes, ensuring consistent plant growth conditions.</li>
+                </div>
+                
+                <p>Where:</p>
+                <ul class="variable-list">
+                   <li>\(RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (PPFD_i - PPFD_{target})^2}\) is the Root Mean Squared Error between the simulated PPFD (\(PPFD_i\)) at each point on the floor grid and the target PPFD (\(PPFD_{target}\)).</li>
+                   <li>\(\text{Penalty}\) represents additional penalty terms (described below).</li>
+                   <li> \(w_{rmse}\) and \(w_{penalty}\) are weighting factors that control the relative importance of the RMSE and the penalty terms.</li>
+                </ul>
+                
+                <p>
+                   The *crucial point* is that calculating the RMSE requires running the *full radiosity simulation* with the given set of LED intensities.  This is how the ML optimization is linked to the physically accurate model.
+                </p>
+                
+                <p><b>Penalty Terms:</b></p>
+                    <ul class="section-list">
+                        <li>Degree of Uniformity (DOU) Penalty:**  A penalty is applied if the DOU falls below a threshold (e.g., 96%). This strongly encourages highly uniform light distribution.</li>
+                        <li>PPFD Constraints:** Nonlinear constraints (described below) ensure the average PPFD remains within a defined range (target PPFD to target PPFD + 250 µmol/m²/s).</li>
+                        <li> Note: the original description also included deviation penalties, which you can optionally include here.</li>
                     </ul>
+                
+                <div class="code-block-container">
+                    <div class="code-block-title">Objective Function (Python - Simplified)</div>
+                    <pre class="code-block"><code class="language-python">
+                def objective_function(x, target_ppfd, fixed_base_height, rmse_weight=1.0, dou_penalty_weight=50.0):
+                    """
+                    Calculates the objective function value.
+                
+                    Args:
+                        x (np.ndarray): The 15-element parameter vector (LED intensities).
+                        target_ppfd (float): The target PPFD value.
+                        fixed_base_height (float):  Height of the LEDs above the floor.
+                        rmse_weight (float): Weight for the RMSE term.
+                        dou_penalty_weight (float): Weight for the DOU penalty.
+                
+                    Returns:
+                        float: The objective function value.
+                    """
+                    avg_ppfd, rmse, dou = simulate_lighting(x, fixed_base_height, plot_result=False)
+                    penalty = 0.0
+                    if dou < 96:
+                        penalty = dou_penalty_weight * (96 - dou)**2
+                    obj_val = rmse_weight * rmse + penalty
+                    print(f"Obj: {obj_val:.3f} | RMSE: {rmse:.3f}, DOU: {dou:.3f}, Penalty: {penalty:.3f}") #Optional Print Statement
+                    return obj_val
+                </code></pre>
+                </div>
+                
+                <h3 class="subsubsection-title">3.3. Optimization Algorithm: Differential Evolution</h3>
+                <p>
+                    We use the Differential Evolution (DE) algorithm, a powerful global optimization method, to minimize the objective function. DE is well-suited for this task because:
+                </p>
+                <ul class="section-list">
+                    <li>Handles Non-Convexity:** The objective function is likely non-convex (meaning it has multiple local minima), and DE is robust to this.  Simpler gradient-based methods might get stuck in local minima.
+                    </li>
+                    <li>Handles Constraints:** DE can handle the nonlinear constraints on the average PPFD.
+                    </li>
+                    <li>Derivative-Free:** DE does *not* require calculating derivatives of the objective function.  This is important because calculating the derivative of the radiosity simulation would be extremely complex.
+                    </li>
+                </ul>
+                <p>
+                 The `scipy.optimize.differential_evolution` function from the SciPy library is used to perform the optimization. We define bounds for each parameter (minimum and maximum luminous flux for each LED) and nonlinear constraints to keep the average PPFD within the desired range.
+                </p>
+                
+                <div class="code-block-container">
+                    <div class="code-block-title">Optimization with Differential Evolution (Python)</div>
+                    <pre class="code-block"><code class="language-python">
+                from scipy.optimize import differential_evolution, NonlinearConstraint
+                
+                def constraint_lower(x, target_ppfd, fixed_base_height):
+                    avg_ppfd, _, _ = simulate_lighting(x, fixed_base_height, plot_result=False)
+                    return avg_ppfd - target_ppfd  # Must be >= 0
+                
+                def constraint_upper(x, target_ppfd, fixed_base_height):
+                    avg_ppfd, _, _ = simulate_lighting(x, fixed_base_height, plot_result=False)
+                    return target_ppfd + 250 - avg_ppfd  # Must be >= 0
+                
+                def optimize_lighting_global(target_ppfd, fixed_base_height):
+                    """
+                    Use differential evolution for global optimization.
+                    """
+                    bounds = [(1000.0, 15000.0)] * 15  # Bounds for each parameter
+                    nc_lower = NonlinearConstraint(lambda x: constraint_lower(x, target_ppfd, fixed_base_height), 0, np.inf)
+                    nc_upper = NonlinearConstraint(lambda x: constraint_upper(x, target_ppfd, fixed_base_height), 0, np.inf)
+                    constraints = [nc_lower, nc_upper]
+                    result = differential_evolution(
+                        lambda x: objective_function(x, target_ppfd, fixed_base_height),
+                        bounds,
+                        constraints=constraints,
+                        maxiter=1000,
+                        popsize=15,
+                        recombination=0.7,
+                        disp=True  # Display progress
+                    )
+                    return result
+                </code></pre>
+                </div>
+                <p><b>Key elements of this code:</b></p>
+                        <ul class="section-list">
+                            <li>`bounds`:** Defines the minimum and maximum allowed luminous flux for each LED.</li>
+                            <li>`constraints`:** Defines nonlinear constraints using `NonlinearConstraint`. These ensure the average PPFD stays within the desired range (target to target + 250). The `constraint_lower` and `constraint_upper` functions are used to define these.</li>
+                           <li>`differential_evolution`:**  This function performs the optimization.  Key parameters include:
+                                <ul>
+                                    <li>`maxiter`:  The maximum number of iterations.</li>
+                                    <li>`popsize`:  The population size (number of candidate solutions evolved in parallel).</li>
+                                    <li>`recombination`: A parameter controlling the mutation strategy.</li>
+                                    <li>`disp`:  Set to `True` to display progress information during optimization.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                <h3 class="subsubsection-title">3.4. Integration with Radiosity</h3>
+                <p>
+                The optimization algorithm works by repeatedly calling the `simulate_lighting` function (which contains the full radiosity model).  This is the crucial link:
+                </p>
+                <ol class="section-list">
+                    <li>**Initial Guess:** The optimization starts with a random initial guess for the LED intensities.</li>
+                    <li>Radiosity Simulation:**  `simulate_lighting` is called with the current LED intensities.**  This performs the full radiosity calculation, including direct irradiance and multiple reflections, and returns the average PPFD, RMSE, and DOU.</li>
+                    <li>Objective Function Evaluation:** The `objective_function` uses the results from `simulate_lighting` (RMSE, DOU) to calculate the objective function value.</li>
+                    <li>Parameter Update:** The Differential Evolution algorithm uses the objective function value to update the LED intensities, creating a new set of candidate solutions.</li>
+                    <li>Repeat:** Steps 2-4 are repeated until the algorithm converges to a solution (a set of LED intensities that minimizes the objective function).</li>
+                </ol>
+                <p>
+                    This iterative process, combining a global optimization algorithm with a physically accurate lighting simulation, allows us to find LED settings that achieve extremely high uniformity and meet the target PPFD, even in complex room geometries.
+                </p>
                     <h4 class="section-title">Interactive Demo</h4>
                     <p>
                         Explore our optimization process through an interactive simulation. Adjust parameters such as floor dimensions and perimeter reflectivity to see how our algorithm adapts LED intensities to maintain uniform PPFD.

@@ -16,102 +16,35 @@
     <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>Cooling System - Luminous Photonics</title>
+    <title>CFD Analysis - Luminous Photonics</title>
 
     <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
 </head>
 <body>
     {% include 'main/navbar.html' %}
 
-    <div class="container">
-        <h1 style="color: #0078BE; text-align: center;">Thermal Analysis of a High-Power COB LED Array with Ducted Air Cooling for Horticultural Applications</h1>
+    <div class="container" id="main-content">
+        <h1 style="color: #0078BE; text-align: center;">Computational Fluid Dynamics Analysis of a High-Power COB LED Array</h1>
 
         <div class="cooling-system-synopsis" style="font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
 
             <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">Abstract</h2>
 
-            <p>This study focuses on a thermal analysis of a high-power Chip-on-Board (COB) LED array, designed for horticultural applications. The primary objectives are to evaluate the effectiveness of the heat sink design in dissipating heat and to assess the overall thermal performance of the system under specified operating conditions. The analysis was conducted using SolidWorks 2023 Flow Simulation software. Two scenarios were investigated: an open-air configuration and an enclosed configuration with ducted airflow. The results indicate that the enclosed design provides more consistent and efficient heat dissipation.</p>
+            <p>
+                This study focuses on the thermal analysis of a high-power Chip-on-Board (COB) LED array, designed for horticultural applications. The primary objectives are to evaluate the effectiveness of different thermal management techniques and to assess the overall thermal performance of the system under specified operating conditions. The analysis was conducted using SolidWorks 2023 Flow Simulation software. Two scenarios were investigated: (1) Open-Air Active CPU-Cooler Heatsink Configuration, and (2) Open-Air Passive Pin-Fin Heatsink Configuration. The results indicate that the conventional method of cooling COBs with passive pin-fin heatsinks is ineffective.
+            </p>
 
             <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">1 Introduction</h2>
-            <p>This report presents a Computational Fluid Dynamics (CFD) analysis of a novel horticultural lighting system based on a high-power COB LED array. The system is designed to provide optimal photon flux density and spectral uniformity for plant growth. A key feature of this system is its unique arrangement of COB LEDs, coupled with an advanced thermal management system and control system for optimizing light distribution. This study focuses on the thermal performance of the system, specifically evaluating the effectiveness of the heat sink design and the impact of ducted air cooling on heat dissipation.</p>
+            <p>This report presents a Computational Fluid Dynamics (CFD) analysis of a novel horticultural lighting system based on a high-power COB LED array. This study focuses on the thermal performance of the system, specifically evaluating the effectiveness of conventional passive pin-fin heatsinks versus active CPU-coolers.</p>
 
-            <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">2 System Description</h2>
-            <p>The horticultural lighting system analyzed in this study utilizes an array of 61 Chip-on-Board (COB) LEDs. These COBs are arranged according to the centered square number sequence pattern (<b>OEIS</b>: A001844), which positions the LEDs in concentric square layers around a central lighting element. The purpose of this arrangement is to maximize uniformity in photon distribution when used in conjunction with a control system that allows for layer-wise intensity modulation, informed by a machine-learning optimization algorithm.</p>
-            <p>Each COB LED has a maximum power consumption of approximately 53 W. To ensure efficient heat transfer, a thermal interface material (TIM) with a thermal conductivity of 15.2 W/m/K (Frost X45 thermal paste) is used to mount each COB to a thin copper interface plate. This assembly is then directly mounted to the copper baseplate of a Scythe Fuma 3 CPU cooler, which is equipped with a Kaze Flex II PWM fan (25 mm).</p>
-            <p>The system also incorporates supplementary Surface Mount Device (SMD) LEDs (437nm blue, 660nm red, and 730nm infrared) disposed along the perimeters of the modular fixtures. These LEDs are separately controllable to achieve any desired total spectrum in conjunction with the white-based 3000K 90CRI COB LEDs, resulting in near-perfect spectral uniformity.</p>
-            <p>The COB LED array is designed for scalability and can be configured into larger rectangular arrays by placing two square arrays side-by-side with a linear connector module in the middle.</p>
-                <div class="image-container3 hidden">
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/csnrect.webp' %}" type="image/webp">
-                        <img src="{% static 'main/images/csnrect.png' %}" alt="CSN Rect" id="csnrect-image" style="display: block; margin: 0 auto;" loading="lazy">
-                    </picture>
-                </div>
-            <h3 style="color: #0078BE; margin-top: 20px;">2.1 COB Arrangement</h3>
-            <p>The COB LEDs are arranged based on the centered square number sequence. This pattern can be visualized as follows:</p>
-            
-            
-            <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/csn.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/csn.jpeg' %}" alt="CSN #1" id="csn-image" loading="lazy">
-                </picture>
-            </div>
-            <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/fixture(x).webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/fixture(x).png' %}" alt="CSN #1" id="csn-image" loading="lazy">
-                </picture>
-                 <p style="font-style: italic; color: #555;">Figure 1: Illustration of the centered square number sequence pattern for COB LED arrangement.</p>
-            </div>
-            <h3 style="color: #0078BE; margin-top: 20px;">2.2 Thermal Management</h3>
-            <p>The thermal management system is designed to maintain the COB junction temperature (Tj) in the low 30°C range under full load. The key components and design principles are:</p>
-            <ul style="list-style-type: none; padding: 0;">
-                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Scythe Fuma 3 CPU Coolers:</strong> High-performance air coolers with four 6 mm copper heatpipes and a high-density aluminum fin array.</li>
-                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Frost X45 Thermal Paste:</strong> High thermal conductivity (15.2 W/m/K) for optimal heat transfer between the COB and the cooler.</li>
-                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Ducted Airflow:</strong> An enclosure with one high-static-pressure inline fan attached to an exhaust port, positioned diagonally across from the intake port, creating negative pressure to draw cool air across the heatsinks.</li>
-                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Bell-Mouth Intake Vents:</strong> Equipped with a dust filter, positioned diagonally opposite to the exhaust port.</li>
-
-                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Optimized Airflow:</strong> The ducted system ensures that all airflow is directed through the heatsinks, preventing hot air recirculation.</li>
-            </ul>
-
-            <h3 style="color: #0078BE; margin-top: 20px;">2.3 Control System</h3>
-            <p>The lighting system features a control system that independently modulates the intensity of each concentric square layer of COBs. This layer-wise control, informed by a machine learning optimization algorithm, aims to maximize photon flux density uniformity across the illuminated area.</p>
-
-            <h3 style="color: #0078BE; margin-top: 20px;">2.4 Lensing</h3>
-            <p>Specialized lenses are affixed to the COBs to further enhance uniformity, especially for edge and corner COBs, which experience less beam overlap and are more affected by the reflective walls of the growing environment.</p>
-
-            <h3 style="color: #0078BE; margin-top: 20px;">2.5 Supplementary SMD LEDs</h3>
-            <p>The system is supplemented with Surface Mount Device (SMD) LED strips disposed along the perimeters of the frame. These strips are comprised of 437nm blue, 660nm red, and 730nm infrared LEDs, all separately controllable to emit any desired combination of spectra.</p>
-
-            <h3 style="color: #0078BE; margin-top: 20px;">2.6 Modular Design</h3>
-            <p>The COB LEDs are affixed to a modularized system consisting of four separate types of modular pieces, enabling infinite scalability across any size square or rectangular space. To form a rectangular arrangement, two square arrangements are placed side-by-side with a linear connector module disposed in the middle, resulting in a rectangular array with nearly equidistantly positioned COBs.</p>
-            <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/mod1.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/mod1.png' %}" alt="Modular Fixture #1" id="mod1-image" loading="lazy">
-                </picture>
-                <picture>
-                    <source srcset="{% static 'main/images/webp/mod2.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/mod2.png' %}" alt="Modular Fixture #2" id="mod2-image" loading="lazy">
-                </picture>
-            </div>
-            <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/mod3.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/mod3.png' %}" alt="Modular Fixture #3" id="mod3-image" loading="lazy">
-                </picture>
-                <picture>
-                    <source srcset="{% static 'main/images/webp/mod4.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/mod4.png' %}" alt="Modular Assembly #1" id="mod4-image" loading="lazy">
-                </picture>
-            </div>
-            <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">3 Computational Fluid Dynamics Analysis Methodology</h2>
+            <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">2 Methodology</h2>
             <p>The thermal analysis was performed using SolidWorks 2023 Flow Simulation software. A refined mesh was employed to ensure the accuracy of the results. The simulations were conducted under the assumption of standard ambient atmospheric conditions, with an atmospheric pressure of 101,325 Pa and an ambient temperature of 25 °C.</p>
-            <h3 style="color: #0078BE; margin-top: 20px;">3.1 Material Properties</h3>
-            <p>The heat sink and heat pipes of the Scythe Fuma 3 cooler are constructed from aluminum, while the baseplate is made of copper. The relevant thermal properties of these materials are listed below:</p>
+
+            <h3 style="color: #0078BE; margin-top: 20px;">2.1 Material Properties</h3>
+            <p>The heat sink and heat pipes of the Scythe Fuma 3 cooler (used in the active cooling scenario) are constructed from aluminum, while the baseplate is made of copper. The relevant thermal properties of these materials are listed below:</p>
             <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                 <thead>
                     <tr>
@@ -144,201 +77,167 @@
                 </tbody>
             </table>
 
-            <h3 style="color: #0078BE; margin-top: 20px;">3.2 Boundary Conditions</h3>
-            <p>Two scenarios were analyzed:</p>
+            <h3 style="color: #0078BE; margin-top: 20px;">2.2 System Setup and Boundary Conditions</h3>
+            <p>Each COB LED has a maximum power consumption of approximately 53 W. To ensure efficient heat transfer, a thermal interface material (TIM) with a thermal conductivity of 15.2 W/m/K (Frost X45 thermal paste) is used to mount each COB to a thin copper interface plate. This assembly is then directly mounted to the cooler.</p>
+
+           <p> Two primary scenarios were investigated:</p>
              <ul style="list-style-type: none; padding: 0;">
-                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Scenario 1: Open-Air</strong> - The COB LED array was simulated without an enclosure, representing an open-air environment.</li>
-                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Scenario 2: Enclosed</strong> - The COB LED array was simulated within a heat-resistant plastic enclosure with a 250 mm diameter inlet and a 200 mm x 60 mm outlet. A 370 CFM exhaust fan was attached to the outlet.</li>
+                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Scenario 1: Open-Air Active CPU-Cooler:</strong> The COB LED array was simulated without an enclosure, representing an open-air environment and utilizing active cooling with Scythe Fuma 3 CPU coolers, equipped with Kaze Flex II PWM fans (25 mm) operating at a maximum speed of 1400 rpm. The initial temperature of the heat sinks was set to 42.5 °C.</li>
+                <li style="margin-bottom: 10px;"><strong style="font-weight: bold; color: #2c3e50;">Scenario 2: Open-Air Passive Pin-Fin Heatsinks:</strong> The COB LED array was simulated without an enclosure, representing an open-air environment and utilizing passive cooling with pin-fin heatsinks. The pin-fin heatsinks have the following dimensions: diameter: 135 mm, overall height: 70 mm, base plate thickness: 10 mm. The array consists of 61 LEDs.</li>
             </ul>
 
-            <p>In both scenarios, the Kaze Flex II PWM fans on the Scythe Fuma 3 coolers were operating at a maximum speed of 1400 rpm. Based on the results of the individual cooler analysis (Analysis 1), the initial temperature of the heat sinks was set to 42.5 °C.</p>
-
-            <h3 style="color: #0078BE; margin-top: 20px;">3.3 Assumptions</h3>
+            <h3 style="color: #0078BE; margin-top: 20px;">2.3 Assumptions</h3>
             <ul style="list-style-type: none; padding: 0;">
-                <li style="margin-bottom: 10px;">The system operates under steady-state conditions after an initial transient period.</strong></li>
-                <li style="margin-bottom: 10px;">Heat generation in each COB LED is directly related to its input power and is assumed to be uniform across the COB surface.</strong></li>
-                <li style="margin-bottom: 10px;">Airflow is assumed to be laminar within the enclosure.</strong></li>
-                <li style="margin-bottom: 10px;">Heat transfer through radiation is considered negligible compared to convection and conduction.</strong></li>
+                <li style="margin-bottom: 10px;">The system operates under steady-state conditions after an initial transient period.</li>
+                <li style="margin-bottom: 10px;">Heat generation in each COB LED is directly related to its input power and is assumed to be uniform across the COB surface.</li>
+                <li style="margin-bottom: 10px;">Airflow is assumed to be laminar.</li>
+                <li style="margin-bottom: 10px;">Heat transfer through radiation is considered negligible compared to convection and conduction in the active cooling scenario, *but is considered in the passive cooling scenario*.</li>
+              <li style="margin-bottom: 10px;"><b>Uniform Heat Generation</b>: The 53 W heat load was assumed to be uniformly distributed across each of the 61 LEDs.</li>
+              <li style="margin-bottom: 10px;"><b>Material Properties</b>: Constant material properties (thermal conductivity, specific heat, density) were assumed.</li>
             </ul>
 
-            <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">4 Results and Discussion</h2>
+            <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">3 Results and Discussion</h2>
 
-            <h3 style="color: #0078BE; margin-top: 20px;">4.1 Analysis 1: Single COB LED and Cooler Assembly</h3>
+            <h3 style="color: #0078BE; margin-top: 20px;">3.1 Scenario 1: Open-Air Active CPU-Cooler</h3>
             <p>This analysis focused on the thermal performance of a single COB LED and CPU cooler assembly.</p>
-            
-            <div class="image-container hidden">
+          
+            <div class="image-container">
                 <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig1.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig1.png' %}" alt="SolidWorks 3D model of the Scythe Fuma 3 CPU cooler with a single COB LED." id="fig1" loading="lazy">
+                    <source srcset="{% static 'main/images/webp/cfd_single.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_single.png' %}" alt="CFD Results - Single COB LED and CPU-Cooler Assembly (Solid Temperature)." id="cfd_single" loading="lazy">
                 </picture>
+                 <p style="font-style: italic; color: #555; text-align: center;">Figure 1: CFD Results - Single COB LED and CPU-Cooler Assembly (Solid Temperature).</p>
             </div>
-            <div class="image-container hidden">
+            <div class="image-container">
                 <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig2.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig2.png' %}" alt="Mesh visualization and temperature distribution of the solid components." id="fig2" loading="lazy">
+                    <source srcset="{% static 'main/images/webp/cfd_single_solid.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_single_solid.png' %}" alt="CFD Results - Single COB LED and CPU-Cooler Assembly (Solid Temperature)." id="cfd_single_solid" loading="lazy">
                 </picture>
+                 <p style="font-style: italic; color: #555; text-align: center;">Figure 1: CFD Results - Single COB LED and CPU-Cooler Assembly (Solid Temperature).</p>
             </div>
-            <p style="font-style: italic; color: #555; text-align: center;">Figure 2: Single COB LED and cooler assembly analysis.</p>
-            <div class="image-container hidden">
-                 <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig3.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig3.png' %}" alt="Temperature distribution in the fluid (air) surrounding the single COB LED and cooler assembly." id="fig3" loading="lazy">
-                 </picture>
-                <p style="font-style: italic; color: #555; margin-top: 5px;">Figure 3: Temperature distribution in the fluid (air) surrounding the single COB LED and cooler assembly.</p>
-            </div>
-             <div class="image-container hidden">
+            <div class="image-container">
                 <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig4.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig4.png' %}" alt="Airflow velocity streamlines around the single COB LED and cooler assembly." id="fig4" loading="lazy">
+                    <source srcset="{% static 'main/images/webp/cfd_single_fluid.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_single_fluid.png' %}" alt="CFD Results - Single COB LED and CPU-Cooler Assembly (Fluid Temperature)." id="cfd_single_fluid" loading="lazy">
                 </picture>
-                <picture>
-                    <source srcset="{% static 'main/images/webp/velocity-min.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/velocity-min.png' %}" alt="Airflow velocity streamlines around the single COB LED and cooler assembly." id="fig4" loading="lazy">
-                </picture>
-                <p style="font-style: italic; color: #555; margin-top: 5px;">Figure 4: Airflow velocity streamlines around the single COB LED and cooler assembly.</p>
+                 <p style="font-style: italic; color: #555; text-align: center;">Figure 2: CFD Results - Single COB LED and CPU-Cooler Assembly (Fluid Temperature).</p>
             </div>
-            <div class="image-container hidden">
+             <div class="image-container">
                 <picture>
-                    <source srcset="{% static 'main/images/webp/fantemp-min.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/fantemp-min.png' %}" alt="Airflow velocity streamlines around the single COB LED and cooler assembly." id="fig4" loading="lazy">
+                    <source srcset="{% static 'main/images/webp/cfd_single_airflow.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_single_airflow.png' %}" alt="CFD Results - Single COB LED and CPU-Cooler Assembly (Airflow)." id="cfd_single_airflow" loading="lazy">
                 </picture>
+                <p style="font-style: italic; color: #555; text-align: center;">Figure 3: CFD Results - Single COB LED and CPU-Cooler Assembly (Airflow).</p>
             </div>
-            <p style="font-style: italic; color: #555; margin-top: 5px; text-align: center;">Figure 5: Fan temperature (close-up).</p>
 
-            <p>The temperature distribution, as illustrated in Figures 2 and 3, demonstrates that the cooler effectively dissipates heat. The maximum temperature observed on the solid components is 56.45°C, while the minimum fluid temperature is 24.99°C. The majority of the heat sink surface area exhibits a temperature of approximately 42.5°C. The thermal gradients observed in the figures indicate that the heat sink is effectively transferring heat away from the COB LED at the center and outwards towards the fins.</p>
+            <p>The temperature distribution demonstrates that the cooler effectively dissipates heat. The maximum temperature observed on the solid components is 56.45°C, while the minimum fluid temperature is 24.99°C. The majority of the heat sink surface area exhibits a temperature of approximately 42.5°C. The airflow simulation reveals that the highest air velocities, reaching up to 7.445 m/s, are concentrated near the heat sink fins.</p>
+
+             <div class="image-container">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/cfd_active_array.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_active_array.png' %}" alt="Open-Air Active Cooling - Full Array" id="cfd_active_array" loading="lazy">
+                </picture>
+            </div>
+            <p style="font-style: italic; color: #555; text-align: center;">Figure 4: Open-Air Active Cooling - Full Array</p>
+          
+             <div class="image-container">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/cfd_active_array_solid.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_active_array_solid.png' %}" alt="Open-Air Active Cooling - Full Array" id="cfd_active_array_solid" loading="lazy">
+                </picture>
+            </div>
+            <p style="font-style: italic; color: #555; text-align: center;">Figure 4: Open-Air Active Cooling, Solid Temperature</p>
+            <div class="image-container">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/cfd_active_array_fluid.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_active_array_fluid.png' %}" alt="Open-Air Active Cooling, Fluid Temperature" id="cfd_active_array_fluid" loading="lazy">
+                </picture>
+            </div>
+            <p style="font-style: italic; color: #555; text-align: center;">Figure 5: Open-Air Active Cooling, Fluid Temperature</p>
 
             <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                 <thead>
                     <tr>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">COB Junction Temperature [°C]</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Unit</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Value</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Scenario</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Max. Temp. (°C)</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Avg. Temp. (°C)</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Min. Temp. (°C)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="border: 1px solid #ddd; padding: 8px;">Maximum Temperature (Solid)</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">[°C]</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">56.3423598217</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">Active (Single)</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">56.45</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">42.5</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">24.99</td>
                     </tr>
                     <tr>
-                        <td style="border: 1px solid #ddd; padding: 8px;">Average Temperature (Solid)</td>
-                         <td style="border: 1px solid #ddd; padding: 8px;">[°C]</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">47.7922897682</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 8px;">Minimum Temperature (Solid)</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">[°C]</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">39.6838012552</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">Active (Array)</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">100.43</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">62.48</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">25.19</td>
                     </tr>
                 </tbody>
             </table>
 
-            <p>The airflow simulation, depicted in Figure 4, reveals that the highest air velocities, reaching up to 7.445 m/s, are concentrated near the heat sink fins. The streamlines clearly illustrate the airflow pattern around and through the heat sink, demonstrating the effectiveness of the cooler's design in directing airflow for optimal heat dissipation.</p>
+            <h3 style="color: #0078BE; margin-top: 20px;">3.2 Scenario 2: Open-Air Passive Pin-Fin Heatsinks</h3>
 
-            <h3 style="color: #0078BE; margin-top: 20px;">4.2 Analysis 2: Full COB LED Array</h3>
-
-            <h4 style="color: #0078BE; margin-top: 20px;">4.2.1 Scenario 1: Open-Air COB LED Array</h4>
-            <div class="image-container hidden">
+             <div class="image-container">
                 <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig5.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig5.png' %}" alt="SolidWorks model of the 61-COB LED array without an enclosure." id="fig5" loading="lazy">
-                </picture>
-                <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig6.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig6.png' %}" alt="Detailed view of the COB LED array and Scythe Fuma 3 cooler assemblies." id="fig6" loading="lazy">
-                </picture>
-                <p style="font-style: italic; color: #555; text-align: center;">Figure 5: Open-air COB LED array.</p>
-            </div>
-             <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig7.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig7.png' %}" alt="Fluid temperature distribution within the open-air COB LED array (top view)." id="fig7" loading="lazy">
-                </picture>
-                <p style="font-style: italic; color: #555; margin-top: 5px;">Figure 6: Fluid temperature distribution within the open-air COB LED array (top view).</p>
-            </div>
-            <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig8.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig8.png' %}" alt="Isometric view of the fluid temperature distribution." id="fig8" loading="lazy">
-                </picture>
-                <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig9.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig9.png' %}" alt="Airflow velocity streamlines within the open-air COB LED array." id="fig9" loading="lazy">
-                </picture>
-                <p style="font-style: italic; color: #555; text-align: center;">Figure 7: Fluid temperature and airflow in the open-air array.</p>
-            </div>
-            <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig10.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig10.png' %}" alt="Airflow velocity vectors around the open-air COB LED array." id="fig10" loading="lazy">
-                </picture>
-                <p style="font-style: italic; color: #555; margin-top: 5px;">Figure 8: Airflow velocity vectors around the open-air COB LED array.</p>
-            </div>
-
-            <p>The results of the open-air simulation, illustrated in Figures 6, 7, and 8, reveal uneven heat dissipation across the COB LED array. Higher temperatures are observed in the central region of the array, while the edges are cooler. These significant temperature gradients suggest that heat spreading is not optimal in this open-air configuration. The non-uniform cooling rate suggests that heat dissipation efficiency is affected by factors such as uneven airflow distribution, possibly due to the lack of an enclosure to direct the airflow.</p>
-
-            <h4 style="color: #0078BE; margin-top: 20px;">4.2.2 Scenario 2: Enclosed COB LED Array</h4>
-             <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig12.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig12.png' %}" alt="Fluid temperature distribution within the enclosed array (cross-sectional view)." id="fig12" loading="lazy">
-                </picture>
-                <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig13.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig13.png' %}" alt="Isometric view of the fluid temperature distribution." id="fig13" loading="lazy">
-                </picture>
-                <p style="font-style: italic; color: #555; text-align: center;">Figure 10: Fluid temperature in the enclosed array.</p>
-            </div>
-            <div class="image-container hidden">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/placeholder_fig14.webp' %}" type="image/webp">
-                    <img src="{% static 'main/images/placeholder_fig14.png' %}" alt="Airflow velocity streamlines within the enclosed array (cross-sectional view)." id="fig14" loading="lazy">
+                    <source srcset="{% static 'main/images/webp/cfd_passive_single.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_passive_single.png' %}" alt="CFD Results - Passive Pin-Fin Heatsink (Single)." id="cfd_passive_single" loading="lazy">
                 </picture>
             </div>
-            <p style="font-style: italic; color: #555; margin-top: 5px; text-align: center;">Figure 11: Airflow in the enclosed array.</p>
+            <p style="font-style: italic; color: #555; text-align: center;">Figure 6: CFD Results - Passive Pin-Fin Heatsink (Single).</p>
+             <div class="image-container">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/cfd_passive_array_solid.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_passive_array_solid.png' %}" alt="CFD Results - Passive Pin-Fin Heatsink Array." id="cfd_passive_array_solid" loading="lazy">
+                </picture>
+            </div>
+            <p style="font-style: italic; color: #555; text-align: center;">Figure 7: CFD Results - Passive Pin-Fin Heatsink Array</p>
+            <div class="image-container">
+               <picture>
+                    <source srcset="{% static 'main/images/webp/cfd_air_temp.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_air_temp.png' %}" alt="Passive Cooling Air Temperature Distribution" id="cfd_air_temp" loading="lazy">
+               </picture>
+            </div>
+            <p style="font-style: italic; color: #555; text-align: center;">Figure 8: Passive Cooling Air Temperature Distribution</p>
+           <div class="image-container">
+                <picture>
+                    <source srcset="{% static 'main/images/webp/cfd_solid_temp.webp' %}" type="image/webp">
+                    <img src="{% static 'main/images/cfd_solid_temp.png' %}" alt="Passive Cooling Solid Temperature" id="cfd_solid_temp" loading="lazy">
+                </picture>
+            </div>
+            <p style="font-style: italic; color: #555; text-align: center;">Figure 9: Passive Cooling Solid Temperature</p>
 
-            <p>The simulation of the enclosed array (Figures 9, 10, and 11) reveals a more uniform temperature distribution compared to the open-air scenario. The majority of the enclosure exhibits an average temperature of approximately 33.33°C. The concentration of airflow in the cooler regions suggests effective heat removal. However, a stagnation point with limited airflow is observed in the lower corner of the enclosure.</p>
+            <p>The simulation indicates a maximum air temperature of 121.95 °C in localized regions. A large portion of the domain exhibits an average air temperature of approximately 34.25 °C. The maximum solid temperature significantly exceeds typical safe operating temperatures for LEDs.</p>
 
-            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+             <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                 <thead>
                     <tr>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">COB Junction Temperature [°C]</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Unit</th>
-                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Value</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Scenario</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Max. Temp. (°C)</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Avg. Temp. (°C)</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Min. Temp. (°C)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="border: 1px solid #ddd; padding: 8px;">Maximum Temperature (Solid)</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">[°C]</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">43.8054567390</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 8px;">Average Temperature (Solid)</td>
-                         <td style="border: 1px solid #ddd; padding: 8px;">[°C]</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">37.8515013695</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 8px;">Minimum Temperature (Solid)</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">[°C]</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">31.4295771315</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">Passive (Array)</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">122.24</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">102.24</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">40.05</td>
                     </tr>
                 </tbody>
             </table>
 
-            <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">5 Conclusion</h2>
-            <p>This study analyzed the thermal performance of a high-power COB LED array designed for horticultural applications. Two scenarios were investigated: an open-air configuration and an enclosed configuration with ducted airflow. The CFD analysis, performed using SolidWorks 2023 Flow Simulation, revealed that the enclosed design provides a more consistent and efficient heat dissipation process compared to the open-air configuration.</p>
+            <p>The CFD analysis demonstrates that the active cooling solution with CPU coolers provides significantly better thermal performance than the passive pin-fin heatsink solution. The passive cooling solution results in unacceptably high temperatures, exceeding the safe operating limits for the LEDs.</p>
 
-            <p>In the open-air scenario, significant temperature gradients were observed, with higher temperatures concentrated in the central region of the array. This suggests that heat spreading is not optimal in this configuration. The non-uniform cooling rate indicates that heat dissipation efficiency is affected by factors such as uneven airflow distribution.</p>
-
-            <p>Conversely, the enclosed system demonstrated a more uniform temperature distribution, with an average temperature of approximately 33.33°C across the majority of the enclosure. The directed airflow facilitated by the enclosure and exhaust fan contributed to effective and stable heat dissipation.</p>
-
-            <p>While the enclosed design performs well, further improvements could be explored by optimizing the enclosure geometry to ensure a more uniform mass flow rate throughout the system, minimizing regions with slower airflow or higher temperature gradients. This could potentially be achieved by incorporating an additional intake vent and inline exhaust fan or modifying the enclosure design to improve airflow in the observed stagnation point. One such design modification could be to poke holes in the top of the heat-resistant plastic, to draw air through the top of the enclosure and spread it throughout the enclosed space.</p>
-
-            <p>Future work could involve investigating the impact of different fan speeds, inlet/outlet configurations, and hole positioning for the aforementioned design modification. Additionally, experimental validation of the CFD results would further enhance the understanding of the system's thermal behavior under real-world operating conditions.</p>
+            <h2 style="color: #0078BE; border-bottom: 2px solid #000000; padding-bottom: 10px;">4 Conclusion</h2>
+             <p>The CFD analysis of the passive pin fin heat sink, under the specified conditions, demonstrates inadequate cooling performance for the high-power COB-LED array. The predicted maximum solid temperatures are significantly above acceptable operating limits, indicating a high risk of LED failure or performance degradation. This result highlights the need for a more effective thermal management solution, such as forced convection (using fans) or a more advanced heat sink design (e.g., with a larger surface area or a different fin geometry), or a combination of these. The comparison with other cooling methods further reinforces this conclusion. Future work should include experimental validation of these simulation results and explore alternative cooling strategies. The inclusion of radiative heat transfer in future simulations is also recommended.</p>
         </div>
-            
+
         <!-- Back to Top Button -->
         <a href="#" class="back-to-top" id="backToTopBtn">
             <picture>
@@ -354,7 +253,7 @@
          </a>
          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
          <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-     
+
          <script src="{% static 'js/scripts.js' %}"></script>
     </div>
     {% include 'main/footer.html' %}

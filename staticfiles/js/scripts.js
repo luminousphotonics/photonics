@@ -6,6 +6,7 @@ function openPDF() {
     window.open(pdfUrl, '_blank');
 }
 
+
 // Lazy Loading for Background Images
 const lazyBackgrounds = document.querySelectorAll(".lazy-load-bg");
 

@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - YourSiteName</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <!-- Load Font Awesome for the magnifying glass icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    /* Container for blog boxes */
+    .blog-container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      max-width: 1000px;
+      margin: 20px auto;
+    }
+    /* Blog box styles */
+    .blog-box {
+      width: calc(33% - 20px);
+      margin-bottom: 30px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      text-align: center;
+      transition: border 0.3s;
+    }
+    .blog-box:hover {
+      border: 2px solid #000;
+    }
+    .blog-box img {
+        width: 100%;
+        height: 200px;       /* Set a fixed height */
+        object-fit: cover;   /* Crop and scale the image to fill the container */
+        display: block;
+    }
+
+    .blog-date {
+      font-size: 0.9em;
+      color: #666;
+      margin: 10px 0;
+    }
+    .blog-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+      transition: color 0.3s;
+    }
+    .blog-box:hover .blog-title {
+      color: #007bff;
+    }
+    /* Make anchor tags with blog-box class display as blocks */
+    .blog-container a.blog-box {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    /* Search container styles */
+    .search-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      margin-left: 20px;
+    }
+    .search-container input {
+      padding: 5px 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: #000;
+    }
+    .search-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: 5px;
+      font-size: 1.2em;
+      color: #000;
+    }
+    .search-btn:focus {
+      outline: none;
+    }
+    .search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-top: none;
+      z-index: 100;
+      display: none;
+    }
+    .search-results a {
+      display: block;
+      padding: 5px 10px;
+      text-decoration: none;
+      color: #333;
+    }
+    .search-results a:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  {# Set show_search_bar to True only on the blog page #}
+  {% with show_search_bar=True %}
+    {% include 'main/navbar.html' %}
+  {% endwith %}
+  
+  <div class="blog-container">
+    <a href="{% url 'cea' %}" class="blog-box">
+      <img src="{% static 'main/images/blog1.jpg' %}" alt="Blog 1">
+      <div class="blog-date">Jan 1, 2025</div>
+      <div class="blog-title">Controlled Environment Agriculture (CEA)</div>
+    </a>
+    <a href="{% url 'agenticai' %}" class="blog-box">
+      <img src="{% static 'main/images/blog3.jpg' %}" alt="Blog 2">
+      <div class="blog-date">Feb 15, 2025</div>
+      <div class="blog-title">Agentic AI</div>
+    </a>
+    <a href="{% url 'cooling_system' %}" class="blog-box">
+      <img src="{% static 'main/images/cfd_active_array_solid.png' %}" alt="Blog 3">
+      <div class="blog-date">Mar 10, 2025</div>
+      <div class="blog-title">Computational Fluid Dynamics (CFD) Analysis</div>
+    </div>
+  </div>
+  
+  {% include 'main/footer.html' %}
+  
+  <script>
+    // Pages to be indexed (with empty content that we'll load)
+    const pages = [
+      { title: "Controlled Environment Agriculture (CEA)", url: "{% url 'cea' %}", content: "" },
+      { title: "Agentic AI", url: "{% url 'agenticai' %}", content: "" },
+      { title: "Computational Fluid Dynamics (CFD) Analysis", url: "{% url 'cooling_system' %}", content: "" }
+    ];
+    
+    function fetchPageContent(page) {
+        // Skip placeholder
+        if (page.url === "#") return Promise.resolve(page);
+        
+        return fetch(page.url)
+            .then(response => response.text())
+            .then(htmlString => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, "text/html");
+
+            // If there's a #main-content element, use only its text.
+            // This prevents nav/footers from being indexed.
+            const mainContent = doc.querySelector('#main-content');
+            if (mainContent) {
+                page.content = mainContent.textContent || "";
+            } else {
+                // If no #main-content exists, fallback to empty
+                page.content = "";
+            }
+
+            return page;
+            })
+            .catch(err => {
+            console.error("Error fetching page content for", page.url, err);
+            page.content = "";
+            return page;
+            });
+        }
+
+    // Preload content for all pages
+    Promise.all(pages.map(fetchPageContent)).then(() => {
+      console.log("All pages content loaded.");
+      
+      const searchInput = document.getElementById("searchInput");
+      const searchResults = document.getElementById("searchResults");
+      const searchBtn = document.getElementById("searchBtn");
+      
+      function performSearch(force = false) {
+        const query = searchInput.value.toLowerCase();
+        searchResults.innerHTML = "";
+        if (!force && query.length === 0) {
+          searchResults.style.display = "none";
+          return;
+        }
+        const results = pages.filter(page => {
+          return page.title.toLowerCase().includes(query) || page.content.toLowerCase().includes(query);
+        });
+        if (results.length > 0) {
+          results.forEach(page => {
+            const a = document.createElement("a");
+            a.href = page.url;
+            a.textContent = page.title;
+            searchResults.appendChild(a);
+          });
+          searchResults.style.display = "block";
+        } else {
+          searchResults.style.display = "none";
+        }
+      }
+      
+      searchInput.addEventListener("input", function() {
+        performSearch(false);
+      });
+      
+      if (searchBtn) {
+        searchBtn.addEventListener("click", function(e) {
+          e.preventDefault();
+          performSearch(true);
+          if (searchResults.children.length > 0) {
+            window.location.href = searchResults.children[0].href;
+          }
+        });
+      }
+      
+      searchInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (searchResults.children.length > 0) {
+            window.location.href = searchResults.children[0].href;
+          }
+        }
+      });
+      
+      document.addEventListener("click", function(e) {
+        if (!searchInput.contains(e.target) && (!searchBtn || !searchBtn.contains(e.target))) {
+          searchResults.style.display = "none";
+        }
+      });
+    });
+  </script>
+  
+</body>
+</html>

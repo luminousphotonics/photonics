@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
 from django.contrib import messages
 from .forms import ContactForm
@@ -35,9 +35,10 @@ def contact(request):
             send_mail(
                 subject,
                 email_body,
-                email,  # From email (form's email)
-                [settings.EMAIL_HOST_USER],  # To email (your email from settings)
-                fail_silently=False,  # Set to True in production after debugging
+                settings.DEFAULT_FROM_EMAIL,  # Use the verified email as sender
+                [settings.EMAIL_HOST_USER],
+                fail_silently=False,
+                #headers={'Reply-To': email},   # Let replies go to the user
             )
 
             return redirect('contact_success')

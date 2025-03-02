@@ -96,3 +96,9 @@ def cea(request):
 
 def lighting_simulation(request):
     return render(request, 'main/lighting_simulation.html')
+
+def upfp(request):
+    return render(request, 'main/blog/upfp.html')
+
+def dialux_simulation(request):
+    return render(request, 'main/dialux_simulation.html')

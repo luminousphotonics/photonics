@@ -1,0 +1,264 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revolutionizing Indoor Farming</title>  <!-- Replace YourSiteName -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <!-- Load Font Awesome for the magnifying glass icon (if needed, keep if already in your base template) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Basic Styling - Customize to match your blog's theme */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1, h2, h3 {
+            color: #005a9c; /* Darker blue for headings */
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            text-align: center;
+        }
+        h2 {
+            font-size: 1.8em;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+        h3 {
+            font-size: 1.3em;
+            margin-top: 1.2em;
+            margin-bottom: 0.6em;
+            color: #0078be; /* Lighter blue for subheadings */
+        }
+        p {
+            margin-bottom: 1em;
+        }
+        ul {
+            list-style: disc;
+            margin-left: 20px;
+            margin-bottom: 1em;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        b, strong {
+            font-weight: bold;
+        }
+        .highlight {
+            color: #0078be; /* Use for key terms/benefits */
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
+        .image-container img {
+            max-width: 75%;  /* Adjust as needed */
+            height: auto;
+        }
+		.section-break {
+            border-top: 2px solid #005a9c;
+            margin-top: 2em;
+            margin-bottom: 2em;
+        }
+        /* Search container styles */
+        .search-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+        .search-container input {
+            padding: 5px 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #000;
+        }
+        .search-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 5px;
+            font-size: 1.2em;
+            color: #000;
+        }
+        .search-btn:focus {
+            outline: none;
+        }
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-top: none;
+            z-index: 100;
+            display: none;
+        }
+        .search-results a {
+            display: block;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        .search-results a:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    {# Set show_search_bar to True only on the blog page #}
+    {% with show_search_bar=True %}
+      {% include 'main/navbar.html' %}
+    {% endwith %}
+<div class="container">  <!-- Or whatever your main container class is -->
+    <div id="main-content">
+    <h1>Revolutionizing Indoor Farming: How the Uniform Photon Flux Principle Optimizes Plant Growth</h1>
+     <div class="image-container">
+        <!--  Replace with your actual image path.  Make sure the image is in the correct 'static' directory. -->
+        <img src="{% static 'main/images/UPFP-blog.png' %}" alt="Luminous Photonics Indoor Farming">
+    </div>
+
+    <p>Indoor farming has come a long way, thanks to advancements in LED lighting and precision agriculture. One of the latest breakthroughs in this space is the <span class="highlight">Uniform Photon Flux Principle (UPFP)</span>—a game-changing approach to delivering light more efficiently and evenly across plants.</p>
+
+    <h2>What is UPFD?</h2>
+
+    <p>At its core, UPFP is designed to optimize how light is distributed in controlled-environment agriculture, ensuring that plants receive <span class="highlight">consistent, well-balanced illumination</span>. Unlike traditional lighting setups, which may create hotspots and uneven coverage, UPFP leverages a <span class="highlight">precise arrangement of LED elements</span> based on a unique mathematical pattern (the centered square number integer sequence). This innovative structure allows for <span class="highlight">maximum uniformity</span> in Photosynthetic Photon Flux Density (PPFD)—the key measurement of light used by plants for growth.</p>
+
+    <p>But UPFP isn't just about placing LEDs in a clever way. The system also integrates a <span class="highlight">differential evolution-based global optimization algorithm</span> to fine-tune the intensity of each light layer, ensuring plants receive just the right amount of energy they need—nothing more, nothing less.</p>
+
+    <h2>Why is Uniform Light Distribution Important?</h2>
+
+    <p>Plants depend on light to fuel photosynthesis, but not all light exposure is created equal. Inconsistent lighting can lead to uneven growth, reduced efficiency, and wasted energy. UPFP directly addresses these challenges, offering several key benefits:</p>
+
+    <ul>
+        <li><b>Faster, Healthier Plant Growth:</b> A uniform light field means all parts of the plant receive the same energy input, leading to enhanced photosynthesis and better overall development. Research has shown that plants with even light exposure produce higher yields and stronger structures.</li>
+        <li><b>Extended Leaf Lifespan:</b> One major challenge in indoor farming is leaf senescence, or premature aging. Uneven lighting often results in lower leaves receiving insufficient light, leading to early deterioration. UPFP ensures deep canopy penetration, keeping leaves healthier for longer and maximizing plant productivity.</li>
+        <li><b>Optimized for High-DLI Crops:</b> Some plants, like cannabis and high-value vegetables, require a high Daily Light Integral (DLI) to thrive. UPFP delivers the ideal light intensity and distribution needed to support their unique growth demands.</li>
+        <li><b>More Energy-Efficient Agriculture:</b> Traditional grow lights often waste energy by producing excess heat or scattering light inefficiently. UPFP minimizes light waste, making sure every photon counts. This boosts energy efficiency by over 20% compared to leading competitors, reducing operational costs while maintaining superior crop performance.</li>
+    </ul>
+	
+	<h2>Real-World Applications of UPFP</h2>
+    <p>UPFP's advantages make it a <span class="highlight">transformational technology</span> for various controlled-environment agriculture settings:</p>
+    <ul>
+        <li><b>Vertical Farms:</b> Optimizing multi-layer plant growth systems where even light distribution is critical.</li>
+        <li><b>Greenhouses:</b> Reducing energy consumption while ensuring plants get consistent illumination throughout the growing season.</li>
+        <li><b>Cannabis Cultivation:</b> Meeting the high light demands of cannabis plants without excessive heat or wasted energy.</li>
+        <li><b>Food Production:</b> Enhancing growth cycles for leafy greens, tomatoes, and other high- value crops through optimized irrigation, climate control, and AI-driven monitoring systems.</li>
+    </ul>
+
+    <h2>The Future of Indoor Farming is Here</h2>
+    <p>By combining <span class=highlight>precise LED placement</span>, <span class="highlight">smart intensity control</span>, and a <span class="highlight">cutting-edge differential evolution-based global optimization algorithm</span>, UPFP represents a significant leap forward in agricultural lighting technology. As the demand for <span class="highlight">sustainable, high-yield indoor farming</span> continues to rise, innovations like UPFP will play a crucial role in ensuring the future of food and plant production is more <span class="highlight">efficient, productive, and environmentally friendly</span>.</p>
+
+    <p>Are you ready to take indoor farming to the next level? The <span class="highlight">Uniform Photon Flux Principle</span> is leading the way!</p>
+</div>
+</div>
+<script>
+    // Pages to be indexed (with empty content that we'll load)
+    const pages = [
+      { title: "Revolutionizing Indoor Farming", url: "{% url 'blog/upfp' %}", content: "" },
+      { title: "Agentic AI", url: "{% url 'agenticai' %}", content: "" },
+      { title: "Computational Fluid Dynamics (CFD) Analysis", url: "{% url 'cooling_system' %}", content: "" }
+    ];
+    
+    function fetchPageContent(page) {
+        // Skip placeholder
+        if (page.url === "#") return Promise.resolve(page);
+        
+        return fetch(page.url)
+            .then(response => response.text())
+            .then(htmlString => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, "text/html");
+
+            // If there's a #main-content element, use only its text.
+            // This prevents nav/footers from being indexed.
+            const mainContent = doc.querySelector('#main-content');
+            if (mainContent) {
+                page.content = mainContent.textContent || "";
+            } else {
+                // If no #main-content exists, fallback to empty
+                page.content = "";
+            }
+
+            return page;
+            })
+            .catch(err => {
+            console.error("Error fetching page content for", page.url, err);
+            page.content = "";
+            return page;
+            });
+        }
+
+    // Preload content for all pages
+    Promise.all(pages.map(fetchPageContent)).then(() => {
+      console.log("All pages content loaded.");
+      
+      const searchInput = document.getElementById("searchInput");
+      const searchResults = document.getElementById("searchResults");
+      const searchBtn = document.getElementById("searchBtn");
+      
+      function performSearch(force = false) {
+        const query = searchInput.value.toLowerCase();
+        searchResults.innerHTML = "";
+        if (!force && query.length === 0) {
+          searchResults.style.display = "none";
+          return;
+        }
+        const results = pages.filter(page => {
+          return page.title.toLowerCase().includes(query) || page.content.toLowerCase().includes(query);
+        });
+        if (results.length > 0) {
+          results.forEach(page => {
+            const a = document.createElement("a");
+            a.href = page.url;
+            a.textContent = page.title;
+            searchResults.appendChild(a);
+          });
+          searchResults.style.display = "block";
+        } else {
+          searchResults.style.display = "none";
+        }
+      }
+      
+      searchInput.addEventListener("input", function() {
+        performSearch(false);
+      });
+      
+      if (searchBtn) {
+        searchBtn.addEventListener("click", function(e) {
+          e.preventDefault();
+          performSearch(true);
+          if (searchResults.children.length > 0) {
+            window.location.href = searchResults.children[0].href;
+          }
+        });
+      }
+      
+      searchInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (searchResults.children.length > 0) {
+            window.location.href = searchResults.children[0].href;
+          }
+        }
+      });
+      
+      document.addEventListener("click", function(e) {
+        if (!searchInput.contains(e.target) && (!searchBtn || !searchBtn.contains(e.target))) {
+          searchResults.style.display = "none";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

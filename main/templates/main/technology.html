@@ -53,7 +53,7 @@
             <h2 class="section-title">Uniform Photon Flux Principle (UPFP)</h2>
             <p>
                 Our research has led to the development of the Uniform Photon Flux Principle (UPFP), a groundbreaking approach to optimizing Photosynthetic Photon Flux Density (PPFD) distribution in controlled-environment agriculture.
-                The UPFP leverages a particular arrangement of Chip-on-Board (CoB) LED elements, positioned according to the centered square number integer sequence (<b>Online Encyclopedia of Integer Sequences</b>: A001844) pattern logic. By carefully assigning optimal intensities to each layer, as informed by our proprietary machine learning algorithm, we achieve unprecedented uniformity in PPFD across the growing area.
+                The UPFP leverages a particular arrangement of Chip-on-Board (CoB) LED elements, positioned according to the centered square number integer sequence (<b>Online Encyclopedia of Integer Sequences</b>: A001844) pattern logic. By carefully assigning optimal intensities to each layer, as informed by our proprietary differential evolution-based global optimization algorithm, we achieve unprecedented uniformity in PPFD across the growing area.
             </p>
             <p>
                 <b>Key Benefits of the UPFP:</b>
@@ -133,7 +133,7 @@
             <div>
                 <h1 class="section-title" id="ls">Visualizing Light Uniformity</h1>
                 <p>
-                    Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs compares a traditional or less optimized approach (right) with our UPFP-based solution (left).
+                    Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs offers a simple comparison to highlight our UPFP-based approach: Each simulation uses the same centered square sequence pattern arrangement of LEDs, but the graphs on the right show a simulation where the same luminous flux was applied to each LED, while the graphs on the left show layer-wise luminous flux assignments that are informed by our differential evolution-based global optimization algorithm.
                 </p>
             
                 <h2 class="section-title">Beam Profile</h2>
@@ -195,9 +195,12 @@
                 <div style="text-align: center; margin-top: 20px;">
                     <a href="{% url 'lighting_simulation' %}" class="dive-deeper-button">Dive Deeper into the Simulation</a>
                 </div>
-                <h2 class="section-title" id="ml">Machine Learning Optimization for Enhanced Uniformity</h2>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="{% url 'dialux_simulation' %}" class="dive-deeper-button">Check out a DIALux Simulation</a>
+                </div>
+                <h1 class="section-title" id="ml">Differential Evolution-Based Global Optimization Algorithm for Enhanced Uniformity</h1>
                 <p>
-                    Complementing our physics-based radiosity simulation, we employ a sophisticated machine learning (ML) algorithm to further refine and optimize the luminous flux settings of our LED arrays. This optimization process leverages the accuracy of the radiosity model to achieve unprecedented levels of PPFD uniformity and energy efficiency. The ML algorithm is *not* a replacement for the radiosity simulation; it's an additional layer of optimization that uses the radiosity simulation as its "ground truth."
+                    Utilizing our physics-based radiosity simulation, we employ a sophisticated differential evolution-based global optimization algorithm to refine and optimize the luminous flux settings of our LED arrays. This optimization process leverages the accuracy of the radiosity model to achieve unprecedented levels of PPFD uniformity and energy efficiency.
                 </p>
                 
                 <h3 class="subsubsection-title">3.1. Parameterization</h3>
@@ -212,7 +215,7 @@
                 
                 <h3 class="subsubsection-title">3.2. Objective Function</h3>
                 <p>
-                   The optimization algorithm's goal is to find the set of parameters (LED intensities) that *minimize* an objective function.  This function quantifies how "good" a particular set of intensities is. We aim to minimize the Root Mean Squared Error (RMSE) between the simulated PPFD and a target PPFD, while also incorporating constraints to ensure realistic and desirable results. The objective function is defined as:
+                   The optimization algorithm's goal is to find the set of parameters (LED intensities) that minimize an objective function. The objective function aims to minimize the Root Mean Squared Error (RMSE) between the simulated PPFD and a target PPFD, while also incorporating constraints to ensure realistic and desirable results. The objective function is defined as:
                 </p>
                 
                 <div class="equation-block">
@@ -229,14 +232,13 @@
                 </ul>
                 
                 <p>
-                   The *crucial point* is that calculating the RMSE requires running the *full radiosity simulation* with the given set of LED intensities.  This is how the ML optimization is linked to the physically accurate model.
+                   The crucial point is that calculating the RMSE requires running the full radiosity simulation with the given set of LED intensities.  This is how the global optimization is linked to the physically accurate radiosity model.
                 </p>
                 
                 <p><b>Penalty Terms:</b></p>
                     <ul class="section-list">
-                        <li>Degree of Uniformity (DOU) Penalty:**  A penalty is applied if the DOU falls below a threshold (e.g., 96%). This strongly encourages highly uniform light distribution.</li>
-                        <li>PPFD Constraints:** Nonlinear constraints (described below) ensure the average PPFD remains within a defined range (target PPFD to target PPFD + 250 µmol/m²/s).</li>
-                        <li> Note: the original description also included deviation penalties, which you can optionally include here.</li>
+                        <li>Degree of Uniformity (DOU) Penalty: A penalty is applied if the DOU falls below a threshold (e.g., 96%). This strongly encourages highly uniform light distribution.</li>
+                        <li>PPFD Constraints: Nonlinear constraints (described below) ensure the average PPFD remains within a defined range (target PPFD to target PPFD + 250 µmol/m²/s).</li>
                     </ul>
                 
                 <div class="code-block-container">
@@ -266,16 +268,16 @@
                 </code></pre>
                 </div>
                 
-                <h3 class="subsubsection-title">3.3. Optimization Algorithm: Differential Evolution</h3>
+                <h3 class="subsubsection-title">3.3. Global Optimization Algorithm: Differential Evolution</h3>
                 <p>
                     We use the Differential Evolution (DE) algorithm, a powerful global optimization method, to minimize the objective function. DE is well-suited for this task because:
                 </p>
                 <ul class="section-list">
-                    <li>Handles Non-Convexity:** The objective function is likely non-convex (meaning it has multiple local minima), and DE is robust to this.  Simpler gradient-based methods might get stuck in local minima.
+                    <li><b>Handles Non-Convexity</b>: The objective function is likely non-convex (meaning it has multiple local minima), and DE is robust to this.  Simpler gradient-based methods might get stuck in local minima.
                     </li>
-                    <li>Handles Constraints:** DE can handle the nonlinear constraints on the average PPFD.
+                    <li><b>Handles Constraints</b>: DE can handle the nonlinear constraints on the average PPFD.
                     </li>
-                    <li>Derivative-Free:** DE does *not* require calculating derivatives of the objective function.  This is important because calculating the derivative of the radiosity simulation would be extremely complex.
+                    <li><b>Derivative-Free</b>: DE does not require calculating derivatives of the objective function.  This is important because calculating the derivative of the radiosity simulation would be extremely complex.
                     </li>
                 </ul>
                 <p>
@@ -283,7 +285,7 @@
                 </p>
                 
                 <div class="code-block-container">
-                    <div class="code-block-title">Optimization with Differential Evolution (Python)</div>
+                    <div class="code-block-title">Global Optimization with Differential Evolution (Python)</div>
                     <pre class="code-block"><code class="language-python">
                 from scipy.optimize import differential_evolution, NonlinearConstraint
                 
@@ -317,81 +319,31 @@
                 </div>
                 <p><b>Key elements of this code:</b></p>
                         <ul class="section-list">
-                            <li>`bounds`:** Defines the minimum and maximum allowed luminous flux for each LED.</li>
-                            <li>`constraints`:** Defines nonlinear constraints using `NonlinearConstraint`. These ensure the average PPFD stays within the desired range (target to target + 250). The `constraint_lower` and `constraint_upper` functions are used to define these.</li>
-                           <li>`differential_evolution`:**  This function performs the optimization.  Key parameters include:
+                            <li><i>`bounds`</i>: Defines the minimum and maximum allowed luminous flux for each LED.</li>
+                            <li><i>`constraints`</i>: Defines nonlinear constraints using `NonlinearConstraint`. These ensure the average PPFD stays within the desired range (target to target + 250). The `constraint_lower` and `constraint_upper` functions are used to define these.</li>
+                           <li><i>`differential_evolution`</i>:  This function performs the optimization.  Key parameters include:
                                 <ul>
-                                    <li>`maxiter`:  The maximum number of iterations.</li>
-                                    <li>`popsize`:  The population size (number of candidate solutions evolved in parallel).</li>
-                                    <li>`recombination`: A parameter controlling the mutation strategy.</li>
-                                    <li>`disp`:  Set to `True` to display progress information during optimization.</li>
+                                    <li><i>`maxiter`</i>:  The maximum number of iterations.</li>
+                                    <li><i>`popsize`</i>:  The population size (number of candidate solutions evolved in parallel).</li>
+                                    <li><i>`recombination`</i>: A parameter controlling the mutation strategy.</li>
+                                    <li><i>`disp`</i>:  Set to `True` to display progress information during optimization.</li>
                                 </ul>
                             </li>
                         </ul>
                 <h3 class="subsubsection-title">3.4. Integration with Radiosity</h3>
                 <p>
-                The optimization algorithm works by repeatedly calling the `simulate_lighting` function (which contains the full radiosity model).  This is the crucial link:
+                The global optimization algorithm works by repeatedly calling the `simulate_lighting` function (which contains the full radiosity model).  This is the crucial link:
                 </p>
                 <ol class="section-list">
-                    <li>**Initial Guess:** The optimization starts with a random initial guess for the LED intensities.</li>
-                    <li>Radiosity Simulation:**  `simulate_lighting` is called with the current LED intensities.**  This performs the full radiosity calculation, including direct irradiance and multiple reflections, and returns the average PPFD, RMSE, and DOU.</li>
-                    <li>Objective Function Evaluation:** The `objective_function` uses the results from `simulate_lighting` (RMSE, DOU) to calculate the objective function value.</li>
-                    <li>Parameter Update:** The Differential Evolution algorithm uses the objective function value to update the LED intensities, creating a new set of candidate solutions.</li>
-                    <li>Repeat:** Steps 2-4 are repeated until the algorithm converges to a solution (a set of LED intensities that minimizes the objective function).</li>
+                    <li><b>Initial Guess</b>: The optimization starts with a random initial guess for the LED intensities.</li>
+                    <li><b>Radiosity Simulation</b>:  `simulate_lighting` is called with the current LED intensities. This performs the full radiosity calculation, including direct irradiance and multiple reflections, and returns the average PPFD, RMSE, and DOU.</li>
+                    <li><b>Objective Function Evaluation</b>: The `objective_function` uses the results from `simulate_lighting` (RMSE, DOU) to calculate the objective function value.</li>
+                    <li><b>Parameter Update</b>: The Differential Evolution algorithm uses the objective function value to update the LED intensities, creating a new set of candidate solutions.</li>
+                    <li><b>Repeat</b>: Steps 2-4 are repeated until the algorithm converges to a solution (a set of LED intensities that minimizes the objective function).</li>
                 </ol>
                 <p>
                     This iterative process, combining a global optimization algorithm with a physically accurate lighting simulation, allows us to find LED settings that achieve extremely high uniformity and meet the target PPFD, even in complex room geometries.
                 </p>
-                    <h4 class="section-title">Interactive Demo</h4>
-                    <p>
-                        Explore our optimization process through an interactive simulation. Adjust parameters such as floor dimensions and perimeter reflectivity to see how our algorithm adapts LED intensities to maintain uniform PPFD.
-                    </p>
-                    <div class="interactive-demo">
-                        <p>Interactive simulation coming soon!</p>
-                    </div>
-                    <div class="image-container2 hidden" style="text-align: center; margin-bottom: 30px;">
-                        <picture>
-                            <source srcset="{% static 'main/images/webp/simulation-min.webp' %}" type="image/webp">
-                            <img src="{% static 'main/images/simulation-min.png' %}" alt="Simulation Demo" style="display: block; margin: 0 auto;">
-                        </picture>
-                    </div>
-                </div>
-                <div>
-                    <div class="section hidden">
-                        <h1 class="section-title">Technical Details</h1>
-                        <p>
-                            Our UPFP technology is based on rigorous mathematical modeling and optimization techniques. Here are some key technical aspects:
-                        </p>
-                        <b>Lambertian Emission Model:</b><br> 
-                        We assume each LED emitter follows a Lambertian emission pattern (an appropriate light modeling strategy for CoB LEDs), where radiant intensity is modeled as: 
-                        \[I_{ij} = \frac{I_j \, z_j}{\left(d_{ij}^2 + z_j^2\right)^{3/2}}.\]
-                        <b>Radiosity and Reflective Walls:</b><br> 
-                        We account for light reflections using the radiosity equation \(I_i = E_i + \rho_i \sum_{j=1}^N F_{ij} I_j\), which is especially important in grow spaces as they tend to have highly reflective walls (\(\rho \approx 1\)).<br><br>
-                        <b>Root Mean Squared Error (RMSE) Calculation:</b><br>
-                        RMSE is a standard measure of the differences between values predicted by a model and the actual values observed. In our case, it quantifies the deviation of the PPFD distribution from the target PPFD. It is calculated as follows:
-                        \[
-                        \text{RMSE} = \sqrt{\frac{\sum_{i=1}^{n} (P_i - T)^2}{n}}
-                        \]
-                        where:
-                        <ul>
-                            <li>\(P_i\) is the predicted PPFD at the \(i\)-th measurement point.</li>
-                            <li>\(T\) is the target PPFD.</li>
-                            <li>\(n\) is the total number of measurement points.</li>
-                        </ul>
-                        A lower RMSE indicates a higher degree of uniformity, as it signifies that the predicted PPFD values are closer to the target PPFD across all measurement points.
-                        <br><br>
-                        <b>Degree of Uniformity (DOU):</b><br> 
-                        We quantify uniformity using the DOU metric, which is based on Root Mean Squared Error (RMSE): 
-                        \[
-                        \text{DOU} = 100 \times \left(1 - \frac{\text{RMSE}}{\text{PPFD}_{\text{avg}}}\right)
-                        \] 
-                        where:
-                        <ul>
-                            <li>\(\text{RMSE}\) is the Root Mean Squared Error of the PPFD distribution.</li>
-                            <li>\(\text{PPFD}_{\text{avg}}\) is the average PPFD across all measurement points.</li>
-                        </ul>
-                        Our prototype numeric solutions have achieved DOU values exceeding 99%.
-                    </div>
                 </div>
                 <div>
                     <h1 class="section-title">Experimental Validation</h1>

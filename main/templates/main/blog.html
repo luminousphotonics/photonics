@@ -4,57 +4,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:image" content="{% static 'main/images/webp/homeleaf.webp' %}" />
   <title>Blog - Luminous Photonics</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <!-- Load Font Awesome for the magnifying glass icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    /* Container for blog boxes */
     .blog-container {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      max-width: 1300px;
-      margin: 20px auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 columns on desktop */
+        gap: 20px; /* Space between grid items */
+        max-width: 1300px;
+        margin: 20px auto;
     }
-    /* Blog box styles */
+
     .blog-box {
-      width: calc(33% - 20px);
-      margin-bottom: 30px;
-      overflow: hidden;
-      border: 2px solid transparent;
-      text-align: center;
-      transition: border 0.3s;
+        margin-bottom: 30px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        text-align: center;
+        transition: border 0.3s;
+        box-sizing: border-box; /*  Include padding and border in width */
     }
-    .blog-box:hover {
-      border: 2px solid #000;
-    }
+
     .blog-box img {
-      max-width: 100%;   /* Image will never be wider than its container */
-      height: auto;       /* Height adjusts automatically to maintain aspect ratio */
-      display: block;     /* Important for removing extra space below the image */
-      object-fit: contain; /* Ensures the image is displayed entirely within the box */
+        max-width: 100%;   /* Image will never be wider than container */
+        height: auto;       /* Maintain aspect ratio */
+        display: block;     /* Remove extra space below image */
+        object-fit: contain; /* Ensure entire image is visible */
     }
 
     .blog-date {
-      font-size: 0.9em;
-      color: #666;
-      margin: 10px 0;
+        font-size: 0.9em;
+        color: #666;
+        margin: 10px 0;
     }
+
     .blog-title {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333;
-      transition: color 0.3s;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+        transition: color 0.3s;
+        word-wrap: break-word; /*  Allow long words to break */
+        padding: 0 5px;        /*  Horizontal padding */
     }
+
     .blog-box:hover .blog-title {
-      color: #007bff;
+        color: #007bff;
     }
+
     /* Make anchor tags with blog-box class display as blocks */
     .blog-container a.blog-box {
-      text-decoration: none;
-      color: inherit;
-      display: block;
+        text-decoration: none;
+        color: inherit;
+        display: block;
     }
     /* Search container styles */
     .search-container {

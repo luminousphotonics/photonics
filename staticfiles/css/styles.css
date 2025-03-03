@@ -86,18 +86,6 @@ body {
     padding-top: 20px;
   }
   
-  /* Responsive Footer */
-  @media (max-width: 768px) {
-    .footer-column {
-      width: 45%; /* 2 columns on smaller screens */
-      margin-bottom: 30px;
-    }
-  
-    .footer-row {
-      justify-content: space-around; /* Adjust spacing for smaller screens */
-    }
-  }
-  
   @media (max-width: 500px) {
     .footer-column {
       width: 100%; /* 1 column on very small screens */
@@ -280,17 +268,6 @@ body {
     font-size: 35px; /* Default font size for larger screens */
 }
 
-/* Responsive design adjustments */
-@media (max-width: 768px) {
-    .info-box {
-        width: 45%; /* Two boxes per row on smaller screens */
-    }
-    .intro-paragraph {
-        font-size: 18px; /* Smaller font size on mobile */
-        margin-left: 20px; /* Reduced margin on mobile */
-    }
-}
-
 @media (max-width: 480px) {
     .info-box {
         width: 95%; /* One box per row on very small screens */
@@ -315,18 +292,6 @@ body {
     column-gap: 1.5rem; /* Adjust gap between columns as needed */
     /* Optional: add padding or adjust width if necessary */
   }
-
-/* Media query for mobile devices */
-@media (max-width: 768px) {
-    .two-col-section {
-        column-count: 1; /* Switch to one column */
-    }
-  .columnpics {
-    column-count: 2;
-    column-gap: 1rem; /* Adjust gap between columns as needed */
-    /* Optional: add padding or adjust width if necessary */
-  }
-} /* This closing brace was missing */
 
 a {
     color: #66afe9; /* Choose a lighter color */
@@ -395,37 +360,6 @@ p {
     color: #00acee;
 }
 
-/* Mobile Styles */
-@media (max-width: 768px) {
-  .navbar-brand {
-    font-size: 1.2em; /* Reduce logo text size for mobile */
-  }
-@media (max-width: 768px) {
-.navbar-brand img {
-    height: 60px !important;  /* Adjust height as needed */
-    width: auto;              /* Maintain aspect ratio */
-}
-
-/* Optionally adjust link sizes or other navbar elements here */
-@media (max-width: 768px) {
-    /* Target top-level navbar links only */
-    .nav-links > li > a {
-      font-size: 1.1em;
-      color: #ffffff;
-      background-color: #000000;
-    }
-  
-    /* Adjust dropdown menu styles separately if needed */
-    .dropdown-content a {
-      font-size: 1.1em; /* or another size */
-      color: #000000; /* desired text color */
-      background-color: #F4F4F4; /* desired background for dropdown items */
-    }
-  }
-}
-}
-
-
 /* Hamburger Button Styling */
 .hamburger {
     display: none;
@@ -442,53 +376,6 @@ p {
     background-color: #e0e0e0;
     margin: 5px 0;
     transition: 0.4s;
-}
-
-/* Media Query for Smaller Screens */
-@media (max-width: 768px) {
-    .hamburger {
-        display: block;
-    }
-
-    .nav-links-container {
-        display: none;
-        width: 100%;
-        position: absolute;
-        top: 80px;
-        left: 0;
-        background-color: #1f1f1f;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    }
-
-    .nav-links-container.active {
-        display: block;
-    }
-
-    .nav-links {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .nav-links li {
-        text-align: center;
-        margin: 10px 0;
-    }
-
-    .navbar .container {
-        position: relative;
-    }
-
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(-45deg) translate(-5px, 6px);
-    }
-
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(45deg) translate(-5px, -6px);
-    }
 }
 
 /* Section Styles */
@@ -612,22 +499,7 @@ button[type="submit"]:hover {
     background-color: #F0F0F0;
     text-decoration: none; /* Remove the underline that may appear */
 }
-  /* Media query for mobile devices */
-  @media (max-width: 768px) {
-
-    .code-container {
-      margin: 0 auto;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      width: 100%;
-    }
-
-    .code-border {
-      margin: 0;
-      width: 100%;
-    }
-  }
+ 
 /* Features Section Styles */
 .features {
     display: flex;
@@ -678,19 +550,7 @@ button[type="submit"]:hover {
     margin: 0 auto;
 }
 
-.fixture img {
-    max-width: 500px;
-    height: auto;
-    margin-bottom: 15px;
-    display: block;
-}
 
-/* Media query for smaller screens (e.g., mobile) */
-@media (max-width: 768px) {
-    .fixture img {
-        max-width: 90%;
-    }
-}
 
 /* CTA Styles */
 .cta {
@@ -900,21 +760,48 @@ button[type="submit"]:hover {
          justify-content: flex-start; /* Align to the top */
          padding: 20px;
      }
- 
-     .image-container1 {
-         width: 100%;
-         max-width: 500px;
-         margin-top: 0px; /* Reset margin-top */
-         margin-left: 0;    /* Center horizontally */
-         margin-right: 0;   /* Center horizontally */
-         padding-bottom: 150px;
-         padding-right: 30px;
-     }
- 
-     .image-container1 img {
-         margin-bottom: 0;
-         height: auto;
-     }
+
+    .blog-box {
+        /*
+            Instead of setting a fixed width (like 50%), we'll let the
+            boxes take up their natural width, BUT we'll limit the
+            MAXIMUM width.  This is key for images that might be
+            wider than half the screen.
+         */
+        /* width: calc(50% - 10px);  REMOVE THIS */
+        max-width: 300px;  /*  ADJUST THIS VALUE.  Set a maximum width. */
+        margin: 0 10px 20px; /* Adjust margins as needed */
+    }
+
+    body .blog-container {
+        /*  Change to 2 columns on mobile */
+        grid-template-columns: repeat(1, 1fr); /*  2 columns */
+        padding: 0 10px; /* Add some padding */
+        max-width: 100%; 
+    }
+	body .blog-title{
+		font-size: 1em;
+	}
+
+     .content-wrapper .image-container1 {
+        width: 100%;
+        max-width: none;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0;
+        margin-top: 0;
+        /* NEW STYLES BELOW */
+        position: static; /* Reset absolute positioning */
+        transform: none;   /* Remove the transform */
+        right: auto;       /* Reset the right positioning */
+    }
+
+    .content-wrapper .image-container1 img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 0;
+        display: block;
+    }
  
      .info-panel {
          width: 100%;
@@ -939,6 +826,158 @@ button[type="submit"]:hover {
          display: inline-block; /* Important for centering a left-aligned list */
  
      }
+
+    /*New Styles (Media Query)*/
+    .hero {
+        position: relative;
+    }
+    .container .hero h2 {
+        font-size: 1.1em;
+        text-align: center;
+    }
+    .features {
+        flex-direction: column;
+        align-items: center;
+    }
+    .feature {
+        width: 80%;
+    }
+
+    .carousel img {
+        width: 60px;
+        height: 60px;
+    }
+    .carousel .slick-prev {
+        left: -35px;
+    }
+    .carousel .slick-next {
+        right: -35px;
+    }
+    .text-below-carousel {
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    .footer-column {
+        width: 45%; /* 2 columns on smaller screens */
+        margin-bottom: 30px;
+    }
+
+    .footer-row {
+        justify-content: space-around; /* Adjust spacing for smaller screens */
+    }
+
+    .info-box {
+        width: 45%; /* Two boxes per row on smaller screens */
+    }
+    .intro-paragraph {
+        font-size: 18px; /* Smaller font size on mobile */
+        margin-left: 20px; /* Reduced margin on mobile */
+    }
+    .two-col-section {
+        column-count: 1; /* Switch to one column */
+    }
+    .columnpics {
+        column-count: 2;
+        column-gap: 1rem; /* Adjust gap between columns as needed */
+        /* Optional: add padding or adjust width if necessary */
+    }
+
+    .navbar-brand {
+        font-size: 1.2em; /* Reduce logo text size for mobile */
+    }
+
+    .navbar-brand img {
+        height: 60px !important;  /* Adjust height as needed */
+        width: auto;              /* Maintain aspect ratio */
+    }
+
+    .nav-links > li > a {
+        font-size: 1.1em;
+        color: #ffffff;
+        background-color: #000000;
+    }
+
+    /* Adjust dropdown menu styles separately if needed */
+    .dropdown-content a {
+        font-size: 1.1em; /* or another size */
+        color: #000000; /* desired text color */
+        background-color: #F4F4F4; /* desired background for dropdown items */
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .nav-links-container {
+        display: none;
+        width: 100%;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        background-color: #1f1f1f;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-links-container.active {
+        display: block;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-links li {
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    .navbar .container {
+        position: relative;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .code-container {
+        margin: 0 auto;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .code-border {
+        margin: 0;
+        width: 100%;
+    }
+
+    .modular-images-section .image-row {
+        flex-wrap: wrap;
+    }
+    .modular-images-section .image-container {
+        width: 80%;
+    }
+    .modular-images-section .image-container img {
+        margin-bottom: 10px;
+        max-width: 100%;
+    }
+
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        padding: 10px;
+    }
  }
  
  /* Media Query for Smaller Mobile Devices (max-width: 480px) */
@@ -948,14 +987,6 @@ button[type="submit"]:hover {
          padding: 40px 5%;
          min-height: 650px; /* Increased from 500px */
          background-position: center 70%; /* Adjust as needed */
-     }
-     .image-container1 {
-         width: 100%;
-         margin-top: 0; /* Further adjustment might not be needed */
-         margin-left: 0;  /* Center horizontally */
-     }
-     .content-wrapper{
-         padding: 0;
      }
  }
 
@@ -1121,20 +1152,6 @@ button[type="submit"]:hover {
     width: 100%;
 }
 
-/* Mobile adjustments for modular images */
-@media (max-width: 768px) {
-    .modular-images-section .image-row {
-        flex-wrap: wrap;
-    }
-    .modular-images-section .image-container {
-        width: 80%;
-    }
-    .modular-images-section .image-container img {
-        margin-bottom: 10px;
-        max-width: 100%;
-    }
-}
-
 /* PDF Container Styles */
 #pdfContainer {
     margin-top: 20px;
@@ -1236,14 +1253,6 @@ pre code {
     animation: pulse 0.6s;
 }
 
-@media (max-width: 768px) {
-    .back-to-top {
-        bottom: 20px;
-        right: 20px;
-        padding: 10px;
-    }
-}
-
 /* Responsive Video */
 .responsive-video {
     max-width: 100%;
@@ -1298,30 +1307,6 @@ pre code {
 .video-placeholder {
     background-image: var(--bg-image); /* Use the CSS variable here */
     /* Styles for a placeholder image or background color */
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .hero {
-        padding: 60px 20px;
-    }
-    .hero h2 {
-        font-size: 1.2em;
-        text-align: center;
-    }
-    .features {
-        flex-direction: column;
-        align-items: center;
-    }
-    .feature {
-        width: 80%;
-    }
-}
-
-@media (min-width: 769px) {
-    .fixture {
-        width: 200px;
-    }
 }
 
 /* Carousel Styling */
@@ -1411,23 +1396,6 @@ pre code {
     .carousel img {
         width: 80px;
         height: 80px;
-    }
-    .text-below-carousel {
-        margin-top: 50px;
-        text-align: center;
-    }
-}
-
-@media (max-width: 768px) {
-    .carousel img {
-        width: 60px;
-        height: 60px;
-    }
-    .carousel .slick-prev {
-        left: -35px;
-    }
-    .carousel .slick-next {
-        right: -35px;
     }
     .text-below-carousel {
         margin-top: 50px;

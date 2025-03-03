@@ -13,7 +13,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
+    <meta property="og:image" content="{% static 'main/images/webp/homeleaf.webp' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Your main stylesheet - MUST come first -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
@@ -152,7 +152,7 @@
     <div class="container">
         <h1 class="section-title">Horticultural Lighting Simulation: Deep Dive</h1>
         <p>
-            This page provides a detailed explanation of the mathematical models, algorithms, and implementation of our advanced lighting simulation script.  We focus on the physics-based approach, using radiosity to accurately model light distribution in controlled-environment agriculture.
+            This page provides a detailed explanation of the mathematical models, algorithms, and implementation of our advanced lighting simulation script.  We focus on a physics-based approach, using radiosity to accurately model light distribution in controlled-environment agriculture.
         </p>
 
         <h2 class="subsection-title">1. Introduction</h2>
@@ -539,39 +539,16 @@ def calculate_floor_ppfd(X, Y, patch_centers, patch_areas, patch_normals,
     <a href="#" class="back-to-top" id="backToTopBtn">
         <picture>
             <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
-            <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+            <img data-src="{% static 'main/images/top-btn.png' %}" alt="Back to Top" class="lazy-load">
         </picture>
     </a>
     <a href="/" class="home-button" id="homeButton">
         <picture>
             <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
-            <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
-         </picture>
-     </a>
-      <script>
-      //Back to top button:
-     $(document).ready(function() {
-        // Back to Top Button
-         $(window).scroll(function() {
-            if ($(this).scrollTop() > 100) {
-                $('#backToTopBtn').fadeIn();
-            } else {
-                $('#backToTopBtn').fadeOut();
-            }
-        });
-
-        $('#backToTopBtn').click(function() {
-            $('html, body').animate({scrollTop : 0},800);
-            return false;
-        });
-
-        // Home Button (if you are using it)
-        $('#homeButton').click(function(){
-            window.location.href = "/"; // Or your homepage URL
-            return false;
-        });
-    });
-    </script>
+            <img data-src="{% static 'main/images/home-btn.png' %}" alt="Home" class="lazy-load">
+        </picture>
+    </a>
+    <script src="{% static 'js/scripts.js' %}"></script>
     {% include 'main/footer.html' %}
 </body>
 </html>

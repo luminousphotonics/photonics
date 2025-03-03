@@ -113,6 +113,36 @@
         .search-results a:hover {
             background-color: #f0f0f0;
         }
+        .heading-image-wrapper {
+          display: flex;         /* Use Flexbox */
+          flex-direction: column; /* Stack items vertically (default) */
+          align-items: center;   /* Center items horizontally */
+        }
+        /* 4. Add this media query for MOBILE: */
+        @media (max-width: 768px) {
+            .heading-image-wrapper {
+                flex-direction: column-reverse; /*  Reverse the order on mobile! */
+            }
+
+            .image-container {
+                width: 100%; /* Full width on mobile */
+                margin-bottom: 0.5em;
+            }
+
+            .image-container img {
+                max-width: 100%; /* Full width on mobile */
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-top: 0;
+                padding: 0 10px;
+            }
+
+            #main-content {
+                padding: 0 10px;
+            }
+        }        
     </style>
 </head>
 <body>
@@ -122,12 +152,13 @@
     {% endwith %}
 <div class="container">  <!-- Or whatever your main container class is -->
     <div id="main-content">
-    <h1>Revolutionizing Indoor Farming: How the Uniform Photon Flux Principle Optimizes Plant Growth</h1>
-     <div class="image-container">
+      <div class="heading-image-wrapper">
+        <h1>Revolutionizing Indoor Farming: How the Uniform Photon Flux Principle Optimizes Plant Growth</h1>
+          <div class="image-container">
         <!--  Replace with your actual image path.  Make sure the image is in the correct 'static' directory. -->
-        <img src="{% static 'main/images/UPFP-blog.png' %}" alt="Luminous Photonics Indoor Farming">
-    </div>
-
+            <img src="{% static 'main/images/UPFP-blog.png' %}" alt="Luminous Photonics Indoor Farming">
+        </div>
+      </div>
     <p>Indoor farming has come a long way, thanks to advancements in LED lighting and precision agriculture. One of the latest breakthroughs in this space is the <span class="highlight">Uniform Photon Flux Principle (UPFP)</span>—a game-changing approach to delivering light more efficiently and evenly across plants.</p>
 
     <h2>What is UPFD?</h2>

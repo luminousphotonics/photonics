@@ -13,7 +13,7 @@
         </script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta property="og:image" content="{% static 'main/images/recycle.png' %}" />
+        <meta property="og:image" content="{% static 'main/images/webp/homeleaf.webp' %}" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         
@@ -344,6 +344,9 @@
                 <p>
                     This iterative process, combining a global optimization algorithm with a physically accurate lighting simulation, allows us to find LED settings that achieve extremely high uniformity and meet the target PPFD, even in complex room geometries.
                 </p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="{% url 'lighting_simulation' %}" class="dive-deeper-button">Dive Deeper into the Radiosity Simulation</a>
                 </div>
                 <div>
                     <h1 class="section-title">Experimental Validation</h1>

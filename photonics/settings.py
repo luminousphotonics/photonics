@@ -18,9 +18,6 @@ ALLOWED_HOSTS = [
 MEDIA_ROOT = Path("/app/media")  # use the mount point provided by Render
 MEDIA_URL = "/media/"
 
-if not MEDIA_ROOT.exists():
-    os.makedirs(MEDIA_ROOT)
-
 LOGIN_URL = '/admin/login/'
 
 SECURE_SSL_REDIRECT = False

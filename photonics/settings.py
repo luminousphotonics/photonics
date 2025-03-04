@@ -5,7 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'luminous-photonics.onrender.com',
@@ -18,6 +18,8 @@ ALLOWED_HOSTS = [
 MEDIA_ROOT = Path("/app/media")  # use the mount point provided by Render
 MEDIA_URL = "/media/"
 
+if not MEDIA_ROOT.exists():
+    os.makedirs(MEDIA_ROOT)
 
 LOGIN_URL = '/admin/login/'
 

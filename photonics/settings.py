@@ -5,7 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'luminous-photonics.onrender.com',
@@ -105,6 +105,7 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 

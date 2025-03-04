@@ -36,7 +36,7 @@ DEFAULT_TARGET_PPFD = 1250.0
 LUMENS_TO_PPFD_CONVERSION = 7
 MAX_LUMENS = 15000.0  # Maximum luminous output constraint
 MIN_LUMENS = 2000.0  # Minimum luminous output constraint
-DEFAULT_PERIMETER_REFLECTIVITY = 0.9  # Default perimeter reflectivity (30%)
+DEFAULT_PERIMETER_REFLECTIVITY = 0.0  # Default perimeter reflectivity (30%)
 
 # --- Centered Square Layer Arrangement ---
 def generate_light_sources(num_layers, center_x, center_y, spacing_x, spacing_y):

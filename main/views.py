@@ -7,7 +7,7 @@ import os
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .lighting_optimization import run_simulation as run_simulation_optimization
+from .ml_simulation import run_ml_simulation  # Import from ml_simulation.py
 
 def index(request):
     return render(request, 'main/index.html')
@@ -35,26 +35,23 @@ def contact(request):
             send_mail(
                 subject,
                 email_body,
-                settings.DEFAULT_FROM_EMAIL,  # Use the verified email as sender
+                settings.DEFAULT_FROM_EMAIL,
                 [settings.EMAIL_HOST_USER],
                 fail_silently=False,
-                #headers={'Reply-To': email},   # Let replies go to the user
             )
 
             return redirect('contact_success')
-
         else:
             print(form.errors)
-
     else:
         form = ContactForm()
 
-    return render(request, 'main/contact.html', {'form': form}) # Assuming your app is named 'main'
+    return render(request, 'main/contact.html', {'form': form})
 
 def contact_success(request):
-    return render(request, 'main/contact_success.html')  # Correct path for 'main' app
+    return render(request, 'main/contact_success.html')
 
-@csrf_exempt  # For testing; handle CSRF appropriately in production
+@csrf_exempt  # For testing; ensure proper CSRF handling in production
 def run_simulation(request):
     if request.method == 'POST':
         try:
@@ -62,20 +59,19 @@ def run_simulation(request):
             floor_width = data.get('floor_width')
             floor_length = data.get('floor_length')
             target_ppfd = data.get('target_ppfd')
-            # floor_height isn’t used by the optimization directly but might be used elsewhere
-            perimeter_reflectivity = data.get('perimeter_reflectivity', 0.3)
 
-            # Validate data if needed
+            if floor_width is None or floor_length is None or target_ppfd is None:
+                return JsonResponse(
+                    {'error': 'Missing required parameters: floor_width, floor_length, target_ppfd'},
+                    status=400
+                )
 
-            # Use the aliased function
-            simulation_results = run_simulation_optimization(
-                floor_width=floor_width,
-                floor_length=floor_length,
-                target_ppfd=target_ppfd,
-                perimeter_reflectivity=perimeter_reflectivity,
-                verbose=False  # Adjust verbosity as needed
+            # Updated call: use keyword names that match the function's signature.
+            simulation_results = run_ml_simulation(
+                floor_width_ft=floor_width,
+                floor_length_ft=floor_length,
+                target_ppfd=target_ppfd
             )
-
             return JsonResponse(simulation_results)
 
         except Exception as e:

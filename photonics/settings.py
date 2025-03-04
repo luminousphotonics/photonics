@@ -66,7 +66,10 @@ WSGI_APPLICATION = "photonics.wsgi.application"
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
+        default=os.environ.get(
+            "DATABASE_URL",
+            "postgresql://lmphotonics_db_user:5QJgXo2WHy4AUfoIsqslc65soDOdJege@dpg-cv3b31i3esus73df0ac0-a.oregon-postgres.render.com/lmphotonics_db"
+        )
     )
 }
 

@@ -52,6 +52,7 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
 
   // Introduce offsetY for upward shift
   const offsetY = 0; // Adjust this value as needed
+
   /**
    * Defines key color points for the custom jet colormap.
    */
@@ -87,11 +88,8 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
         return `rgb(${r},${g},${b})`;
       }
     }
-
     // Fallback to the highest color if t is exactly 1
-    return `rgb(${jetColorPoints[jetColorPoints.length - 1].color.join(
-      ","
-    )})`;
+    return `rgb(${jetColorPoints[jetColorPoints.length - 1].color.join(",")})`;
   };
 
   /**
@@ -122,46 +120,53 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
     return jetColors[index];
   };
 
- // Function to determine the number of layers based on floor dimensions in meters
- const calculateLayers = (width: number, length: number): number => {
-  const layerDimensions = [
-    { width: 0, length: 0 },      // Layer 0 (center)
-    { width: 0.9144, length: 0.9144 },  // Layer 1 (3 ft in meters)
-    { width: 1.524, length: 1.524 },   // Layer 2 (5 ft in meters)
-    { width: 2.4384, length: 2.4384 }, // Layer 3 (8 ft in meters)
-    { width: 3.048, length: 3.048 },   // Layer 4 (10 ft in meters)
-    { width: 3.6576, length: 3.6576 }  // Layer 5 (12 ft in meters)
-  ];
+  // Function to determine the number of layers based on floor dimensions in meters
+  const calculateLayers = (width: number, length: number): number => {
+    const layerDimensions = [
+      { width: 0, length: 0 }, // Layer 0 (center)
+      { width: 0.9144, length: 0.9144 }, // Layer 1 (3 ft in meters)
+      { width: 1.524, length: 1.524 }, // Layer 2 (5 ft in meters)
+      { width: 2.4384, length: 2.4384 }, // Layer 3 (8 ft in meters)
+      { width: 3.048, length: 3.048 }, // Layer 4 (10 ft in meters)
+      { width: 3.6576, length: 3.6576 }, // Layer 5 (12 ft in meters)
+    ];
 
-  let activeLayers = 0;
-  for (let i = 0; i < layerDimensions.length; i++) {
-    if (width >= layerDimensions[i].width && length >= layerDimensions[i].length) {
-      activeLayers = i + 1; // Add one to include the central element as Layer 0
-    } else {
-      break; // Stop when dimensions no longer fit
+    let activeLayers = 0;
+    for (let i = 0; i < layerDimensions.length; i++) {
+      if (width >= layerDimensions[i].width && length >= layerDimensions[i].length) {
+        activeLayers = i + 1; // Add one to include the central element as Layer 0
+      } else {
+        break; // Stop when dimensions no longer fit
+      }
     }
-  }
-  return activeLayers;
-};
-
+    return activeLayers;
+  };
 
   // Update selectedLayers based on floor dimensions
   useEffect(() => {
-      const calculatedLayers = calculateLayers(floorWidthMeters, floorLengthMeters);
-      setSelectedLayers(calculatedLayers);
+    const calculatedLayers = calculateLayers(floorWidthMeters, floorLengthMeters);
+    setSelectedLayers(calculatedLayers);
   }, [floorWidthMeters, floorLengthMeters]);
 
   // Function to determine the number of fixtures in a layer (No changes)
   const determineFixturesInLayer = (layer: number): number => {
     switch (layer) {
-      case 0: return 1;   // Center unit (Layer 0)
-      case 1: return 4;   // 4 fixtures in Layer 1
-      case 2: return 4;   // 4 fixtures in Layer 2
-      case 3: return 4;   // 4 fixtures in Layer 3
-      case 4: return 4;   // 4 fixtures in Layer 4
-      case 5: return 4;   // 4 fixtures in Layer 5
-      case 6: return 4;   // 4 fixtures in Layer 6
-      default: return 0;
+      case 0:
+        return 1; // Center unit (Layer 0)
+      case 1:
+        return 4; // 4 fixtures in Layer 1
+      case 2:
+        return 4; // 4 fixtures in Layer 2
+      case 3:
+        return 4; // 4 fixtures in Layer 3
+      case 4:
+        return 4; // 4 fixtures in Layer 4
+      case 5:
+        return 4; // 4 fixtures in Layer 5
+      case 6:
+        return 4; // 4 fixtures in Layer 6
+      default:
+        return 0;
     }
   };
 
@@ -180,14 +185,7 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
     const offsetValue = layer * layerSpacing;
 
     // Define rotation angles for fixtures in each layer
-    const rotationAngles = [
-      0,   // Layer 0 (center) - no rotation
-      -45, // Layer 1 - rotate by -45 degrees
-      0,   // Layer 2 - no rotation
-      45,  // Layer 3 - rotate by 45 degrees
-      0,   // Layer 4 - no rotation
-      0,   // Layer 5 - no rotation
-    ];
+    const rotationAngles = [0, -45, 0, 45, 0, 0];
 
     // Define the spacing for each layer (CORRECTED for meters)
     const layerSpacings = [
@@ -221,7 +219,6 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
         { x: centerX - offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
         { x: centerX + offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
       ];
-
       const position = positions[fixtureIndex];
       return (
         <LShapedUnit
@@ -245,7 +242,6 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
         { x: centerX, y: centerY + offsetValue, rotation: rotationAngles[layer] + 180 },
         { x: centerX - offsetValue, y: centerY, rotation: rotationAngles[layer] + 270 },
       ];
-
       const position = positions[fixtureIndex];
       return (
         <LinearUnit
@@ -268,7 +264,6 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
         { x: centerX - offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
         { x: centerX + offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
       ];
-
       const position = positions[fixtureIndex];
       return (
         <LShapedUnit
@@ -292,7 +287,6 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
         { x: centerX - offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
         { x: centerX + offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
       ];
-
       const position = positions[fixtureIndex];
       return (
         <CustomTopLeftUnit
@@ -316,7 +310,6 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
         { x: centerX - offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
         { x: centerX + offsetValue, y: centerY + offsetValue, rotation: rotationAngles[layer] },
       ];
-
       const position = positions[fixtureIndex];
       return (
         <CustomTopLeftUnit
@@ -347,8 +340,8 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
     }
   }
 
-  // Calculate viewBox dimensions to fit the visualization
-  const viewBox = `0 0 ${viewBoxWidth} ${viewBoxHeight}`;
+  // Calculate viewBox dimensions to fit the visualization and use the declared variable
+  const viewBox = `0 ${offsetY} ${viewBoxWidth} ${viewBoxHeight}`;
 
   return (
     <div className="modular-visualization-container">
@@ -369,7 +362,7 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
             ref={svgRef}
             width="100%"
             height="100%"
-            viewBox={`${0} ${offsetY} ${viewBoxWidth} ${viewBoxHeight}`}
+            viewBox={viewBox}
             preserveAspectRatio="xMidYMid meet"
           >
             {fixtures}
@@ -390,20 +383,20 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
           ></div>
           <div className="legend-labels-container">
             <div
-             className="legend-labels"
-             style={{
-               display: "flex",
-               flexDirection: "column-reverse",
-               justifyContent: "space-between",
-               height: "300px",
-               marginLeft: "5px",
-             }}
+              className="legend-labels"
+              style={{
+                display: "flex",
+                flexDirection: "column-reverse",
+                justifyContent: "space-between",
+                height: "300px",
+                marginLeft: "5px",
+              }}
             >
-             <span>Low</span>
-             <span>Mid-Low</span>
-             <span>Mid</span>
-             <span>Mid-High</span>
-             <span>High</span>
+              <span>Low</span>
+              <span>Mid-Low</span>
+              <span>Mid</span>
+              <span>Mid-High</span>
+              <span>High</span>
             </div>
           </div>
         </div>

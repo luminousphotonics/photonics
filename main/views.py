@@ -8,6 +8,14 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .ml_simulation import run_ml_simulation  # Import from ml_simulation.py
+from django.contrib.auth.decorators import login_required
+from .blog_system import BlogPost, Comment, Like, Share  # our model file
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from .forms import BlogPostForm
+from django.http import HttpResponse
+from .blog_system import BlogPost
 
 def index(request):
     return render(request, 'main/index.html')
@@ -99,3 +107,91 @@ def upfp(request):
 
 def dialux_simulation(request):
     return render(request, 'main/dialux_simulation.html')
+
+@login_required  # ensure only authorized users can access
+def blog_admin_panel(request):
+    posts = BlogPost.objects.all().order_by('-created_at')
+    return render(request, 'main/blog_admin_panel.html', {'posts': posts})
+
+@require_POST
+@login_required
+def toggle_like(request):
+    post_slug = request.POST.get('slug')
+    if not post_slug:
+        return HttpResponseBadRequest("Missing post slug.")
+    
+    post = get_object_or_404(BlogPost, slug=post_slug)
+    like, created = Like.objects.get_or_create(post=post, user=request.user)
+    if not created:
+        # Already liked, so remove like
+        like.delete()
+        liked = False
+    else:
+        liked = True
+
+    return JsonResponse({
+        'liked': liked,
+        'like_count': post.likes.count()
+    })
+
+@require_POST
+@login_required
+def add_comment(request):
+    post_slug = request.POST.get('slug')
+    comment_text = request.POST.get('comment')
+    if not post_slug or not comment_text:
+        return HttpResponseBadRequest("Missing parameters.")
+    
+    post = get_object_or_404(BlogPost, slug=post_slug)
+    comment = Comment.objects.create(post=post, user=request.user, text=comment_text)
+    
+    return JsonResponse({
+        'comment_id': comment.id,
+        'comment_text': comment.text,
+        'username': comment.user.username,
+        'created_at': comment.created_at.strftime("%Y-%m-%d %H:%M")
+    })
+
+@require_POST
+@login_required
+def log_share(request):
+    post_slug = request.POST.get('slug')
+    platform = request.POST.get('platform')
+    if not post_slug or not platform:
+        return HttpResponseBadRequest("Missing parameters.")
+    
+    post = get_object_or_404(BlogPost, slug=post_slug)
+    share = Share.objects.create(post=post, user=request.user, platform=platform)
+    
+    return JsonResponse({
+        'share_id': share.id,
+        'platform': share.platform,
+        'share_count': post.shares.count()
+    })
+
+@login_required
+def create_blog_post(request):
+    if request.method == 'POST':
+        form = BlogPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('blog_admin_panel')
+    else:
+        form = BlogPostForm()
+    return render(request, 'main/blog_create.html', {'form': form})
+
+@login_required
+def edit_blog_post(request, slug):
+    return HttpResponse("Edit blog post functionality coming soon.")
+
+@login_required
+def delete_blog_post(request, slug):
+    return HttpResponse("Delete blog post functionality coming soon.")
+
+def blog_index(request):
+    posts = BlogPost.objects.all().order_by('-created_at')
+    return render(request, 'main/blog_index.html', {'posts': posts})
+
+def blog_detail(request, slug):
+    post = get_object_or_404(BlogPost, slug=slug)
+    return render(request, 'main/blog_detail.html', {'post': post})

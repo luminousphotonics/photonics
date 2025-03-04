@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +9,7 @@
 </head>
 <body>
     <header>
-        </header>
+    </header>
 
     <main>
         {% block content %}
@@ -16,7 +17,9 @@
     </main>
 
     <footer>
-        </footer>
-{% include 'main/footer.html' %}
+    </footer>
+    {% include 'main/footer.html' %}
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

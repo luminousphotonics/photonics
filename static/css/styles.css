@@ -745,7 +745,59 @@ button[type="submit"]:hover {
     animation: slideIn 0.8s ease forwards;
 }
 
+/* LinkedIn-inspired blog post card */
+.blog-post {
+    background-color: #fff;
+    border: 1px solid #e1e9ee;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
 
+.blog-post h1 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.blog-post .post-meta {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.blog-post img {
+    width: 100%;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.blog-post .post-content {
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.blog-post .interaction-bar {
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #e1e9ee;
+    padding-top: 10px;
+    margin-top: 15px;
+}
+
+.blog-post .interaction-bar button {
+    background: none;
+    border: none;
+    color: #0073b1; /* LinkedIn blue */
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.blog-post .interaction-bar button:hover {
+    text-decoration: underline;
+}
 /* Media Query for Tablets and Smaller (max-width: 768px) */
 @media (max-width: 768px) {
     .grey-background {
@@ -760,7 +812,7 @@ button[type="submit"]:hover {
          justify-content: flex-start; /* Align to the top */
          padding: 20px;
      }
-
+  
     .blog-box {
         /*
             Instead of setting a fixed width (like 50%), we'll let the

@@ -1,0 +1,39 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<article class="blog-post">
+  <h1>{{ post.title }}</h1>
+  <div class="post-meta">
+    Published on {{ post.created_at|date:"M d, Y" }}
+  </div>
+  {% if post.title_image %}
+    <img src="{{ post.title_image.url }}" alt="{{ post.title }}">
+  {% endif %}
+  <div class="post-content">
+    {{ post.content|safe }}
+  </div>
+  <div class="interaction-bar">
+    <button onclick="toggleLike('{{ post.slug }}')">Like (<span id="like-count">{{ post.likes.count }}</span>)</button>
+    <button onclick="addComment('{{ post.slug }}')">Comment</button>
+    <button onclick="logShare('{{ post.slug }}', 'linkedin')">Share on LinkedIn</button>
+    <button onclick="logShare('{{ post.slug }}', 'facebook')">Share on Facebook</button>
+    <button onclick="logShare('{{ post.slug }}', 'x')">Share on X</button>
+  </div>
+  
+  <!-- Comment Section -->
+  <div id="comment-section">
+    <input type="text" id="comment-input" placeholder="Write a comment...">
+    <div id="comment-list">
+      {% for comment in post.comments.all %}
+        <div>{{ comment.user.username }}: {{ comment.text }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/blog_interactions.js' %}"></script>
+{% endblock %}

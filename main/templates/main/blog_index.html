@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+<div class="blog-container">
+  {% for post in posts %}
+    <a href="{% url 'blog_detail' post.slug %}" class="blog-box">
+      <img src="{{ post.title_image.url }}" alt="{{ post.title }}">
+      <div class="blog-date">{{ post.created_at|date:"M d, Y" }}</div>
+      <div class="blog-title">{{ post.title }}</div>
+    </a>
+  {% endfor %}
+</div>
+{% endblock %}

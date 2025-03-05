@@ -9,6 +9,11 @@ class ContactForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Your Message'}))
 
 class BlogPostForm(forms.ModelForm):
+    content_doc = forms.FileField(
+        required=False,
+        help_text="Upload a Word document (.docx) for the post content."
+    )
+
     class Meta:
         model = BlogPost
-        fields = ['title', 'slug', 'content', 'title_image']
+        fields = ['title', 'slug', 'content', 'title_image']  # 'content' will eventually hold the HTML

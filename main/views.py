@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
 from django.contrib import messages
@@ -12,10 +12,11 @@ from django.contrib.auth.decorators import login_required
 from .blog_system import BlogPost, Comment, Like, Share  # our model file
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
-from django.shortcuts import get_object_or_404
 from .forms import BlogPostForm
 from django.http import HttpResponse
 from .blog_system import BlogPost
+import mammoth
+from django.contrib.auth.decorators import user_passes_test
 
 def index(request):
     return render(request, 'main/index.html')
@@ -169,29 +170,84 @@ def log_share(request):
         'share_count': post.shares.count()
     })
 
+import mammoth
+
 @login_required
 def create_blog_post(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
+            # Process Word document conversion if uploaded...
+            doc_file = form.cleaned_data.get('content_doc')
+            if doc_file:
+                style_map = [
+                    "p[style-name='BlueText'] => p[style='color: #0073b1']",
+                ]
+                result = mammoth.convert_to_html(doc_file, style_map=style_map)
+                html = result.value
+                form.instance.content = html
+            # Set the creator to the currently logged in user
+            form.instance.created_by = request.user
             form.save()
             return redirect('blog_admin_panel')
     else:
         form = BlogPostForm()
     return render(request, 'main/blog_create.html', {'form': form})
 
+
 @login_required
 def edit_blog_post(request, slug):
-    return HttpResponse("Edit blog post functionality coming soon.")
+    post = get_object_or_404(BlogPost, slug=slug)
+    if request.method == 'POST':
+        form = BlogPostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            doc_file = form.cleaned_data.get('content_doc')
+            if doc_file:
+                style_map = "p[style-name='SubText'] => p[style='color: #0078BE']"
+                result = mammoth.convert_to_html(doc_file, style_map=style_map)
+                html = result.value
+                form.instance.content = html
+            form.save()
+            return redirect('blog_admin_panel')
+    else:
+        form = BlogPostForm(instance=post)
+    return render(request, 'main/blog_edit.html', {'form': form, 'post': post})
 
 @login_required
 def delete_blog_post(request, slug):
-    return HttpResponse("Delete blog post functionality coming soon.")
+    post = get_object_or_404(BlogPost, slug=slug)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('blog_admin_panel')
+    return render(request, 'main/blog_confirm_delete.html', {'post': post})
 
 def blog_index(request):
-    posts = BlogPost.objects.all().order_by('-created_at')
+    if request.user.is_superuser:
+        posts = BlogPost.objects.all().order_by('-created_at')
+    else:
+        posts = BlogPost.objects.filter(approved=True).order_by('-created_at')
     return render(request, 'main/blog_index.html', {'posts': posts})
 
 def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
     return render(request, 'main/blog_detail.html', {'post': post})
+
+def is_austin(user):
+    return user.username == 'austin22'
+
+@user_passes_test(is_austin)
+def approve_blog_post(request, slug):
+    post = get_object_or_404(BlogPost, slug=slug)
+    # Only allow approval if not already approved.
+    if not post.approved:
+        post.approved = True
+        post.save()
+        # Send notification email to the creator (assumed to be 'amrouse123')
+        send_mail(
+            "Your Blog Post Has Been Approved",
+            f"Hello, your blog post titled '{post.title}' has been approved and is now live on the website.",
+            "austin@luminousphotonics.com",
+            [post.created_by.email],
+            fail_silently=False,
+        )
+    return redirect('blog_admin_panel')

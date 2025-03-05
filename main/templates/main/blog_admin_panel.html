@@ -16,7 +16,7 @@
     <tbody>
       {% for post in posts %}
       <tr>
-        <td>{{ post.title }}</td>
+        <td><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></td>
         <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
         <td>{{ post.comments.count }}</td>
         <td>{{ post.likes.count }}</td>
@@ -24,6 +24,9 @@
         <td>
           <a href="{% url 'edit_blog_post' post.slug %}">Edit</a> |
           <a href="{% url 'delete_blog_post' post.slug %}">Delete</a>
+          {% if not post.approved %}
+             | <a href="{% url 'approve_blog_post' post.slug %}">Approve</a>
+          {% endif %}
         </td>
       </tr>
       {% endfor %}

@@ -20,7 +20,7 @@ MEDIA_ROOT = Path("/app/media")  # use the mount point provided by Render
 MEDIA_URL = "/media/"
 
 # Use local media directory if DEBUG is True
-if os.environ.get("DEBUG", "True") == "True":
+if DEBUG:
     MEDIA_ROOT = BASE_DIR / "media"
     MEDIA_URL = "/media/"
 else:
@@ -72,14 +72,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "photonics.wsgi.application"
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get(
-            "DATABASE_URL",
-            "postgresql://lmphotonics_db_user:5QJgXo2WHy4AUfoIsqslc65soDOdJege@dpg-cv3b31i3esus73df0ac0-a.oregon-postgres.render.com/lmphotonics_db"
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.environ.get(
+                "DATABASE_URL",
+                "postgresql://lmphotonics_db_user:5QJgXo2WHy4AUfoIsqslc65soDOdJege@dpg-cv3b31i3esus73df0ac0-a.oregon-postgres.render.com/lmphotonics_db"
+            )
         )
-    )
-}
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [

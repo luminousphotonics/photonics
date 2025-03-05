@@ -17,6 +17,7 @@ from django.http import HttpResponse
 from .blog_system import BlogPost
 import mammoth
 from django.contrib.auth.decorators import user_passes_test
+import io
 
 def index(request):
     return render(request, 'main/index.html')
@@ -177,16 +178,16 @@ def create_blog_post(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
-            # Process Word document conversion if uploaded...
             doc_file = form.cleaned_data.get('content_doc')
             if doc_file:
-                style_map = [
-                    "p[style-name='BlueText'] => p[style='color: #0073b1']",
-                ]
-                result = mammoth.convert_to_html(doc_file, style_map=style_map)
+                # Read the entire file into memory as bytes
+                file_bytes = doc_file.read()
+                file_io = io.BytesIO(file_bytes)
+                # Use a style map as a string
+                style_map = "p[style-name='BlueText'] => p[style='color: #0073b1']"
+                result = mammoth.convert_to_html(file_io, style_map=style_map)
                 html = result.value
                 form.instance.content = html
-            # Set the creator to the currently logged in user
             form.instance.created_by = request.user
             form.save()
             return redirect('blog_admin_panel')

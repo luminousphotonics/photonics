@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from .ml_simulation import run_ml_simulation  # Import from ml_simulation.py
 from django.contrib.auth.decorators import login_required
-from .blog_system import BlogPost, Comment, Like, Share  # our model file
+from .blog_system import BlogPost, Like, Share  # our model file
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from .forms import BlogPostForm
@@ -138,24 +138,6 @@ def toggle_like(request):
 
 @require_POST
 @login_required
-def add_comment(request):
-    post_slug = request.POST.get('slug')
-    comment_text = request.POST.get('comment')
-    if not post_slug or not comment_text:
-        return HttpResponseBadRequest("Missing parameters.")
-    
-    post = get_object_or_404(BlogPost, slug=post_slug)
-    comment = Comment.objects.create(post=post, user=request.user, text=comment_text)
-    
-    return JsonResponse({
-        'comment_id': comment.id,
-        'comment_text': comment.text,
-        'username': comment.user.username,
-        'created_at': comment.created_at.strftime("%Y-%m-%d %H:%M")
-    })
-
-@require_POST
-@login_required
 def log_share(request):
     post_slug = request.POST.get('slug')
     platform = request.POST.get('platform')
@@ -178,23 +160,40 @@ def create_blog_post(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
+            instance = form.save(commit=False)
             doc_file = form.cleaned_data.get('content_doc')
             if doc_file:
-                # Read the entire file into memory as bytes
                 file_bytes = doc_file.read()
                 file_io = io.BytesIO(file_bytes)
-                # Use a style map as a string
-                style_map = "p[style-name='BlueText'] => p[style='color: #0073b1']"
+                style_map = """
+p[style-name='BoldBlueTitle'] => p[style='margin: 0 !important; line-height: 1.4 !important;']
+r[style-name='BoldBlueTitle'] => span[style='display: block; color: #0073b1; font-weight: bold; font-size: 26px; margin: 0 !important; line-height: 1.4 !important;']
+
+p[style-name='BoldBlue'] => p[style='color: #0073b1; font-weight: bold; font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 20px; margin-bottom: 5px;']
+r[style-name='BoldBlue'] => span.bold-blue[style='color: #0073b1; font-weight: bold; font-size: 20px;']
+
+p[style-name='TitleText'] => p[style='font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 20px; margin-top: 0px !important;']
+r[style-name='TitleText'] => span.title-text[style='font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 20px;']
+
+p[style-name='SectionText'] => p[style='margin: 0 !important; line-height: 1.4 !important;']
+r[style-name='SectionText'] => span[style='display: block; font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 20px; margin: 0 !important; line-height: 1.4 !important;']
+
+p[style-name='BlueSectionText'] => p[style='color: #0073b1; font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 20px; margin-top: 0px !important;']
+r[style-name='BlueSectionText'] => span.blue-section-text[style='color: #0073b1; font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-size: 20px;']
+
+p[style-name='BoldBlackTitle'] => p[style='font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-weight: bold; font-size: 20px; margin-top: 0px !important;']
+r[style-name='BoldBlackTitle'] => span.bold-black-title[style='font-family: "Avenir Next", "Helvetica Neue", sans-serif; font-weight: bold; font-size: 20px;']
+"""
                 result = mammoth.convert_to_html(file_io, style_map=style_map)
-                html = result.value
-                form.instance.content = html
-            form.instance.created_by = request.user
-            form.save()
+                instance.content = result.value
+                from django.core.files.base import ContentFile
+                instance.content_doc = ContentFile(file_bytes, name=doc_file.name)
+            instance.created_by = request.user
+            instance.save()
             return redirect('blog_admin_panel')
     else:
         form = BlogPostForm()
     return render(request, 'main/blog_create.html', {'form': form})
-
 
 @login_required
 def edit_blog_post(request, slug):
@@ -202,17 +201,21 @@ def edit_blog_post(request, slug):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            doc_file = form.cleaned_data.get('content_doc')
-            if doc_file:
-                style_map = "p[style-name='SubText'] => p[style='color: #0078BE']"
-                result = mammoth.convert_to_html(doc_file, style_map=style_map)
-                html = result.value
-                form.instance.content = html
+            # Only override content if a new file was uploaded.
+            if 'content_doc' in request.FILES:
+                doc_file = form.cleaned_data.get('content_doc')
+                if doc_file:
+                    style_map = "p[style-name='SubText'] => p[style='color: #0078BE']"
+                    result = mammoth.convert_to_html(doc_file, style_map=style_map)
+                    html = result.value
+                    form.instance.content = html
+            # Otherwise, leave the CKEditor content as-is.
             form.save()
             return redirect('blog_admin_panel')
     else:
         form = BlogPostForm(instance=post)
     return render(request, 'main/blog_edit.html', {'form': form, 'post': post})
+
 
 @login_required
 def delete_blog_post(request, slug):

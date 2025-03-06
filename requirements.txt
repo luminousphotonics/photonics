@@ -32,4 +32,6 @@ dj-database-url>=0.5.0
 psycopg>=3.2.5
 mammoth>=1.9.0
 cobble>=0.1.4
-
+django-js-asset>=3.1.2
+django-tinymce>=4.1.0
+django-ckeditor>=6.7.2

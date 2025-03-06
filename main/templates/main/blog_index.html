@@ -7,8 +7,6 @@
         <div class="blog-image-container">
           <img src="{{ post.title_image.url }}" alt="{{ post.title }}">
         </div>
-        <div class="blog-date">{{ post.created_at|date:"M d, Y" }}</div>
-        <div class="blog-title">{{ post.title }}</div>
       </a>
     {% endfor %}
   </div>

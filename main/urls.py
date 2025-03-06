@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from main import views
 from .views import blog_admin_panel
 from django.conf import settings
@@ -22,7 +22,6 @@ urlpatterns = [
     path('blog/upfp/', views.upfp, name='blog/upfp'),
     path('dialux_simulation/', views.dialux_simulation, name='dialux_simulation'),
     path('ajax/toggle-like/', views.toggle_like, name='toggle_like'),
-    path('ajax/add-comment/', views.add_comment, name='add_comment'),
     path('ajax/log-share/', views.log_share, name='log_share'),
     path('blog-admin/', blog_admin_panel, name='blog_admin_panel'),
     path('blog-admin/create/', views.create_blog_post, name='create_blog_post'),
@@ -30,6 +29,7 @@ urlpatterns = [
     path('blog/delete/<slug:slug>/', views.delete_blog_post, name='delete_blog_post'),
     path('blogs/<slug:slug>/', views.blog_detail, name='blog_detail'),
     path('blog/approve/<slug:slug>/', views.approve_blog_post, name='approve_blog_post'),
+    path('tinymce/', include('tinymce.urls')),
 ]
 
 if settings.DEBUG:

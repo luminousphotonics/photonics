@@ -8,6 +8,23 @@ body {
     color: #000000;           /* Black text */
 }
 
+@font-face {
+    font-family: 'Avenir Next';
+    src: url('/static/fonts/AvenirNext-Regular.woff2') format('woff2'),
+         url('/static/fonts/AvenirNext-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Avenir Next';
+    src: url('/static/fonts/AvenirNext-DemiBold.woff2') format('woff2'),
+         url('/static/fonts/AvenirNext-DemiBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
 .learn-more-link {
     text-decoration: none; /* Remove underline */
 }
@@ -746,6 +763,8 @@ button[type="submit"]:hover {
 }
 
 /* LinkedIn-inspired blog post card */
+
+
 .blog-post {
     background-color: #fff;
     border: 1px solid #e1e9ee;
@@ -776,8 +795,9 @@ button[type="submit"]:hover {
 
 .blog-post .post-content {
     font-size: 1em;
-    line-height: 1.6;
+    line-height: 1.2;
 }
+
 
 .blog-post .interaction-bar {
     display: flex;
@@ -800,21 +820,26 @@ button[type="submit"]:hover {
 }
 .blog-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 10px;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on desktop */
+    gap: 20px; /* Space between grid items */
+    max-width: 1300px;
+    margin: 20px auto;
   }
   .blog-box {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    margin-bottom: 30px;
     overflow: hidden;
+    border: 2px solid transparent;
+    text-align: center;
+    box-sizing: border-box; /*  Include padding and border in width */
     transition: box-shadow 0.3s;
   }
+
+  .blog-box img {
+    max-width: 100%;   /* Image will never be wider than container */
+    height: auto;       /* Maintain aspect ratio */
+    display: block;     /* Remove extra space below image */
+    object-fit: contain; /* Ensure entire image is visible */
+}
   
   .blog-box:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
@@ -822,7 +847,7 @@ button[type="submit"]:hover {
   
   .blog-image-container {
     width: 100%;
-    height: 150px; /* Adjust height as needed */
+    height: 250px; /* Adjust height as needed */
     overflow: hidden;
   }
   

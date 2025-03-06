@@ -38,8 +38,46 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'ckeditor',
     'main.apps.MainConfig',
+
 ]
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': [
+            { 'name': 'document', 'items': [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
+            { 'name': 'clipboard', 'items': [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+            { 'name': 'editing', 'items': [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+            '/',
+            { 'name': 'forms', 'items': [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+            { 'name': 'basicstyles', 'items': [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+            { 'name': 'paragraph', 'items': [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 
+                                              'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 
+                                              'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl' ] },
+            { 'name': 'links', 'items': [ 'Link', 'Unlink', 'Anchor' ] },
+            { 'name': 'insert', 'items': [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+            '/',
+            { 'name': 'styles', 'items': [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+            { 'name': 'colors', 'items': [ 'TextColor', 'BGColor' ] },
+            { 'name': 'tools', 'items': [ 'Maximize', 'ShowBlocks' ] },
+            { 'name': 'others', 'items': [ '-' ] },
+            { 'name': 'about', 'items': [ 'About' ] }
+        ],
+        'height': 300,
+        'width': '100%',
+        'font_names': (
+            "Avenir Next/Avenir Next, sans-serif;"
+            "Arial/Arial, Helvetica, sans-serif;"
+            "Times New Roman/Times New Roman, Times, serif;"
+            "Courier New/Courier New, Courier, monospace;"
+            "Verdana/Verdana, Geneva, sans-serif"
+        ),
+    },
+}
+
+
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -137,5 +175,4 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'true'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
-
 

@@ -4,10 +4,48 @@
 
 {% block content %}
   <h1>Edit Blog Post: "{{ post.title }}"</h1>
-  <form method="post" enctype="multipart/form-data">
+  <form id="blog-edit-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save Changes</button>
-  </form>
+  </form>  
+
+  {% if post.content_doc %}
+    <p>
+      <a href="{{ post.content_doc.url }}" download>
+        Download Word Document
+      </a>
+    </p>
+  {% endif %}
   <p><a href="{% url 'blog_admin_panel' %}">Back to Admin Panel</a></p>
 {% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+  <script>
+    (function() {
+      var form = document.getElementById("blog-edit-form");
+      form.addEventListener("submit", function(e) {
+        e.preventDefault();  // Stop the form from submitting immediately
+        console.log("Submit triggered, updating CKEditor instances...");
+        for (var instance in CKEDITOR.instances) {
+          if (CKEDITOR.instances.hasOwnProperty(instance)) {
+            console.log("Before update, instance", instance, "has data:", CKEDITOR.instances[instance].getData());
+            CKEDITOR.instances[instance].updateElement();
+            console.log("After update, hidden textarea value:", document.getElementById(instance).value);
+          }
+        }
+        // Delay the actual submission to ensure updateElement() has completed
+        setTimeout(function() {
+          console.log("Submitting form now...");
+          form.submit();
+        }, 100); // Adjust the delay if needed
+      });
+    })();
+  </script>
+{% endblock %}
+
+
+
+
+

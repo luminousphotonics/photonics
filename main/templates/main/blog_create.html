@@ -1,9 +1,14 @@
 {% extends 'main/base.html' %}
-{% load static %}
-{% block title %}Create Blog Post{% endblock %}
+
 {% block content %}
 <div class="container">
   <h1>Create New Blog Post</h1>
+  <!-- Display form errors if any -->
+  {% if form.errors %}
+    <div class="error">
+      {{ form.errors }}
+    </div>
+  {% endif %}
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}

@@ -16,6 +16,8 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+
 MEDIA_ROOT = Path("/app/media")  # use the mount point provided by Render
 MEDIA_URL = "/media/"
 

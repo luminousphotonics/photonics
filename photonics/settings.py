@@ -166,6 +166,8 @@ STATICFILES_FINDERS = [
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+WHITENOISE_MANIFEST_STRICT = False
+
 WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

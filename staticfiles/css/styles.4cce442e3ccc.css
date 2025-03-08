@@ -10,16 +10,16 @@ body {
 
 @font-face {
     font-family: 'Avenir Next';
-    src: url('/static/fonts/AvenirNext-Regular.woff2') format('woff2'),
-         url('/static/fonts/AvenirNext-Regular.woff') format('woff');
+    src: url("/static/fonts/AvenirNext-Regular.d29838806643.woff2") format('woff2'),
+         url("/static/fonts/AvenirNext-Regular.77ff08ccd136.woff") format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Avenir Next';
-    src: url('/static/fonts/AvenirNext-DemiBold.woff2') format('woff2'),
-         url('/static/fonts/AvenirNext-DemiBold.woff') format('woff');
+    src: url("/static/fonts/AvenirNext-DemiBold.30a18be55420.woff2") format('woff2'),
+         url("/static/fonts/AvenirNext-DemiBold.aa2596125852.woff") format('woff');
     font-weight: bold;
     font-style: normal;
 }
@@ -967,6 +967,8 @@ button[type="submit"]:hover {
   .blog-box:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   }
+  
+
   
   .blog-date,
   .blog-title {

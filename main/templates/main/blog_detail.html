@@ -15,11 +15,20 @@
     {{ post.content|safe }}
   </div>
   <div class="interaction-bar">
-    <button onclick="toggleLike('{{ post.slug }}')">Like (<span id="like-count">{{ post.likes.count }}</span>)</button>
-    <button onclick="logShare('{{ post.slug }}', 'linkedin')">Share on LinkedIn</button>
-    <button onclick="logShare('{{ post.slug }}', 'facebook')">Share on Facebook</button>
-    <button onclick="logShare('{{ post.slug }}', 'x')">Share on X</button>
-  </div>
+    <button class="like-button" onclick="toggleLike('{{ post.slug }}')">
+      <i class="fas fa-thumbs-up"></i>
+      <span id="like-count">{{ post.likes.count }}</span>
+    </button>
+    <button onclick="logShare('{{ post.slug }}', 'linkedin')" class="share-button linkedin">
+      <i class="fab fa-linkedin-in"></i>
+    </button>
+    <button onclick="logShare('{{ post.slug }}', 'facebook')" class="share-button facebook">
+      <i class="fab fa-facebook-f"></i>
+    </button>
+    <button onclick="logShare('{{ post.slug }}', 'x')" class="share-button x">
+      <i class="fab fa-x-twitter"></i>
+    </button>
+  </div>  
 </article>
 {% endblock %}
 

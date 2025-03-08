@@ -10,16 +10,16 @@ body {
 
 @font-face {
     font-family: 'Avenir Next';
-    src: url('/static/fonts/AvenirNext-Regular.woff2') format('woff2'),
-         url('/static/fonts/AvenirNext-Regular.woff') format('woff');
+    src: url("/static/fonts/AvenirNext-Regular.d29838806643.woff2") format('woff2'),
+         url("/static/fonts/AvenirNext-Regular.77ff08ccd136.woff") format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Avenir Next';
-    src: url('/static/fonts/AvenirNext-DemiBold.woff2') format('woff2'),
-         url('/static/fonts/AvenirNext-DemiBold.woff') format('woff');
+    src: url("/static/fonts/AvenirNext-DemiBold.30a18be55420.woff2") format('woff2'),
+         url("/static/fonts/AvenirNext-DemiBold.aa2596125852.woff") format('woff');
     font-weight: bold;
     font-style: normal;
 }
@@ -762,54 +762,6 @@ button[type="submit"]:hover {
     animation: slideIn 0.8s ease forwards;
 }
 
-/* Edit Blog Post Styles */
-.edit-page-container {
-    max-width: 1200px;       /* You can adjust as desired */
-    margin: 0 auto;         /* Centers the container horizontally */
-    padding: 1rem;          /* Some breathing room */
-  }
-.edit-actions-container {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .save-btn {
-    background-color: #0078BE;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    cursor: pointer;
-    font-size: 1em;
-    border-radius: 4px;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .save-btn:hover {
-    background-color: #005b8d;
-  }
-  
-  /* Center the extra links below the form */
-  .edit-extra-container {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .edit-extra-container p {
-    margin: 8px 0;
-  }
-  
-  .edit-extra-container a {
-    color: #0078BE;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  .edit-extra-container a:hover {
-    text-decoration: underline;
-  }
-  
-  
-
 /* LinkedIn-inspired blog post card */
 
 
@@ -850,6 +802,33 @@ button[type="submit"]:hover {
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     unicode-bidi: isolate;
+}
+
+.blog-post .interaction-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    border-top: 1px solid #e1e9ee;
+    padding-top: 10px;
+    margin-top: 15px;
+}
+
+.blog-post .interaction-bar button {
+    background-color: #333;
+    color: #eee;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.blog-post .interaction-bar button:hover {
+    background-color: #0078BE;
 }
 
 /* Optional: Increase icon size if desired */
@@ -966,6 +945,19 @@ button[type="submit"]:hover {
   
   .blog-box:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  .blog-image-container {
+    width: 100%;
+    height: 250px; /* Adjust height as needed */
+    overflow: hidden;
+  }
+  
+  .blog-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Crop the image to fill the container */
+    display: block;
   }
   
   .blog-date,

@@ -10,16 +10,16 @@ body {
 
 @font-face {
     font-family: 'Avenir Next';
-    src: url('/static/fonts/AvenirNext-Regular.woff2') format('woff2'),
-         url('/static/fonts/AvenirNext-Regular.woff') format('woff');
+    src: url("/static/fonts/AvenirNext-Regular.d29838806643.woff2") format('woff2'),
+         url("/static/fonts/AvenirNext-Regular.77ff08ccd136.woff") format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Avenir Next';
-    src: url('/static/fonts/AvenirNext-DemiBold.woff2') format('woff2'),
-         url('/static/fonts/AvenirNext-DemiBold.woff') format('woff');
+    src: url("/static/fonts/AvenirNext-DemiBold.30a18be55420.woff2") format('woff2'),
+         url("/static/fonts/AvenirNext-DemiBold.aa2596125852.woff") format('woff');
     font-weight: bold;
     font-style: normal;
 }
@@ -763,14 +763,11 @@ button[type="submit"]:hover {
 }
 
 /* Edit Blog Post Styles */
-.edit-page-container {
-    max-width: 1200px;       /* You can adjust as desired */
-    margin: 0 auto;         /* Centers the container horizontally */
-    padding: 1rem;          /* Some breathing room */
-  }
+/* Container for the Save Changes button */
+/* Center the “Save Changes” button */
 .edit-actions-container {
-    margin-top: 20px;
     text-align: center;
+    margin-top: 20px;
   }
   
   .save-btn {
@@ -788,7 +785,7 @@ button[type="submit"]:hover {
     background-color: #005b8d;
   }
   
-  /* Center the extra links below the form */
+  /* Center and space out the extra links below the form */
   .edit-extra-container {
     margin-top: 20px;
     text-align: center;
@@ -966,6 +963,19 @@ button[type="submit"]:hover {
   
   .blog-box:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  .blog-image-container {
+    width: 100%;
+    height: 250px; /* Adjust height as needed */
+    overflow: hidden;
+  }
+  
+  .blog-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Crop the image to fill the container */
+    display: block;
   }
   
   .blog-date,

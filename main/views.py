@@ -236,17 +236,17 @@ def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
     return render(request, 'main/blog_detail.html', {'post': post})
 
-def is_austin(user):
-    return user.username == 'austin22'
+def is_approver(user):
+    return user.username in ['austin22', 'amrouse123']
 
-@user_passes_test(is_austin)
+@user_passes_test(is_approver)
 def approve_blog_post(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
     # Only allow approval if not already approved.
     if not post.approved:
         post.approved = True
         post.save()
-        # Send notification email to the creator (assumed to be 'amrouse123')
+        # Send notification email to the creator.
         send_mail(
             "Your Blog Post Has Been Approved",
             f"Hello, your blog post titled '{post.title}' has been approved and is now live on the website.",
@@ -255,3 +255,4 @@ def approve_blog_post(request, slug):
             fail_silently=False,
         )
     return redirect('blog_admin_panel')
+

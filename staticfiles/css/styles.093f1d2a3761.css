@@ -10,16 +10,16 @@ body {
 
 @font-face {
     font-family: 'Avenir Next';
-    src: url('/static/fonts/AvenirNext-Regular.woff2') format('woff2'),
-         url('/static/fonts/AvenirNext-Regular.woff') format('woff');
+    src: url("/static/fonts/AvenirNext-Regular.d29838806643.woff2") format('woff2'),
+         url("/static/fonts/AvenirNext-Regular.77ff08ccd136.woff") format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Avenir Next';
-    src: url('/static/fonts/AvenirNext-DemiBold.woff2') format('woff2'),
-         url('/static/fonts/AvenirNext-DemiBold.woff') format('woff');
+    src: url("/static/fonts/AvenirNext-DemiBold.30a18be55420.woff2") format('woff2'),
+         url("/static/fonts/AvenirNext-DemiBold.aa2596125852.woff") format('woff');
     font-weight: bold;
     font-style: normal;
 }
@@ -822,23 +822,6 @@ button[type="submit"]:hover {
     unicode-bidi: isolate;    
 }
 
-.post-content ol {
-    display: block;
-    margin-block-start: 0em;
-    margin-block-end: 0em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    unicode-bidi: isolate;    
-}
-
-.post-content div {
-    display: block;
-    margin-block-start: 0em;
-    margin-block-end: 0em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    unicode-bidi: isolate;      
-}
 
 .blog-post .interaction-bar {
     display: flex;

@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field  # Updated import
 
 User = get_user_model()
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
-    content = RichTextField(blank=True, null=True)  # Changed here
+    # Updated field: using CKEditor5Field with our default config
+    content = CKEditor5Field('Content', config_name='default', blank=True, null=True)
     title_image = models.ImageField(upload_to='blog_images/')
     content_doc = models.FileField(upload_to='blog_docs/', blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blog_posts")

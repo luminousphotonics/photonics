@@ -23,29 +23,17 @@
 {% block extra_js %}
   {{ form.media }}
   <script>
-    (function() {
-      var form = document.getElementById("blog-edit-form");
-      form.addEventListener("submit", function(e) {
-        e.preventDefault();  // Stop the form from submitting immediately
-        console.log("Submit triggered, updating CKEditor instances...");
-        for (var instance in CKEDITOR.instances) {
-          if (CKEDITOR.instances.hasOwnProperty(instance)) {
-            console.log("Before update, instance", instance, "has data:", CKEDITOR.instances[instance].getData());
-            CKEDITOR.instances[instance].updateElement();
-            console.log("After update, hidden textarea value:", document.getElementById(instance).value);
-          }
-        }
-        // Delay the actual submission to ensure updateElement() has completed
-        setTimeout(function() {
-          console.log("Submitting form now...");
-          form.submit();
-        }, 100); // Adjust the delay if needed
-      });
-    })();
+    document.addEventListener("DOMContentLoaded", function() {
+      if (window.ClassicEditor) {
+        ClassicEditor
+          .create(document.querySelector('#id_content'))
+          .catch(error => {
+            console.error("Error initializing CKEditor 5:", error);
+          });
+      } else {
+        console.error("ClassicEditor is not available.");
+      }
+    });
   </script>
 {% endblock %}
-
-
-
-
 

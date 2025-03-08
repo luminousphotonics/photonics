@@ -29,7 +29,7 @@ urlpatterns = [
     path('blog/delete/<slug:slug>/', views.delete_blog_post, name='delete_blog_post'),
     path('blogs/<slug:slug>/', views.blog_detail, name='blog_detail'),
     path('blog/approve/<slug:slug>/', views.approve_blog_post, name='approve_blog_post'),
-    path('tinymce/', include('tinymce.urls')),
+    path('ckeditor/', include('django_ckeditor_5.urls')),
 ]
 
 if settings.DEBUG:

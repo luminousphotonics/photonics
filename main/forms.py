@@ -1,8 +1,7 @@
 # myapp/forms.py
 from django import forms
 from .blog_system import BlogPost
-from tinymce.widgets import TinyMCE
-from ckeditor.widgets import CKEditorWidget
+from django_ckeditor_5.widgets import CKEditor5Widget
 
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Your Name'}))
@@ -20,5 +19,5 @@ class BlogPostForm(forms.ModelForm):
         model = BlogPost
         fields = ['title', 'slug', 'content', 'title_image', 'content_doc']
         widgets = {
-            'content': CKEditorWidget(),
+            'content': CKEditor5Widget(config_name='default'),
         }

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ModularVisualization from "../components/ModularVisualization";
+import { SimulationData } from "../types";
 
 interface SseMessageData {
   message: string;
@@ -9,16 +10,6 @@ interface FormDataState {
   floor_width: string;
   floor_length: string;
   target_ppfd: string;
-}
-
-interface SimulationResult {
-  optimized_lumens_by_layer: number[];
-  mad: number;
-  optimized_ppfd: number;
-  floor_width: number;
-  floor_length: number;
-  floor_height: number;
-  target_ppfd: number;
 }
 
 const SimulationForm: React.FC = () => {
@@ -32,7 +23,7 @@ const SimulationForm: React.FC = () => {
   // SSE and simulation state
   const [progress, setProgress] = useState<number>(0);
   const [logMessages, setLogMessages] = useState<string[]>([]);
-  const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
+  const [simulationResult, setSimulationResult] = useState<SimulationData | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const logOutputRef = useRef<HTMLDivElement>(null);
 
@@ -74,7 +65,7 @@ const SimulationForm: React.FC = () => {
       if (message.startsWith("RESULT:")) {
         try {
           const jsonStr = message.replace("RESULT:", "");
-          const result: SimulationResult = JSON.parse(jsonStr);
+          const result: SimulationData = JSON.parse(jsonStr);
           setSimulationResult(result);
           setLogMessages((prev) => [...prev, "[INFO] Simulation complete!"]);
         } catch (err) {
@@ -96,7 +87,7 @@ const SimulationForm: React.FC = () => {
         if (!isNaN(pct)) {
           setProgress(pct);
         }
-        // Optionally, you can also log the progress update.
+        // Optionally log the progress update.
         setLogMessages((prev) => [...prev, `[INFO] ${pct}% complete`]);
       } else {
         // Otherwise, simply append the message to the log.
@@ -197,7 +188,7 @@ const SimulationForm: React.FC = () => {
           <ul>
             {simulationResult.optimized_lumens_by_layer.map((lumens, i) => (
               <li key={i}>
-                Layer {i + 1}: {lumens.toFixed(2)} lumens
+                {i === 0 ? "Center COB" : `Layer ${i + 1}`}: {lumens.toFixed(2)} lumens
               </li>
             ))}
           </ul>
@@ -211,6 +202,12 @@ const SimulationForm: React.FC = () => {
               optimizedLumensByLayer={simulationResult.optimized_lumens_by_layer}
               simulationResult={simulationResult}
             />
+          </div>
+          <div>
+            <h2>Surface Graph</h2>
+            <img src={`data:image/png;base64,${simulationResult.surface_graph}`} alt="Surface Graph" style={{ maxWidth: "100%" }} />
+            <h2>Heatmap</h2>
+            <img src={`data:image/png;base64,${simulationResult.heatmap}`} alt="Heatmap" style={{ maxWidth: "100%" }} />
           </div>
         </div>
       )}

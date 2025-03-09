@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
 Lighting Optimization Script (ml_simulation.py)
-Replicates the Original Lighting Simulation (Diamond Layout, 6 Layers + Corner COBs),
-Uses Patch-Based Radiosity & a 2cm Floor Grid.
-Now includes progress callback support for live updates.
+Now supports dynamic COB positioning and layer‐specific luminous flux parameters.
 """
 
 import math
@@ -12,31 +10,18 @@ from scipy.optimize import minimize
 import sys
 from numba import njit
 from functools import lru_cache
+import io
+import base64
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.tri as mtri
+from mpl_toolkits.mplot3d import Axes3D  # just for side-effects
+
 
 # ------------------------------
 # Configuration & Constants
 # ------------------------------
-
-# Diamond pattern: 6 sets of coordinates (plus an extra "layer 0" that we skip)
-layers_coords = [
-    [(0, 0)],  # Center layer (skipped later)
-    [(-1, 0), (1, 0), (0, -1), (0, 1)],
-    [(-1, -1), (1, -1), (-1, 1), (1, 1),
-     (-2, 0), (2, 0), (0, -2), (0, 2)],
-    [(-2, -1), (2, -1), (-2, 1), (2, 1),
-     (-1, -2), (1, -2), (-1, 2), (1, 2),
-     (-3, 0), (3, 0), (0, -3), (0, 3)],
-    [(-2, -2), (2, -2), (-2, 2), (2, 2),
-     (-3, -1), (3, -1), (-3, 1), (3, 1),
-     (-1, -3), (1, -3), (-1, 3), (1, 3),
-     (-4, 0), (4, 0), (0, -4), (0, 4)],
-    [(-3, -2), (3, -2), (-3, 2), (3, 2),
-     (-2, -3), (2, -3), (-2, 3), (2, 3),
-     (-4, -1), (4, -1), (-4, 1), (4, 1),
-     (-1, -4), (1, -4), (-1, 4), (1, 4),
-     (-5, 0), (5, 0), (0, -5), (0, 5)]
-]
-corner_idx = [57, 58, 59, 60]  # Indices of the 4 corner COBs in the final array
 
 REFL_WALL = 0.08
 REFL_CEIL = 0.1
@@ -51,7 +36,7 @@ WALL_SUBDIVS_Y = 5
 CEIL_SUBDIVS_X = 10
 CEIL_SUBDIVS_Y = 10
 
-# Coarser floor grid resolution (increased from 0.02 to 0.05 meters)
+# Coarser floor grid resolution (meters)
 FLOOR_GRID_RES = 0.05
 
 MIN_LUMENS = 2000.0
@@ -87,33 +72,72 @@ def compute_conversion_factor(spd_file):
 CONVERSION_FACTOR = compute_conversion_factor(SPD_FILE)
 
 # ------------------------------
-# Geometry & COB Intensity Functions
+# Dynamic COB Positioning Functions
 # ------------------------------
 def build_cob_positions(W, L, H):
-    light_positions = []
-    center = (W/2, L/2)
-    light_positions.append((center[0], center[1], H))
-    for i, layer in enumerate(layers_coords):
-        if i == 0:
-            continue
-        for (dx, dy) in layer:
-            theta = math.radians(45)
-            rx = dx * math.cos(theta) - dy * math.sin(theta)
-            ry = dx * math.sin(theta) + dy * math.cos(theta)
-            px = center[0] + rx * (W / 7.2)
-            py = center[1] + ry * (W / 7.2)
-            light_positions.append((px, py, H))
-    return np.array(light_positions, dtype=np.float64)
+    """
+    Generate COB positions dynamically based on floor dimensions.
+    W, L: floor width and length in meters.
+    H: COB plane height in meters.
+    
+    First, compute n = max(1, floor(floor_width_ft/2) - 1),
+    where floor_width_ft = W in feet.
+    Then, for each layer i from 0 to n:
+      - layer 0 (center): count = 1
+      - for i >= 1, count = 4*i (all integer (x,y) with |x|+|y|=i)
+    Rotate the grid by 45° and scale so that the outer COBs nearly reach the floor edge.
+    
+    Returns an array of shape (num_COBs, 4) with columns [x, y, H, layer].
+    """
+    ft2m = 3.28084
+    floor_width_ft = W * ft2m
+    n = max(1, int(floor_width_ft / 2) - 1)
+    
+    positions = []
+    # Center (layer 0)
+    positions.append((0, 0, H, 0))
+    
+    for i in range(1, n+1):
+        for x in range(-i, i+1):
+            y_abs = i - abs(x)
+            if y_abs == 0:
+                positions.append((x, 0, H, i))
+            else:
+                positions.append((x, y_abs, H, i))
+                positions.append((x, -y_abs, H, i))
+    
+    # Rotate by 45°.
+    theta = math.radians(45)
+    cos_t = math.cos(theta)
+    sin_t = math.sin(theta)
+    # Scale: outermost point (n,0) rotates to (n/√2, n/√2); want its distance = ~95% of half the floor width.
+    desired_max = (W / 2) * 0.95
+    scale = (desired_max * math.sqrt(2)) / n
+    centerX = W / 2
+    centerY = L / 2
+    transformed = []
+    for (x, y, h, layer) in positions:
+        rx = x * cos_t - y * sin_t
+        ry = x * sin_t + y * cos_t
+        px = centerX + rx * scale
+        py = centerY + ry * scale
+        transformed.append((px, py, h, layer))
+    return np.array(transformed, dtype=np.float64)
 
-def pack_luminous_flux(params):
-    LAYER_COUNTS = [1, 4, 8, 12, 16, 20]
-    layers_vals = params[0:6]
-    common_corner = params[6]
+def pack_luminous_flux_dynamic(params, cob_positions):
+    """
+    Given optimization parameters (one per layer) and the COB positions array (with column 3 as layer),
+    assign each COB the intensity corresponding to its layer.
+    If a COB's layer index exceeds the parameter array length, use the last parameter.
+    """
     led_intensities = []
-    for val, count in zip(layers_vals, LAYER_COUNTS):
-        led_intensities.extend([val] * count)
-    for c_idx in corner_idx:
-        led_intensities[c_idx] = common_corner
+    for pos in cob_positions:
+        layer = int(pos[3])
+        if layer < len(params):
+            intensity = params[layer]
+        else:
+            intensity = params[-1]
+        led_intensities.append(intensity)
     return np.array(led_intensities, dtype=np.float64)
 
 # ------------------------------
@@ -164,16 +188,15 @@ def compute_direct_floor(light_positions, light_fluxes, X, Y):
 # ------------------------------
 @lru_cache(maxsize=32)
 def cached_build_patches(W: float, L: float, H: float):
+    # (As before – unchanged.)
     patch_centers = []
     patch_areas = []
     patch_normals = []
     patch_refl = []
-
     patch_centers.append((W/2, L/2, 0.0))
     patch_areas.append(W * L)
     patch_normals.append((0.0, 0.0, 1.0))
     patch_refl.append(REFL_FLOOR)
-
     dx_c = W / CEIL_SUBDIVS_X
     dy_c = L / CEIL_SUBDIVS_Y
     for i in range(CEIL_SUBDIVS_X):
@@ -184,7 +207,6 @@ def cached_build_patches(W: float, L: float, H: float):
             patch_areas.append(dx_c * dy_c)
             patch_normals.append((0.0, 0.0, -1.0))
             patch_refl.append(REFL_CEIL)
-
     dx = W / WALL_SUBDIVS_X
     dz = H / WALL_SUBDIVS_Y
     for ix in range(WALL_SUBDIVS_X):
@@ -205,7 +227,6 @@ def cached_build_patches(W: float, L: float, H: float):
             patch_areas.append(dx * dz)
             patch_normals.append((0.0, 1.0, 0.0))
             patch_refl.append(REFL_WALL)
-
     dy = L / WALL_SUBDIVS_X
     for iy in range(WALL_SUBDIVS_X):
         for iz in range(WALL_SUBDIVS_Y):
@@ -225,7 +246,6 @@ def cached_build_patches(W: float, L: float, H: float):
             patch_areas.append(dy * dz)
             patch_normals.append((1.0, 0.0, 0.0))
             patch_refl.append(REFL_WALL)
-
     return (np.array(patch_centers, dtype=np.float64),
             np.array(patch_areas, dtype=np.float64),
             np.array(patch_normals, dtype=np.float64),
@@ -243,7 +263,7 @@ def compute_patch_direct(light_positions, light_fluxes, patch_centers, patch_nor
         norm_n = math.sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2])
         accum = 0.0
         for j in range(light_positions.shape[0]):
-            lx, ly, lz = light_positions[j]
+            lx, ly, lz = light_positions[j, :3]
             dx = pc[0] - lx
             dy = pc[1] - ly
             dz = pc[2] - lz
@@ -262,6 +282,7 @@ def compute_patch_direct(light_positions, light_fluxes, patch_centers, patch_nor
             accum += E_led*cos_in_patch
         out[ip] = accum
     return out
+
 
 @njit
 def iterative_radiosity_loop(patch_centers, patch_normals, patch_direct, patch_areas, patch_refl, num_bounces):
@@ -342,8 +363,8 @@ def compute_reflection_on_floor(X, Y, patch_centers, patch_normals, patch_areas,
 # ------------------------------
 def simulate_lighting(params, W, L, H):
     cob_positions = build_cob_positions(W, L, H)
-    lumens_arr = pack_luminous_flux(params)
-    power_arr = lumens_arr / LUMINOUS_EFFICACY
+    led_intensities = pack_luminous_flux_dynamic(params, cob_positions)
+    power_arr = led_intensities / LUMINOUS_EFFICACY
     X, Y = build_floor_grid(W, L)
     direct_irr = compute_direct_floor(cob_positions, power_arr, X, Y)
     patch_centers, patch_areas, patch_normals, patch_refl = build_patches(W, L, H)
@@ -362,9 +383,12 @@ def objective_function(params, W, L, H, target_ppfd):
     return mad + 2.0 * ppfd_penalty
 
 def optimize_lighting(W, L, H, target_ppfd, progress_callback=None):
-    x0 = np.array([8000, 8000, 8000, 8000, 8000, 8000, 18000], dtype=np.float64)
-    bounds = [(MIN_LUMENS, MAX_LUMENS_MAIN)] * 6 + [(MIN_LUMENS, MAX_LUMENS_CORNER)]
-    total_iterations_estimate = 500  # Reduced max iterations for speed.
+    cob_positions = build_cob_positions(W, L, H)
+    n = int(np.max(cob_positions[:, 3]))  # maximum layer index
+    # x0: one value per layer; use 8000 for inner layers and 18000 for the outermost.
+    x0 = np.array([8000] * n + [18000], dtype=np.float64)
+    bounds = [(MIN_LUMENS, MAX_LUMENS_MAIN)] * n + [(MIN_LUMENS, MAX_LUMENS_CORNER)]
+    total_iterations_estimate = 500
     iteration = 0
 
     def wrapped_obj(p):
@@ -382,7 +406,6 @@ def optimize_lighting(W, L, H, target_ppfd, progress_callback=None):
 
     if progress_callback:
         progress_callback("[INFO] Starting SLSQP optimization...")
-
     res = minimize(
         wrapped_obj, x0, method='SLSQP', bounds=bounds,
         options={'maxiter': total_iterations_estimate, 'disp': True}
@@ -392,6 +415,84 @@ def optimize_lighting(W, L, H, target_ppfd, progress_callback=None):
     return res.x
 
 
+# --- New functions to generate graphs ---
+
+def generate_surface_graph(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, cmap="jet") -> str:
+    """
+    Generates a 3D surface plot where each grid point's PPFD is its height above z=0.
+    We 'shift' the entire dataset so that the global min PPFD becomes z=0.
+    
+    X, Y, Z must be the same shape (rows x cols).
+    Returns a base64-encoded PNG string.
+    """
+    # Shift so the minimum PPFD is at z=0
+    z_min = np.min(Z)
+    Z_shifted = Z - z_min
+    # Ensure no negative values after shifting
+    Z_shifted[Z_shifted < 0] = 0
+
+    fig = plt.figure(figsize=(8,6))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Create the surface. Each point in X, Y has a height Z_shifted[r,c].
+    surf = ax.plot_surface(X, Y, Z_shifted, cmap=cmap, edgecolor='none')
+
+    ax.set_xlabel("X (m)")
+    ax.set_ylabel("Y (m)")
+    ax.set_zlabel("PPFD (µmol/m²/s)")
+    ax.set_title("Light Intensity Surface Graph")
+
+    # The highest point is now (max(Z) - min(Z)) above zero.
+    ax.set_zlim(0, np.max(Z_shifted))
+
+    # Add color bar
+    fig.colorbar(surf, fraction=0.032, pad=0.04)
+
+    # Save figure to in-memory buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    plt.close(fig)
+    buf.seek(0)
+    return base64.b64encode(buf.read()).decode('utf-8')
+
+
+def generate_heatmap(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, cmap="jet") -> str:
+    """
+    2D heatmap with edges pinned to zero.
+    Returns base64-encoded PNG string.
+    """
+    Z_copy = Z.copy()
+    Z_copy[0, :] = 0
+    Z_copy[-1, :] = 0
+    Z_copy[:, 0] = 0
+    Z_copy[:, -1] = 0
+
+    fig, ax = plt.subplots(figsize=(8,6))
+    extent = [X.min(), X.max(), Y.min(), Y.max()]
+
+    # Calculate a suitable colorbar maximum (20% above the max intensity)
+    colorbar_max = Z.max() * 1.2
+
+    # Use vmin and vmax to control the color scaling
+    im = ax.imshow(Z_copy, cmap=cmap, extent=extent, origin="lower", aspect="auto", vmin=0, vmax=colorbar_max)
+
+    ax.set_xlabel("X (m)")
+    ax.set_ylabel("Y (m)")
+    ax.set_title("Light Intensity Heatmap")
+
+    # Create the colorbar and set its limits and ticks
+    cbar = fig.colorbar(im, ax=ax)
+    cbar.set_ticks(np.linspace(0, colorbar_max, num=6))  # 6 ticks
+    cbar.set_ticklabels([f"{int(x)}" for x in np.linspace(0, colorbar_max, num=6)]) # Integer labels
+
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    plt.close(fig)
+    buf.seek(0)
+    return base64.b64encode(buf.read()).decode('utf-8')
+
+# --- Updated run_ml_simulation to include graph images ---
 def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_callback=None):
     ft2m = 3.28084
     W_m = floor_width_ft / ft2m
@@ -401,19 +502,27 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_cal
     final_ppfd = simulate_lighting(best_params, W_m, L_m, H_m)
     mean_ppfd = np.mean(final_ppfd)
     mad = np.mean(np.abs(final_ppfd - mean_ppfd))
+    
+    # Generate surface graph and heatmap based on the floor grid.
+    X, Y = build_floor_grid(W_m, L_m)  # same shape as final_ppfd
+    surface_graph_b64 = generate_surface_graph(X, Y, final_ppfd, cmap="jet")
+    heatmap_b64 = generate_heatmap(X, Y, final_ppfd, cmap="jet")
+    
     if progress_callback:
         progress_callback("PROGRESS:100")
         progress_callback("[INFO] Simulation complete!")
+
     return {
-        "optimized_lumens_by_layer": best_params[0:6].tolist(),
+        "optimized_lumens_by_layer": best_params.tolist(),
         "mad": float(mad),
         "optimized_ppfd": float(mean_ppfd),
         "floor_width": floor_width_ft,
         "floor_length": floor_length_ft,
         "target_ppfd": target_ppfd,
-        "floor_height": 3.0
+        "floor_height": 3.0,
+        "surface_graph": surface_graph_b64,
+        "heatmap": heatmap_b64
     }
-
 
 
 # ------------------------------
@@ -425,7 +534,6 @@ def run_simulation(floor_width_ft=14.0, floor_length_ft=14.0, target_ppfd=1250.0
     print(result)
 
 def main():
-    # Run with default parameters when executed as a standalone script
     run_simulation()
 
 if __name__ == "__main__":

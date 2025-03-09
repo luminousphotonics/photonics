@@ -6,6 +6,7 @@ services:
     startCommand: "gunicorn photonics.wsgi:application"
     static: true # This tells Render to serve static files
     staticPath: ./staticfiles # This is the path to your STATIC_ROOT
+    timeoutSeconds: 300  # Added timeout setting (5 minutes)
     envVars:
       - key: SECRET_KEY
         fromDatabase: # If using a Render PostgreSQL database

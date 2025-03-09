@@ -1,35 +1,93 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simulation</title>
+    <title>Lighting Simulation Progress</title>
     {% load static %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
-        /* You can add CSS styles here, or in a separate CSS file */
+        /* Overall page styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .simul-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        /* Progress bar styling */
+        .progress-container {
+            margin: 20px 0;
+        }
+        .progress-bar {
+            width: 100%;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 20px;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            width: 0;
+            background: #28a745;
+            transition: width 0.5s ease;
+        }
+        #progressText {
+            text-align: center;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        /* Log output styling */
+        .log-output {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            height: 200px;
+            overflow-y: scroll;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
         .error-message {
             color: red;
+            text-align: center;
         }
-        /* Other styles for your components */
-        .simulation-form-container {
-            /* Example styles */
-            padding: 20px;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
+        /* Button styling */
+        #startSimulationBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
         }
-
-        .modular-visualization-container {
-            /* Example styles */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        #startSimulationBtn:hover {
+            background: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div id="root"></div> 
+    <div class="simul-container">
+        <!-- React app mount point -->
+        <div id="root"></div>
+        {% csrf_token %}
+    </div>
 
-    {% csrf_token %}
     <script>
         function getCookie(name) {
             let cookieValue = null;
@@ -45,11 +103,46 @@
             }
             return cookieValue;
         }
-
         const csrftoken = getCookie('csrftoken');
+
+        document.getElementById('startSimulationBtn').addEventListener('click', function() {
+            // Optionally, collect simulation parameters from form fields or URL parameters.
+            // For example, here we simply use defaults.
+            const params = new URLSearchParams({
+                start: "1",
+                floor_width: "14.0",
+                floor_length: "14.0",
+                target_ppfd: "1250.0"
+            });
+            if (!!window.EventSource) {
+                const source = new EventSource('/api/ml_simulation/progress/?' + params.toString());
+                source.onmessage = function(event) {
+                    const data = JSON.parse(event.data);
+                    // Update progress bar if data contains progress percentage.
+                    if (data.progress !== undefined) {
+                        document.getElementById('progressBar').style.width = data.progress + '%';
+                        document.getElementById('progressText').innerText = data.progress + '%';
+                    }
+                    // Append log message.
+                    if (data.message) {
+                        const logOutput = document.getElementById('logOutput');
+                        const newLog = document.createElement('div');
+                        newLog.textContent = data.message;
+                        logOutput.appendChild(newLog);
+                        // Auto-scroll to bottom.
+                        logOutput.scrollTop = logOutput.scrollHeight;
+                    }
+                };
+                source.onerror = function(err) {
+                    console.error("EventSource failed:", err);
+                };
+            } else {
+                console.warn("Your browser does not support Server-Sent Events.");
+            }
+        });
     </script>
 
-    <script src="{% static 'js/main.dfb5bd1f.js' %}"></script> 
-{% include 'main/footer.html' %}
+    <script src="{% static 'js/main.2a5fed40.js' %}"></script>
+    {% include 'main/footer.html' %}
 </body>
 </html>

@@ -390,58 +390,52 @@ def objective_function(params, W, L, H, target_ppfd):
     obj = mad + 2.0 * ppfd_penalty
     return obj
 
-def optimize_lighting(W, L, H, target_ppfd):
-    """
-    Optimize 7 parameters:
-      - 6 main layer intensities (bounds: [MIN_LUMENS, MAX_LUMENS_MAIN])
-      - 1 common corner intensity (bounds: [MIN_LUMENS, MAX_LUMENS_CORNER])
-    """
+def optimize_lighting(W, L, H, target_ppfd, progress_callback=None):
     x0 = np.array([8000, 8000, 8000, 8000, 8000, 8000, 18000], dtype=np.float64)
     bounds = [(MIN_LUMENS, MAX_LUMENS_MAIN)] * 6 + [(MIN_LUMENS, MAX_LUMENS_CORNER)]
+    total_iterations_estimate = 1000  # Use an estimated maximum, if possible.
+    iteration = 0
 
     def wrapped_obj(p):
+        nonlocal iteration
+        iteration += 1
         val = objective_function(p, W, L, H, target_ppfd)
-        floor_ppfd = simulate_lighting(p, W, L, H)
-        mp = np.mean(floor_ppfd)
-        print(f"[DEBUG] param={p}, mean_ppfd={mp:.1f}, obj={val:.3f}")
+        mp = np.mean(simulate_lighting(p, W, L, H))
+        msg = f"[DEBUG] param={p}, mean_ppfd={mp:.1f}, obj={val:.3f}"
+        if progress_callback:
+            # Calculate progress percentage based on iteration count.
+            progress_pct = min(100, (iteration / total_iterations_estimate) * 100)
+            progress_callback(f"PROGRESS:{progress_pct}")
+            progress_callback(msg)
         return val
 
-    print("[INFO] Starting SLSQP optimization...")
+    if progress_callback:
+        progress_callback("[INFO] Starting SLSQP optimization...")
+
     res = minimize(
         wrapped_obj, x0, method='SLSQP', bounds=bounds,
-        options={'maxiter': 1000, 'disp': True}
+        options={'maxiter': total_iterations_estimate, 'disp': True}
     )
-    if not res.success:
-        print(f"[WARN] Optimization did not converge: {res.message}", file=sys.stderr)
+    if not res.success and progress_callback:
+        progress_callback(f"[WARN] Optimization did not converge: {res.message}")
     return res.x
 
-# ------------------------------
-# New API Integration Function
-# ------------------------------
-def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd):
-    """
-    Runs the lighting simulation given:
-      - floor_width_ft: Floor width in feet
-      - floor_length_ft: Floor length in feet
-      - target_ppfd: Desired PPFD (µmol/m²/s)
-      
-    Returns a JSON-serializable dictionary with:
-      - optimized_lumens_by_layer (for the 6 main layers)
-      - mad (mean absolute deviation)
-      - optimized_ppfd (mean PPFD on the floor)
-      - floor dimensions and target_ppfd (for reference)
-      - floor_height (constant, as per simulation)
-    """
-    # Convert from feet to meters
+
+def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_callback=None):
     ft2m = 3.28084
     W_m = floor_width_ft / ft2m
     L_m = floor_length_ft / ft2m
-    H_m = 3.0 / ft2m  # LED height constant (~0.9144 m)
+    H_m = 3.0 / ft2m
 
-    best_params = optimize_lighting(W_m, L_m, H_m, target_ppfd)
+    best_params = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback)
     final_ppfd = simulate_lighting(best_params, W_m, L_m, H_m)
     mean_ppfd = np.mean(final_ppfd)
     mad = np.mean(np.abs(final_ppfd - mean_ppfd))
+
+    if progress_callback:
+        # Ensure the progress bar shows 100% at the end.
+        progress_callback("PROGRESS:100")
+        progress_callback("[INFO] Simulation complete!")
 
     return {
         "optimized_lumens_by_layer": best_params[0:6].tolist(),
@@ -450,8 +444,10 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd):
         "floor_width": floor_width_ft,
         "floor_length": floor_length_ft,
         "target_ppfd": target_ppfd,
-        "floor_height": 3.0  # Constant LED height in feet
+        "floor_height": 3.0
     }
+
+
 
 # ------------------------------
 # Standalone Execution

@@ -1,222 +1,217 @@
-import React, { useState } from "react";
-import { SimulationData } from "../types";
+import React, { useState, useRef, useEffect } from "react";
 import ModularVisualization from "../components/ModularVisualization";
 
-export const triggerSimulation = async (
-  payload: { floor_width: number; floor_length: number; target_ppfd: number },
-  csrftoken: string
-) => {
-  const response = await fetch("/api/ml_simulation/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrftoken,
-    },
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.detail || "Failed to run simulation");
-  }
-  const data = await response.json();
-  return data as SimulationData;
-};
-
-interface SimulationFormProps {
-  onSimulationComplete: (data: SimulationData) => void;
+interface SseMessageData {
+  message: string;
 }
 
-const SimulationForm: React.FC<SimulationFormProps> = ({ onSimulationComplete }) => {
-  const [formData, setFormData] = useState({
-    floor_width: "",
-    floor_length: "",
-    target_ppfd: "",
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [simulationResult, setSimulationResult] = useState<SimulationData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+interface FormDataState {
+  floor_width: string;
+  floor_length: string;
+  target_ppfd: string;
+}
 
+interface SimulationResult {
+  optimized_lumens_by_layer: number[];
+  mad: number;
+  optimized_ppfd: number;
+  floor_width: number;
+  floor_length: number;
+  floor_height: number;
+  target_ppfd: number;
+}
+
+const SimulationForm: React.FC = () => {
+  // Form state
+  const [formData, setFormData] = useState<FormDataState>({
+    floor_width: "12",
+    floor_length: "12",
+    target_ppfd: "1250",
+  });
+
+  // SSE and simulation state
+  const [progress, setProgress] = useState<number>(0);
+  const [logMessages, setLogMessages] = useState<string[]>([]);
+  const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
+  const eventSourceRef = useRef<EventSource | null>(null);
+  const logOutputRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll log output when messages update.
+  useEffect(() => {
+    if (logOutputRef.current) {
+      logOutputRef.current.scrollTop = logOutputRef.current.scrollHeight;
+    }
+  }, [logMessages]);
+
+  // Handle form changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const runSimulation = async (
-    payload: { floor_width: number; floor_length: number; target_ppfd: number },
-    csrftoken: string | null
-  ): Promise<SimulationData> => {
-    try {
-      if (!csrftoken) {
-        throw new Error("CSRF token not found.");
-      }
-      const backendSimulationData = await triggerSimulation(payload, csrftoken);
-      return {
-        optimized_lumens_by_layer: backendSimulationData.optimized_lumens_by_layer,
-        mad: backendSimulationData.mad,
-        optimized_ppfd: backendSimulationData.optimized_ppfd,
-        floor_width: payload.floor_width,
-        floor_length: payload.floor_length,
-        target_ppfd: payload.target_ppfd,
-        floor_height: backendSimulationData.floor_height,
-        fixtures: [],
-      };
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "An unknown error occurred during simulation."
-      );
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  // Start simulation on button click.
+  const startSimulation = () => {
+    // Reset state.
+    setProgress(0);
+    setLogMessages([]);
     setSimulationResult(null);
 
-    const floorWidthFeet = parseFloat(formData.floor_width);
-    const floorLengthFeet = parseFloat(formData.floor_length);
-    const targetPPFD = parseFloat(formData.target_ppfd);
+    const params = new URLSearchParams({
+      start: "1",
+      floor_width: formData.floor_width,
+      floor_length: formData.floor_length,
+      target_ppfd: formData.target_ppfd,
+    });
+    const url = `/api/ml_simulation/progress/?${params.toString()}`;
+    const es = new EventSource(url);
+    eventSourceRef.current = es;
 
-    if (isNaN(floorWidthFeet) || isNaN(floorLengthFeet) || isNaN(targetPPFD)) {
-      setError("Please enter valid numerical values for all fields.");
-      return;
-    }
+    es.onmessage = (event) => {
+      const data: SseMessageData = JSON.parse(event.data);
+      const { message } = data;
 
-    setIsLoading(true);
-    try {
-      const csrftoken = getCookie("csrftoken");
-      const payload = {
-        floor_width: floorWidthFeet,
-        floor_length: floorLengthFeet,
-        target_ppfd: targetPPFD,
-      };
+      // If it's a result message, parse and set the final simulation result.
+      if (message.startsWith("RESULT:")) {
+        try {
+          const jsonStr = message.replace("RESULT:", "");
+          const result: SimulationResult = JSON.parse(jsonStr);
+          setSimulationResult(result);
+          setLogMessages((prev) => [...prev, "[INFO] Simulation complete!"]);
+        } catch (err) {
+          setLogMessages((prev) => [...prev, "[ERROR] Failed to parse result JSON"]);
+        }
+        return;
+      }
 
-      runSimulation(payload, csrftoken)
-        .then((simulationData) => {
-          setSimulationResult(simulationData);
-          onSimulationComplete(simulationData);
-        })
-        .catch((error) => {
-          setError(error.message || "An unknown error occurred during simulation.");
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "An unknown error occurred in handleSubmit."
-      );
-      setIsLoading(false);
-    }
+      // If it's an error message, log it.
+      if (message.startsWith("ERROR:")) {
+        setLogMessages((prev) => [...prev, message]);
+        return;
+      }
+
+      // If the message contains progress information, update the progress bar.
+      if (message.startsWith("PROGRESS:")) {
+        const pctStr = message.replace("PROGRESS:", "").trim();
+        const pct = parseFloat(pctStr);
+        if (!isNaN(pct)) {
+          setProgress(pct);
+        }
+        // Optionally, you can also log the progress update.
+        setLogMessages((prev) => [...prev, `[INFO] ${pct}% complete`]);
+      } else {
+        // Otherwise, simply append the message to the log.
+        setLogMessages((prev) => [...prev, message]);
+      }
+    };
+
+    es.onerror = (err) => {
+      setLogMessages((prev) => [...prev, "[ERROR] SSE connection failed"]);
+      console.error("EventSource failed:", err);
+      es.close();
+    };
   };
 
-  // Utility function to get a cookie by name
-  function getCookie(name: string) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
-
   return (
-    <div className="form-and-visualization-container">
-      <div className="simulation-form-container">
-        <h2>Run Simulation</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="floor_width">Floor Width (feet):</label>
-            <input
-              type="number"
-              id="floor_width"
-              name="floor_width"
-              value={formData.floor_width}
-              onChange={handleChange}
-              required
-              step="0.01"
-              min="0"
-            />
-          </div>
-          <div>
-            <label htmlFor="floor_length">Floor Length (feet):</label>
-            <input
-              type="number"
-              id="floor_length"
-              name="floor_length"
-              value={formData.floor_length}
-              onChange={handleChange}
-              required
-              step="0.01"
-              min="0"
-            />
-          </div>
-          <div>
-            <label htmlFor="target_ppfd">Target PPFD (µmol/m²/s):</label>
-            <input
-              type="number"
-              id="target_ppfd"
-              name="target_ppfd"
-              value={formData.target_ppfd}
-              onChange={handleChange}
-              required
-              step="0.01"
-              min="0"
-            />
-          </div>
-          <button type="submit" disabled={isLoading}>
-            {isLoading ? "Running Simulation..." : "Run Simulation"}
-          </button>
-        </form>
-        {error && <p className="error-message">{error}</p>}
-        {isLoading && <div>Loading...</div>}
-        {simulationResult && (
-          <div className="simulation-results-container">
-            <h2>Simulation Results</h2>
-            <div className="simulation-metrics">
-              <p>
-                <strong>Minimized MAD:</strong> {simulationResult.mad.toFixed(2)}
-              </p>
-              <p>
-                <strong>Optimized PPFD:</strong> {simulationResult.optimized_ppfd.toFixed(2)} µmol/m²/s
-              </p>
-            </div>
-            <div className="optimized-lumens">
-              <h3>Optimized Lumens by Layer</h3>
-              <ul>
-                {simulationResult.optimized_lumens_by_layer.map((lumens, index) => (
-                  <li key={index}>
-                    Layer {index + 1}: {lumens.toFixed(2)} lumens
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-      </div>
-      {simulationResult && (
-        <div className="modular-visualization-wrapper">
-          <ModularVisualization
-            mad={simulationResult.mad}
-            optimized_ppfd={simulationResult.optimized_ppfd}
-            floorWidth={simulationResult.floor_width}
-            floorLength={simulationResult.floor_length}
-            floorHeight={simulationResult.floor_height}
-            optimizedLumensByLayer={simulationResult.optimized_lumens_by_layer}
-            simulationResult={simulationResult}
+    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+      <h1>Lighting Simulation Progress</h1>
+
+      {/* Progress Bar */}
+      <div style={{ margin: "20px 0" }}>
+        <div style={{ width: "100%", background: "#eee", borderRadius: "5px", overflow: "hidden", height: "20px" }}>
+          <div
+            style={{
+              height: "100%",
+              width: `${progress}%`,
+              background: "#28a745",
+              transition: "width 0.5s ease",
+            }}
           />
+        </div>
+        <p style={{ textAlign: "center", marginTop: "5px", fontWeight: "bold" }}>{progress}%</p>
+      </div>
+
+      {/* Log Output */}
+      <div
+        ref={logOutputRef}
+        style={{
+          background: "#333",
+          color: "#fff",
+          padding: "10px",
+          borderRadius: "5px",
+          height: "200px",
+          overflowY: "scroll",
+          fontFamily: "monospace",
+          fontSize: "0.9em",
+          marginBottom: "20px",
+        }}
+      >
+        {logMessages.map((line, idx) => (
+          <div key={idx}>{line}</div>
+        ))}
+      </div>
+
+      {/* Input Fields */}
+      <div style={{ marginBottom: "20px" }}>
+        <label>
+          Floor Width (feet):{" "}
+          <input type="number" name="floor_width" value={formData.floor_width} onChange={handleChange} style={{ marginRight: "10px" }} />
+        </label>
+        <label>
+          Floor Length (feet):{" "}
+          <input type="number" name="floor_length" value={formData.floor_length} onChange={handleChange} style={{ marginRight: "10px" }} />
+        </label>
+        <label>
+          Target PPFD (µmol/m²/s):{" "}
+          <input type="number" name="target_ppfd" value={formData.target_ppfd} onChange={handleChange} style={{ marginRight: "10px" }} />
+        </label>
+      </div>
+
+      {/* Single Start Simulation Button */}
+      <button
+        onClick={startSimulation}
+        style={{
+          display: "inline-block",
+          padding: "10px 20px",
+          background: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          fontSize: "1em",
+        }}
+      >
+        Start Simulation
+      </button>
+
+      {/* Final Result & Visualization */}
+      {simulationResult && (
+        <div style={{ marginTop: "30px" }}>
+          <h2>Simulation Results</h2>
+          <p>
+            <strong>Minimized MAD:</strong> {simulationResult.mad.toFixed(2)}
+          </p>
+          <p>
+            <strong>Optimized PPFD:</strong> {simulationResult.optimized_ppfd.toFixed(2)} µmol/m²/s
+          </p>
+          <h3>Optimized Lumens by Layer</h3>
+          <ul>
+            {simulationResult.optimized_lumens_by_layer.map((lumens, i) => (
+              <li key={i}>
+                Layer {i + 1}: {lumens.toFixed(2)} lumens
+              </li>
+            ))}
+          </ul>
+          <div style={{ marginTop: "20px" }}>
+            <ModularVisualization
+              mad={simulationResult.mad}
+              optimized_ppfd={simulationResult.optimized_ppfd}
+              floorWidth={simulationResult.floor_width}
+              floorLength={simulationResult.floor_length}
+              floorHeight={simulationResult.floor_height}
+              optimizedLumensByLayer={simulationResult.optimized_lumens_by_layer}
+              simulationResult={simulationResult}
+            />
+          </div>
         </div>
       )}
     </div>

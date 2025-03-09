@@ -13,11 +13,14 @@ from .blog_system import BlogPost, Like, Share  # our model file
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from .forms import BlogPostForm
-from django.http import HttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 from .blog_system import BlogPost
 import mammoth
 from django.contrib.auth.decorators import user_passes_test
 import io
+from .ml_simulation import run_ml_simulation
+import queue
+import threading
 
 def index(request):
     return render(request, 'main/index.html')
@@ -61,36 +64,78 @@ def contact(request):
 def contact_success(request):
     return render(request, 'main/contact_success.html')
 
-@csrf_exempt  # For testing; ensure proper CSRF handling in production
+@csrf_exempt
 def run_simulation(request):
     if request.method == 'POST':
+        print("DEBUG: run_simulation POST received")
         try:
             data = json.loads(request.body)
+            print("DEBUG: Received data:", data)
             floor_width = data.get('floor_width')
             floor_length = data.get('floor_length')
             target_ppfd = data.get('target_ppfd')
 
             if floor_width is None or floor_length is None or target_ppfd is None:
-                return JsonResponse(
-                    {'error': 'Missing required parameters: floor_width, floor_length, target_ppfd'},
-                    status=400
-                )
+                return JsonResponse({'error': 'Missing required parameters'}, status=400)
 
-            # Updated call: use keyword names that match the function's signature.
             simulation_results = run_ml_simulation(
                 floor_width_ft=floor_width,
                 floor_length_ft=floor_length,
                 target_ppfd=target_ppfd
             )
+            print("DEBUG: Simulation completed. Results:", simulation_results)
             return JsonResponse(simulation_results)
-
         except Exception as e:
+            print("ERROR in run_simulation:", e)
             return JsonResponse({'error': str(e)}, status=400)
-
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
 def simulation_view(request):
     return render(request, 'main/simulation.html')
+
+def simulation_progress(request):
+    # Only start simulation if the query parameter "start" equals "1"
+    if request.GET.get("start") != "1":
+        def event_stream():
+            yield "data: {}\n\n"
+        return StreamingHttpResponse(event_stream(), content_type="text/event-stream")
+
+    try:
+        floor_width = float(request.GET.get("floor_width", 14.0))
+        floor_length = float(request.GET.get("floor_length", 14.0))
+        target_ppfd = float(request.GET.get("target_ppfd", 1250.0))
+    except ValueError:
+        return StreamingHttpResponse("Invalid parameters", status=400)
+
+    progress_queue = queue.Queue()
+
+    def progress_callback(message):
+        progress_queue.put(message)
+
+    def run_sim():
+        try:
+            result = run_ml_simulation(floor_width, floor_length, target_ppfd, progress_callback=progress_callback)
+            progress_queue.put("RESULT:" + json.dumps(result))
+        except Exception as e:
+            progress_queue.put("ERROR:" + str(e))
+        finally:
+            progress_queue.put(None)  # Sentinel
+
+    thread = threading.Thread(target=run_sim)
+    thread.start()
+
+    def event_stream():
+        while True:
+            msg = progress_queue.get()
+            if msg is None:
+                break
+            data = {"message": msg}
+            yield f"data: {json.dumps(data)}\n\n"
+
+    response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
+    response['Cache-Control'] = 'no-cache'
+    return response
 
 def agenticai(request):
     return render(request, 'main/agenticai.html')

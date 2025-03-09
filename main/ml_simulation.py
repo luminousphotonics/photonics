@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-Lighting Optimization Script (ml-simulation.py)
+Lighting Optimization Script (ml_simulation.py)
 Replicates the Original Lighting Simulation (Diamond Layout, 6 Layers + Corner COBs),
 Uses Patch-Based Radiosity & a 2cm Floor Grid.
-
-Now includes a new API integration function (run_ml_simulation) to allow backend endpoints
-to call the simulation logic with parameters and get back a JSON-serializable result.
+Now includes progress callback support for live updates.
 """
 
 import math
@@ -13,6 +11,7 @@ import numpy as np
 from scipy.optimize import minimize
 import sys
 from numba import njit
+from functools import lru_cache
 
 # ------------------------------
 # Configuration & Constants
@@ -20,7 +19,7 @@ from numba import njit
 
 # Diamond pattern: 6 sets of coordinates (plus an extra "layer 0" that we skip)
 layers_coords = [
-    [(0, 0)],  # This is the "center layer"
+    [(0, 0)],  # Center layer (skipped later)
     [(-1, 0), (1, 0), (0, -1), (0, 1)],
     [(-1, -1), (1, -1), (-1, 1), (1, 1),
      (-2, 0), (2, 0), (0, -2), (0, 2)],
@@ -37,32 +36,27 @@ layers_coords = [
      (-1, -4), (1, -4), (-1, 4), (1, 4),
      (-5, 0), (5, 0), (0, -5), (0, 5)]
 ]
-# The final array length is 61 total COB positions.
 corner_idx = [57, 58, 59, 60]  # Indices of the 4 corner COBs in the final array
 
-# Reflectances from the original script
 REFL_WALL = 0.08
 REFL_CEIL = 0.1
 REFL_FLOOR = 0.0
 
-# SPD -> PPFD conversion
 LUMINOUS_EFFICACY = 182.0         # lm/W
 SPD_FILE = "./backups/spd_data.csv"
 
-# Bounces and geometry subdivision
 NUM_RADIOSITY_BOUNCES = 2
 WALL_SUBDIVS_X = 10
 WALL_SUBDIVS_Y = 5
 CEIL_SUBDIVS_X = 10
 CEIL_SUBDIVS_Y = 10
 
-# Floor grid resolution (2 cm)
-FLOOR_GRID_RES = 0.02
+# Coarser floor grid resolution (increased from 0.02 to 0.05 meters)
+FLOOR_GRID_RES = 0.05
 
-# Bounds for parameters:
 MIN_LUMENS = 2000.0
-MAX_LUMENS_MAIN = 24000.0      # For the 6 main COB layers
-MAX_LUMENS_CORNER = 36000.0    # For the common corner COBs
+MAX_LUMENS_MAIN = 24000.0
+MAX_LUMENS_CORNER = 36000.0
 
 # ------------------------------
 # SPD Conversion Factor
@@ -72,7 +66,6 @@ def compute_conversion_factor(spd_file):
         spd = np.loadtxt(spd_file, delimiter=' ', skiprows=1)
     except Exception as e:
         print("Error loading SPD data:", e)
-        # Fallback if SPD file is missing
         return 0.0138
     wl = spd[:, 0]
     intens = spd[:, 1]
@@ -97,58 +90,48 @@ CONVERSION_FACTOR = compute_conversion_factor(SPD_FILE)
 # Geometry & COB Intensity Functions
 # ------------------------------
 def build_cob_positions(W, L, H):
-    """
-    Replicates the diamond pattern from the original script:
-    Returns an array of shape (61, 3) representing COB positions.
-    """
     light_positions = []
     center = (W/2, L/2)
-    # Add center
     light_positions.append((center[0], center[1], H))
-
     for i, layer in enumerate(layers_coords):
         if i == 0:
-            continue  # Center already added
+            continue
         for (dx, dy) in layer:
-            # Rotate 45 degrees
             theta = math.radians(45)
             rx = dx * math.cos(theta) - dy * math.sin(theta)
             ry = dx * math.sin(theta) + dy * math.cos(theta)
             px = center[0] + rx * (W / 7.2)
             py = center[1] + ry * (W / 7.2)
             light_positions.append((px, py, H))
-
     return np.array(light_positions, dtype=np.float64)
 
 def pack_luminous_flux(params):
-    """
-    Packs the 7 simulation parameters into an array for 61 COB positions.
-    The first 6 parameters are used for the main layers, and the 7th parameter
-    is applied to all corner COBs.
-    """
     LAYER_COUNTS = [1, 4, 8, 12, 16, 20]
-    layers_vals = params[0:6]     # 6 main layer intensities
-    common_corner = params[6]     # Common intensity for all corner COBs
-
+    layers_vals = params[0:6]
+    common_corner = params[6]
     led_intensities = []
     for val, count in zip(layers_vals, LAYER_COUNTS):
         led_intensities.extend([val] * count)
-
-    # Overwrite the 4 corner positions with the common value
     for c_idx in corner_idx:
         led_intensities[c_idx] = common_corner
-
     return np.array(led_intensities, dtype=np.float64)
 
 # ------------------------------
 # Floor Grid & Direct Irradiance
 # ------------------------------
-def build_floor_grid(W, L):
+@lru_cache(maxsize=32)
+def cached_build_floor_grid(W: float, L: float):
     xs = np.arange(0, W, FLOOR_GRID_RES)
     ys = np.arange(0, L, FLOOR_GRID_RES)
     X, Y = np.meshgrid(xs, ys)
     return X, Y
 
+def build_floor_grid(W, L):
+    return cached_build_floor_grid(W, L)
+
+# ------------------------------
+# Floor Grid & Direct Irradiance
+# ------------------------------
 @njit
 def compute_direct_floor(light_positions, light_fluxes, X, Y):
     out = np.zeros_like(X, dtype=np.float64)
@@ -179,19 +162,18 @@ def compute_direct_floor(light_positions, light_fluxes, X, Y):
 # ------------------------------
 # Surface Patch Functions
 # ------------------------------
-def build_patches(W, L, H):
+@lru_cache(maxsize=32)
+def cached_build_patches(W: float, L: float, H: float):
     patch_centers = []
     patch_areas = []
     patch_normals = []
     patch_refl = []
 
-    # Floor patch
     patch_centers.append((W/2, L/2, 0.0))
     patch_areas.append(W * L)
     patch_normals.append((0.0, 0.0, 1.0))
     patch_refl.append(REFL_FLOOR)
 
-    # Ceiling patches
     dx_c = W / CEIL_SUBDIVS_X
     dy_c = L / CEIL_SUBDIVS_Y
     for i in range(CEIL_SUBDIVS_X):
@@ -203,7 +185,6 @@ def build_patches(W, L, H):
             patch_normals.append((0.0, 0.0, -1.0))
             patch_refl.append(REFL_CEIL)
 
-    # Wall patches (y=0 and y=L)
     dx = W / WALL_SUBDIVS_X
     dz = H / WALL_SUBDIVS_Y
     for ix in range(WALL_SUBDIVS_X):
@@ -225,7 +206,6 @@ def build_patches(W, L, H):
             patch_normals.append((0.0, 1.0, 0.0))
             patch_refl.append(REFL_WALL)
 
-    # Wall patches (x=0 and x=W)
     dy = L / WALL_SUBDIVS_X
     for iy in range(WALL_SUBDIVS_X):
         for iz in range(WALL_SUBDIVS_Y):
@@ -250,6 +230,9 @@ def build_patches(W, L, H):
             np.array(patch_areas, dtype=np.float64),
             np.array(patch_normals, dtype=np.float64),
             np.array(patch_refl, dtype=np.float64))
+
+def build_patches(W, L, H):
+    return cached_build_patches(W, L, H)
 
 def compute_patch_direct(light_positions, light_fluxes, patch_centers, patch_normals, patch_areas):
     Np = patch_centers.shape[0]
@@ -358,26 +341,15 @@ def compute_reflection_on_floor(X, Y, patch_centers, patch_normals, patch_areas,
 # Simulation & Optimization
 # ------------------------------
 def simulate_lighting(params, W, L, H):
-    # 1) Build geometry: 61 COB positions
     cob_positions = build_cob_positions(W, L, H)
     lumens_arr = pack_luminous_flux(params)
-    power_arr = lumens_arr / LUMINOUS_EFFICACY  # Convert lumens to watts
-
-    # 2) Floor grid
+    power_arr = lumens_arr / LUMINOUS_EFFICACY
     X, Y = build_floor_grid(W, L)
     direct_irr = compute_direct_floor(cob_positions, power_arr, X, Y)
-
-    # 3) Build patches & compute direct patch irradiance
     patch_centers, patch_areas, patch_normals, patch_refl = build_patches(W, L, H)
     patch_direct = compute_patch_direct(cob_positions, power_arr, patch_centers, patch_normals, patch_areas)
-    
-    # 4) Multi-bounce radiosity
     patch_rad = iterative_radiosity_loop(patch_centers, patch_normals, patch_direct, patch_areas, patch_refl, NUM_RADIOSITY_BOUNCES)
-    
-    # 5) Reflection on floor
     reflect_irr = compute_reflection_on_floor(X, Y, patch_centers, patch_normals, patch_areas, patch_rad, patch_refl)
-
-    # Total floor irradiance and conversion to PPFD
     floor_irr = direct_irr + reflect_irr
     floor_ppfd = floor_irr * CONVERSION_FACTOR
     return floor_ppfd
@@ -387,23 +359,22 @@ def objective_function(params, W, L, H, target_ppfd):
     mean_ppfd = np.mean(floor_ppfd)
     mad = np.mean(np.abs(floor_ppfd - mean_ppfd))
     ppfd_penalty = (mean_ppfd - target_ppfd) ** 2
-    obj = mad + 2.0 * ppfd_penalty
-    return obj
+    return mad + 2.0 * ppfd_penalty
 
 def optimize_lighting(W, L, H, target_ppfd, progress_callback=None):
     x0 = np.array([8000, 8000, 8000, 8000, 8000, 8000, 18000], dtype=np.float64)
     bounds = [(MIN_LUMENS, MAX_LUMENS_MAIN)] * 6 + [(MIN_LUMENS, MAX_LUMENS_CORNER)]
-    total_iterations_estimate = 1000  # Use an estimated maximum, if possible.
+    total_iterations_estimate = 500  # Reduced max iterations for speed.
     iteration = 0
 
     def wrapped_obj(p):
         nonlocal iteration
         iteration += 1
         val = objective_function(p, W, L, H, target_ppfd)
-        mp = np.mean(simulate_lighting(p, W, L, H))
+        floor_ppfd = simulate_lighting(p, W, L, H)
+        mp = np.mean(floor_ppfd)
         msg = f"[DEBUG] param={p}, mean_ppfd={mp:.1f}, obj={val:.3f}"
         if progress_callback:
-            # Calculate progress percentage based on iteration count.
             progress_pct = min(100, (iteration / total_iterations_estimate) * 100)
             progress_callback(f"PROGRESS:{progress_pct}")
             progress_callback(msg)
@@ -425,18 +396,14 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_cal
     ft2m = 3.28084
     W_m = floor_width_ft / ft2m
     L_m = floor_length_ft / ft2m
-    H_m = 3.0 / ft2m
-
+    H_m = 3.0 / ft2m  # Constant LED height
     best_params = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback)
     final_ppfd = simulate_lighting(best_params, W_m, L_m, H_m)
     mean_ppfd = np.mean(final_ppfd)
     mad = np.mean(np.abs(final_ppfd - mean_ppfd))
-
     if progress_callback:
-        # Ensure the progress bar shows 100% at the end.
         progress_callback("PROGRESS:100")
         progress_callback("[INFO] Simulation complete!")
-
     return {
         "optimized_lumens_by_layer": best_params[0:6].tolist(),
         "mad": float(mad),

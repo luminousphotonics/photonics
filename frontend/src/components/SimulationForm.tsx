@@ -2,6 +2,43 @@ import React, { useState, useRef, useEffect } from "react";
 import ModularVisualization from "../components/ModularVisualization";
 import { SimulationData } from "../types";
 
+// Immaculate jetColor function – produces a smooth jet colormap.
+// This implementation is based on the MATLAB formulation:
+//   r = clamp(1.5 - |4*t - 3|, 0, 1)
+//   g = clamp(1.5 - |4*t - 2|, 0, 1)
+//   b = clamp(1.5 - |4*t - 1|, 0, 1)
+// where t is the normalized value between 0 and 1.
+// The output is then scaled to 0-255 for standard RGB color strings.
+function jetColor(value: number, min: number, max: number): string {
+  // Normalize value to t in [0,1]
+  let t = (value - min) / (max - min);
+  t = Math.max(0, Math.min(1, t));
+
+  // Compute red channel.
+  // When t=0, |4*0 - 3| = 3, so r = clamp(1.5 - 3, 0,1) = 0.
+  // When t=1, |4*1 - 3| = 1, so r = clamp(1.5 - 1, 0,1) = 0.5.
+  const r = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 3)));
+  
+  // Compute green channel.
+  // When t=0, |4*0 - 2| = 2, so g = clamp(1.5 - 2, 0,1) = 0.
+  // When t=0.5, |4*0.5 - 2| = 0, so g = clamp(1.5 - 0, 0,1) = 1.
+  // When t=1, |4*1 - 2| = 2, so g = clamp(1.5 - 2, 0,1) = 0.
+  const g = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 2)));
+  
+  // Compute blue channel.
+  // When t=0, |4*0 - 1| = 1, so b = clamp(1.5 - 1, 0,1) = 0.5.
+  // When t=1, |4*1 - 1| = 3, so b = clamp(1.5 - 3, 0,1) = 0.
+  const b = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 1)));
+
+  // Scale each channel from [0,1] to [0,255].
+  const R = Math.round(r * 255);
+  const G = Math.round(g * 255);
+  const B = Math.round(b * 255);
+  return `rgb(${R}, ${G}, ${B})`;
+}
+
+
+
 interface SseMessageData {
   message: string;
 }
@@ -20,12 +57,18 @@ const SimulationForm: React.FC = () => {
     target_ppfd: "1250",
   });
 
+  // State for plant growth stage selection
+  const [growthStage, setGrowthStage] = useState<string>("propagation");
+
   // SSE and simulation state
   const [progress, setProgress] = useState<number>(0);
   const [logMessages, setLogMessages] = useState<string[]>([]);
   const [simulationResult, setSimulationResult] = useState<SimulationData | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const logOutputRef = useRef<HTMLDivElement>(null);
+
+  // Toggle state for showing heatmap intensity values
+  const [showHeatmapIntensity, setShowHeatmapIntensity] = useState<boolean>(false);
 
   // Auto-scroll log output when messages update.
   useEffect(() => {
@@ -38,6 +81,46 @@ const SimulationForm: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handler for plant icon click to compute suggested PPFD
+  const handlePlantClick = (e: React.MouseEvent<HTMLElement>) => {
+    const plantType = e.currentTarget.getAttribute("data-plant");
+    if (!plantType) return;
+
+    // Updated mapping based on your provided table:
+    const plantMapping: Record<string, Record<string, { dli: number; dayLength: number }>> = {
+      cannabis: {
+        propagation: { dli: 45, dayLength: 18 },
+        vegetative: { dli: 50, dayLength: 18 },
+        flowering: { dli: 50, dayLength: 12 },
+      },
+      tomatoes: {
+        propagation: { dli: 25, dayLength: 16 },
+        vegetative: { dli: 27.5, dayLength: 16 },
+        flowering: { dli: 27.5, dayLength: 16 },
+      },
+      strawberries: {
+        propagation: { dli: 20, dayLength: 8 },
+        vegetative: { dli: 22.5, dayLength: 8 },
+        flowering: { dli: 22.5, dayLength: 8 },
+      },
+      leafy: {
+        propagation: { dli: 12, dayLength: 16 },
+        vegetative: { dli: 16, dayLength: 16 },
+        flowering: { dli: 16, dayLength: 12 },
+      },
+    };
+
+    const plantInfo = plantMapping[plantType];
+    if (!plantInfo) return;
+    const stageData = plantInfo[growthStage];
+    if (!stageData) return;
+    const { dli, dayLength } = stageData;
+
+    // Calculate PPFD correctly:
+    const suggestedPPFD = ((dli * 1000000) / (dayLength * 3600)).toFixed(0);
+    setFormData((prev) => ({ ...prev, target_ppfd: suggestedPPFD }));
   };
 
   // Start simulation on button click.
@@ -87,16 +170,17 @@ const SimulationForm: React.FC = () => {
         if (!isNaN(pct)) {
           setProgress(pct);
         }
-        // Optionally log the progress update.
         setLogMessages((prev) => [...prev, `[INFO] ${pct}% complete`]);
       } else {
-        // Otherwise, simply append the message to the log.
         setLogMessages((prev) => [...prev, message]);
       }
     };
 
     es.onerror = (err) => {
-      setLogMessages((prev) => [...prev, "[ERROR] SSE connection failed"]);
+      setLogMessages((prev) => [
+        ...prev,
+        "[WARN] Connection to server lost. Please try again.",
+      ]);
       console.error("EventSource failed:", err);
       es.close();
     };
@@ -108,7 +192,15 @@ const SimulationForm: React.FC = () => {
 
       {/* Progress Bar */}
       <div style={{ margin: "20px 0" }}>
-        <div style={{ width: "100%", background: "#eee", borderRadius: "5px", overflow: "hidden", height: "20px" }}>
+        <div
+          style={{
+            width: "100%",
+            background: "#eee",
+            borderRadius: "5px",
+            overflow: "hidden",
+            height: "20px",
+          }}
+        >
           <div
             style={{
               height: "100%",
@@ -118,7 +210,9 @@ const SimulationForm: React.FC = () => {
             }}
           />
         </div>
-        <p style={{ textAlign: "center", marginTop: "5px", fontWeight: "bold" }}>{progress}%</p>
+        <p style={{ textAlign: "center", marginTop: "5px", fontWeight: "bold" }}>
+          {progress}%
+        </p>
       </div>
 
       {/* Log Output */}
@@ -136,28 +230,148 @@ const SimulationForm: React.FC = () => {
           marginBottom: "20px",
         }}
       >
-        {logMessages.map((line, idx) => (
-          <div key={idx}>{line}</div>
-        ))}
+      {logMessages.map((line, idx) => {
+        // Remove any "[DEBUG]" prefix and substitute "param=" with "Layer Intensity:"
+        let modifiedLine = line.replace("[DEBUG] ", "").replace("param=", "Layer Intensity:");
+        modifiedLine = modifiedLine.replace(
+          "[ERROR] SSE connection failed",
+          "[WARN] Connection to server lost. Please try again."
+        );
+
+        // Determine log line color based on prefix.
+        let logColor = "#fff";
+        if (modifiedLine.startsWith("[INFO]")) {
+          logColor = "#8FBC8F"; // green
+        } else if (modifiedLine.startsWith("[WARN]")) {
+          logColor = "#FFA500"; // orange
+        } else if (modifiedLine.startsWith("[ERROR]")) {
+          logColor = "#FF6347"; // red
+        }
+
+        // Use regex to extract intensity values from a line formatted like:
+        // "Layer Intensity:[ 9892.47 12362.66 6095.29 3426.29 2000. 34628.58 ], mean_ppfd=..."
+        const intensityRegex = /Layer Intensity:\[\s*([^\]]+)\]/;
+        const intensityMatch = modifiedLine.match(intensityRegex);
+
+        if (intensityMatch) {
+          const valuesStr = intensityMatch[1];
+          // Split by whitespace and parse to numbers.
+          const values = valuesStr.trim().split(/\s+/).map(Number);
+          const minVal = Math.min(...values);
+          const maxVal = Math.max(...values);
+
+          // Get any text following the intensity array.
+          const afterBracket = modifiedLine.indexOf("]") !== -1
+            ? modifiedLine.slice(modifiedLine.indexOf("]") + 1)
+            : "";
+
+          return (
+            <div key={idx} style={{ margin: "2px 0", fontFamily: "monospace", color: logColor }}>
+              <span>Layer Intensity: [ </span>
+              {values.map((val, i) => (
+                <span
+                  key={i}
+                  style={{
+                    backgroundColor: jetColor(val, minVal, maxVal),
+                    color: "#fff", // white text for contrast
+                    padding: "0 4px",
+                    margin: "0 2px",
+                    borderRadius: "3px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {Math.round(val)}
+                </span>
+              ))}
+              <span> ]{afterBracket}</span>
+            </div>
+          );
+        } else {
+          return (
+            <div key={idx} style={{ margin: "2px 0", fontFamily: "monospace", color: logColor }}>
+              {modifiedLine}
+            </div>
+          );
+        }
+      })}
+
+
+
       </div>
 
       {/* Input Fields */}
       <div style={{ marginBottom: "20px" }}>
         <label>
           Floor Width (feet):{" "}
-          <input type="number" name="floor_width" value={formData.floor_width} onChange={handleChange} style={{ marginRight: "10px" }} />
+          <input
+            type="number"
+            name="floor_width"
+            value={formData.floor_width}
+            onChange={handleChange}
+            style={{ marginRight: "10px" }}
+          />
         </label>
         <label>
           Floor Length (feet):{" "}
-          <input type="number" name="floor_length" value={formData.floor_length} onChange={handleChange} style={{ marginRight: "10px" }} />
+          <input
+            type="number"
+            name="floor_length"
+            value={formData.floor_length}
+            onChange={handleChange}
+            style={{ marginRight: "10px" }}
+          />
         </label>
         <label>
           Target PPFD (µmol/m²/s):{" "}
-          <input type="number" name="target_ppfd" value={formData.target_ppfd} onChange={handleChange} style={{ marginRight: "10px" }} />
+          <input
+            type="number"
+            name="target_ppfd"
+            value={formData.target_ppfd}
+            onChange={handleChange}
+            style={{ marginRight: "10px" }}
+          />
         </label>
       </div>
 
-      {/* Single Start Simulation Button */}
+      {/* Plant Selector */}
+      <div className="plant-selector" style={{ marginBottom: "20px" }}>
+        <label>
+          Growth Stage:{" "}
+          <select
+            value={growthStage}
+            onChange={(e) => setGrowthStage(e.target.value)}
+          >
+            <option value="propagation">Propagation</option>
+            <option value="vegetative">Vegetative</option>
+            <option value="flowering">Flowering</option>
+          </select>
+        </label>
+        <div className="plant-icons" style={{ marginTop: "10px" }}>
+          <span style={{ marginRight: "10px" }}>Select Plant:</span>
+          <i
+            className="fa fa-leaf plant-icon"
+            data-plant="leafy"
+            onClick={handlePlantClick}
+          ></i>
+          <i
+            className="fa fa-seedling plant-icon"
+            data-plant="tomatoes"
+            onClick={handlePlantClick}
+          ></i>
+          <i
+            className="fa fa-cannabis plant-icon"
+            data-plant="cannabis"
+            onClick={handlePlantClick}
+          ></i>
+          <i
+            className="fa fa-apple-whole plant-icon"
+            data-plant="strawberries"
+            onClick={handlePlantClick}
+          ></i>
+        </div>
+      </div>
+
+      {/* Start Simulation Button */}
       <button
         onClick={startSimulation}
         style={{
@@ -205,11 +419,40 @@ const SimulationForm: React.FC = () => {
           </div>
           <div>
             <h2>Surface Graph</h2>
-            <img src={`data:image/png;base64,${simulationResult.surface_graph}`} alt="Surface Graph" style={{ maxWidth: "100%" }} />
+            <img
+              src={`data:image/png;base64,${simulationResult.surface_graph}`}
+              alt="Surface Graph"
+              style={{ maxWidth: "100%" }}
+            />
             <h2>Heatmap</h2>
-            <img src={`data:image/png;base64,${simulationResult.heatmap}`} alt="Heatmap" style={{ maxWidth: "100%" }} />
+            {/* Toggle Button for Intensity Overlay */}
+            <button
+              onClick={() => setShowHeatmapIntensity((prev) => !prev)}
+              style={{
+                marginBottom: "10px",
+                padding: "8px 16px",
+                background: "#6f42c1",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "0.9em",
+              }}
+            >
+              {showHeatmapIntensity ? "Hide" : "Show"} Intensity Values
+            </button>
+            <img
+              src={
+                showHeatmapIntensity
+                  ? `data:image/png;base64,${simulationResult.heatmap_overlay}`
+                  : `data:image/png;base64,${simulationResult.heatmap}`
+              }
+              alt="Heatmap"
+              style={{ maxWidth: "100%" }}
+            />
           </div>
         </div>
+
       )}
     </div>
   );

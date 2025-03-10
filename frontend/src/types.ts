@@ -7,9 +7,11 @@ export interface SimulationData {
   floor_height: number;
   target_ppfd: number;
   fixtures: FixtureData[];
-  surface_graph?: string;  // Add this property
-  heatmap?: string;        // And this property
+  surface_graph?: string;  // Existing property
+  heatmap?: string;        // Existing property
+  heatmap_overlay?: string; // Add this line
 }
+
 
 export interface FixtureData {
   type: 'CenterUnit' | 'LinearUnit' | 'LShapedUnit' | 'ReverseLShapedUnit';

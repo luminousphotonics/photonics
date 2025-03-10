@@ -28,6 +28,7 @@ REFL_FLOOR = 0.0  # Often negligible
 # Core Simulation
 # ------------------------------
 def run_simulation():
+    global floor_ppfd
     # 1. Fetch user inputs
     try:
         layer_intensities = [float(e.get().strip()) for e in layer_intensity_entries]
@@ -448,6 +449,7 @@ def run_simulation():
             plt.plot(pos[0], pos[1], 'mo', markersize=3)  # Magenta 'o' for strip points
             
     plt.show()
+
 
 # ------------------------------
 # Basic Tkinter UI

@@ -9,7 +9,6 @@ export interface SimulationData {
   fixtures: FixtureData[];
   surface_graph?: string;  // Existing property
   heatmap?: string;        // Existing property
-  heatmap_overlay?: string; // Add this line
 }
 
 

@@ -12,10 +12,14 @@ interface ModularVisualizationProps {
 
 type CobPosition = { x: number; y: number; layer: number };
 
-const buildCobPositionsDynamic = (W: number, L: number, H: number, floorWidth_ft: number): CobPosition[] => {
-  const n = Math.max(1, Math.floor(floorWidth_ft / 2) - 1);
+const buildCobPositionsDynamic = (W: number, L: number, H: number, floorWidth_ft: number, floorLength_ft: number): CobPosition[] => {
+  // Use the larger dimension to determine the number of layers
+  const maxDim_ft = Math.max(floorWidth_ft, floorLength_ft);
+  const n = Math.max(1, Math.floor(maxDim_ft / 2) - 1);
+
+  // Generate initial positions in a diamond pattern
   const positions: { x: number; y: number; layer: number }[] = [];
-  positions.push({ x: 0, y: 0, layer: 0 });
+  positions.push({ x: 0, y: 0, layer: 0 }); // Center COB
   for (let i = 1; i <= n; i++) {
     for (let x = -i; x <= i; x++) {
       const yAbs = i - Math.abs(x);
@@ -27,22 +31,29 @@ const buildCobPositionsDynamic = (W: number, L: number, H: number, floorWidth_ft
       }
     }
   }
+
+  // Rotate positions by 45 degrees
   const theta = Math.PI / 4;
   const cos_t = Math.cos(theta);
   const sin_t = Math.sin(theta);
-  const desired_max = (W / 2) * 0.95;
-  const scale = (desired_max * Math.SQRT2) / n;
   const centerX = W / 2;
   const centerY = L / 2;
+
+  // Define separate scaling factors for x and y
+  const scaleX = (W / 2 * 0.95 * Math.SQRT2) / n;
+  const scaleY = (L / 2 * 0.95 * Math.SQRT2) / n;
+
+  // Transform positions with separate scaling
   const transformed = positions.map(pos => {
     const rx = pos.x * cos_t - pos.y * sin_t;
     const ry = pos.x * sin_t + pos.y * cos_t;
     return {
-      x: centerX + rx * scale,
-      y: centerY + ry * scale,
+      x: centerX + rx * scaleX,
+      y: centerY + ry * scaleY,
       layer: pos.layer
     };
   });
+
   return transformed;
 };
 
@@ -59,8 +70,8 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
   const floorLengthMeters = floorLength * 0.3048;
   const floorHeightMeters = floorHeight * 0.3048;
   
-  const cobPositions = buildCobPositionsDynamic(floorWidthMeters, floorLengthMeters, floorHeightMeters, floorWidth);
-  
+  const cobPositions = buildCobPositionsDynamic(floorWidthMeters, floorLengthMeters, floorHeightMeters, floorWidth, floorLength);
+    
   const minLumens = Math.min(...optimizedLumensByLayer);
   const maxLumens = Math.max(...optimizedLumensByLayer);
   

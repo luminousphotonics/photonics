@@ -122,7 +122,17 @@ const SimulationForm: React.FC = () => {
     const suggestedPPFD = ((dli * 1000000) / (dayLength * 3600)).toFixed(0);
     setFormData((prev) => ({ ...prev, target_ppfd: suggestedPPFD }));
   };
-
+  
+  const handleFloorSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // Expected value format: "14 x 14" or "12 x 16"
+    const [widthStr, lengthStr] = e.target.value.split(" x ");
+    setFormData((prev) => ({
+      ...prev,
+      floor_width: widthStr,
+      floor_length: lengthStr,
+    }));
+  };
+  
   // Start simulation on button click.
   const startSimulation = () => {
     // Reset state.
@@ -295,31 +305,28 @@ const SimulationForm: React.FC = () => {
         }
       })}
 
-
-
       </div>
 
       {/* Input Fields */}
       <div style={{ marginBottom: "20px" }}>
         <label>
-          Floor Width (feet):{" "}
-          <input
-            type="number"
-            name="floor_width"
-            value={formData.floor_width}
-            onChange={handleChange}
+          Floor Size:{" "}
+          <select
+            name="floor_size"
+            value={`${formData.floor_width} x ${formData.floor_length}`}
+            onChange={handleFloorSizeChange}
             style={{ marginRight: "10px" }}
-          />
-        </label>
-        <label>
-          Floor Length (feet):{" "}
-          <input
-            type="number"
-            name="floor_length"
-            value={formData.floor_length}
-            onChange={handleChange}
-            style={{ marginRight: "10px" }}
-          />
+          >
+            <option value="2 x 2">2' x 2'</option>
+            <option value="4 x 4">4' x 4'</option>
+            <option value="6 x 6">6' x 6'</option>
+            <option value="8 x 8">8' x 8'</option>
+            <option value="10 x 10">10' x 10'</option>
+            <option value="12 x 12">12' x 12'</option>
+            <option value="14 x 14">14' x 14'</option>
+            <option value="16 x 16">16' x 16'</option>
+            <option value="12 x 16">12' x 16'</option>
+          </select>
         </label>
         <label>
           Target PPFD (µmol/m²/s):{" "}
@@ -332,6 +339,7 @@ const SimulationForm: React.FC = () => {
           />
         </label>
       </div>
+
 
       {/* Plant Selector */}
       <div className="plant-selector" style={{ marginBottom: "20px" }}>
@@ -425,35 +433,15 @@ const SimulationForm: React.FC = () => {
               style={{ maxWidth: "100%" }}
             />
             <h2>Heatmap</h2>
-            {/* Toggle Button for Intensity Overlay */}
-            <button
-              onClick={() => setShowHeatmapIntensity((prev) => !prev)}
-              style={{
-                marginBottom: "10px",
-                padding: "8px 16px",
-                background: "#6f42c1",
-                color: "#fff",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "0.9em",
-              }}
-            >
-              {showHeatmapIntensity ? "Hide" : "Show"} Intensity Values
-            </button>
             <img
-              src={
-                showHeatmapIntensity
-                  ? `data:image/png;base64,${simulationResult.heatmap_overlay}`
-                  : `data:image/png;base64,${simulationResult.heatmap}`
-              }
+              src={`data:image/png;base64,${simulationResult.heatmap}`}
               alt="Heatmap"
               style={{ maxWidth: "100%" }}
             />
           </div>
         </div>
-
       )}
+
     </div>
   );
 };

@@ -79,14 +79,17 @@ CONVERSION_FACTOR = compute_conversion_factor(SPD_FILE)
 def build_cob_positions(W, L, H):
     ft2m = 3.28084
     floor_width_ft = W * ft2m
-    n = max(1, int(floor_width_ft / 2) - 1)
+    floor_length_ft = L * ft2m
+    max_dim_ft = max(floor_width_ft, floor_length_ft)
+    n = max(1, int(max_dim_ft / 2) - 1)
     
     positions = []
     # Center (layer 0)
     positions.append((0, 0, H, 0))
     
-    for i in range(1, n+1):
-        for x in range(-i, i+1):
+    # Generate diamond pattern positions
+    for i in range(1, n + 1):
+        for x in range(-i, i + 1):
             y_abs = i - abs(x)
             if y_abs == 0:
                 positions.append((x, 0, H, i))
@@ -94,23 +97,24 @@ def build_cob_positions(W, L, H):
                 positions.append((x, y_abs, H, i))
                 positions.append((x, -y_abs, H, i))
     
-    # Rotate by 45°, scale so outer COBs are near floor edge
+    # Rotate by 45° and scale separately
     theta = math.radians(45)
     cos_t = math.cos(theta)
     sin_t = math.sin(theta)
-    desired_max = (W / 2) * 0.95
-    scale = (desired_max * math.sqrt(2)) / n
     centerX = W / 2
     centerY = L / 2
+    scale_x = (W / 2 * 0.95 * math.sqrt(2)) / n
+    scale_y = (L / 2 * 0.95 * math.sqrt(2)) / n
+    
     transformed = []
     for (x, y, h, layer) in positions:
         rx = x * cos_t - y * sin_t
         ry = x * sin_t + y * cos_t
-        px = centerX + rx * scale
-        py = centerY + ry * scale
+        px = centerX + rx * scale_x
+        py = centerY + ry * scale_y
         transformed.append((px, py, h, layer))
+    
     return np.array(transformed, dtype=np.float64)
-
 
 def pack_luminous_flux_dynamic(params, cob_positions):
     led_intensities = []
@@ -434,46 +438,57 @@ def optimize_lighting(W, L, H, target_ppfd, progress_callback=None):
 # Visualization
 # ------------------------------
 def generate_surface_graph(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, cmap="jet") -> str:
-    grid_density = 100
-    x_grid, y_grid = np.mgrid[X.min():X.max():grid_density*1j,
-                              Y.min():Y.max():grid_density*1j]
-    
-    z_grid = griddata(
-        np.column_stack((X.flatten(), Y.flatten())),
-        Z.flatten(), (x_grid, y_grid),
-        method='linear', fill_value=np.nan
-    )
-    
-    colorbar_max = Z.max() * 1.2
-    norm = plt.Normalize(vmin=0, vmax=colorbar_max)
-    facecolors = plt.get_cmap(cmap)(norm(z_grid))
-    
+    # Flatten simulation data and apply scaling if needed
+    x_ = X.flatten()
+    y_ = Y.flatten()
+    z_ = Z.flatten()
+
+    # Build triangulation from your scattered (or gridded) simulation data
+    triang = mtri.Triangulation(x_, y_)
+
+    # Interpolate over a regular grid; adjust 'step' for resolution.
+    step = 0.02
+    x_grid, y_grid = np.mgrid[x_.min():x_.max():step, y_.min():y_.max():step]
+    interp_lin = mtri.LinearTriInterpolator(triang, z_)
+    z_grid = interp_lin(x_grid, y_grid)
+
+    # Create figure and 3D axes
     fig = plt.figure(figsize=(8, 6))
     ax = fig.add_subplot(111, projection='3d')
-    
-    ax.plot_surface(
-        x_grid, y_grid, np.zeros_like(z_grid),
-        rstride=1, cstride=1, facecolors=facecolors,
-        shade=False, antialiased=False
-    )
-    
+
+    # Plot the surface using the interpolated grid
+    surf = ax.plot_surface(x_grid, y_grid, np.nan_to_num(z_grid),
+                           cmap=cmap, vmin=z_.min(), vmax=z_.max(),
+                           edgecolor='none', antialiased=True)
+
+    # Overlay a sparse wireframe for a 3D mesh look.
+    ax.plot_wireframe(x_grid[::50, ::50],
+                      y_grid[::50, ::50],
+                      np.nan_to_num(z_grid)[::50, ::50],
+                      color='k', linewidth=0.4)
+
+    # Extend colored contours down to z=0 for that “edge dropping” effect.
+    ax.contourf(x_grid, y_grid, np.nan_to_num(z_grid),
+                zdir='z', offset=0, cmap=cmap, alpha=0.7)
+
     ax.set_xlabel("X (m)")
     ax.set_ylabel("Y (m)")
-    ax.set_zlabel("PPFD")
-    ax.set_title("3D Floor Heatmap")
+    ax.set_zlabel("PPFD (µmol/m²/s)")
+    ax.set_title("Light Intensity Surface Graph")
     ax.set_xlim(X.min(), X.max())
     ax.set_ylim(Y.min(), Y.max())
-    ax.set_zlim(0, 500)
-    
-    mappable = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
-    mappable.set_array(z_grid)
-    fig.colorbar(mappable, ax=ax, fraction=0.032, pad=0.04)
-    
+    ax.set_zlim(0, z_.max())
+
+    fig.colorbar(surf, fraction=0.032, pad=0.04)
+
     buf = io.BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight')
     plt.close(fig)
     buf.seek(0)
     return base64.b64encode(buf.read()).decode('utf-8')
+
+
+
 
 
 def generate_heatmap(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, cmap="jet", 
@@ -545,7 +560,7 @@ def generate_heatmap(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, cmap="jet",
     im = ax.imshow(Z_hr, cmap=cmap, origin="lower", extent=extent, vmin=0, vmax=colorbar_max, aspect="auto")
     ax.set_xlabel("X (m)")
     ax.set_ylabel("Y (m)")
-    ax.set_title("Heatmap with Anchored Corners & Center (Rotated)")
+    ax.set_title("Heatmap")
     cbar = fig.colorbar(im, ax=ax)
     ticks = np.linspace(0, colorbar_max, 6)
     cbar.set_ticks(ticks)
@@ -570,19 +585,28 @@ def generate_heatmap(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, cmap="jet",
 # Final Entry Point
 # ------------------------------
 def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_callback=None):
+    # Ensure the floor dimensions and target_ppfd are floats.
+    try:
+        floor_width_ft = float(floor_width_ft)
+        floor_length_ft = float(floor_length_ft)
+        target_ppfd = float(target_ppfd)
+    except Exception as e:
+        print("Error converting floor dimensions or target PPFD to float:", e)
+        return {}
+
     ft2m = 3.28084
     W_m = floor_width_ft / ft2m
     L_m = floor_length_ft / ft2m
-    H_m = 3.0 / ft2m
+    H_m = 3.0 / ft2m  # Constant LED height
     best_params = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback)
     final_ppfd = simulate_lighting(best_params, W_m, L_m, H_m)
     mean_ppfd = np.mean(final_ppfd)
     mad = np.mean(np.abs(final_ppfd - mean_ppfd))
     
-    X, Y = build_floor_grid(W_m, L_m)
+    # Generate graphs based on the floor grid.
+    X, Y = build_floor_grid(W_m, L_m)  # same shape as final_ppfd
     surface_graph_b64 = generate_surface_graph(X, Y, final_ppfd, cmap="jet")
     heatmap_b64 = generate_heatmap(X, Y, final_ppfd, cmap="jet", overlay_intensity=False)
-    heatmap_overlay_b64 = generate_heatmap(X, Y, final_ppfd, cmap="jet", overlay_intensity=True, overlay_step=10)
     
     if progress_callback:
         progress_callback("PROGRESS:100")
@@ -598,9 +622,9 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_cal
         "floor_height": 3.0,
         "surface_graph": surface_graph_b64,
         "heatmap": heatmap_b64,
-        "heatmap_overlay": heatmap_overlay_b64,
         "heatmapGrid": final_ppfd.tolist()
     }
+
 
 
 def run_simulation(floor_width_ft=14.0, floor_length_ft=14.0, target_ppfd=1250.0):

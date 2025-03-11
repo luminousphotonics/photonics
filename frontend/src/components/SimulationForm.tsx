@@ -67,9 +67,6 @@ const SimulationForm: React.FC = () => {
   const eventSourceRef = useRef<EventSource | null>(null);
   const logOutputRef = useRef<HTMLDivElement>(null);
 
-  // Toggle state for showing heatmap intensity values
-  const [showHeatmapIntensity, setShowHeatmapIntensity] = useState<boolean>(false);
-
   // Auto-scroll log output when messages update.
   useEffect(() => {
     if (logOutputRef.current) {

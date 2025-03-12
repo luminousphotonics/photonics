@@ -136,22 +136,49 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
             border: "1px solid black",
           }}
         >
-          <svg width="100%" height="100%" viewBox={viewBox} preserveAspectRatio="xMidYMid meet">
-            {cobPositions.map((pos, index) => {
-              const flux = optimizedLumensByLayer[pos.layer] || optimizedLumensByLayer[optimizedLumensByLayer.length - 1];
-              const color = getColorForLumens(flux);
-              return (
-                <circle
-                  key={index}
-                  cx={pos.x}
-                  cy={pos.y}
-                  r={0.04 * floorWidthMeters}
-                  fill={color}
-                  stroke="#000"
-                  strokeWidth={0.003 * floorWidthMeters}
-                />
-              );
-            })}
+          <svg
+            width="100%"
+            height="100%"
+            viewBox={viewBox}
+            preserveAspectRatio="xMidYMid meet"
+            style={{ shapeRendering: "geometricPrecision" }}
+          >
+            <defs>
+              {cobPositions.map((pos, index) => {
+                const flux =
+                  optimizedLumensByLayer[pos.layer] ||
+                  optimizedLumensByLayer[optimizedLumensByLayer.length - 1];
+                const ledColor = getColorForLumens(flux);
+                return (
+                  <radialGradient
+                    key={index}
+                    id={`ledGradient-${index}`}
+                    cx="50%"
+                    cy="50%"
+                    r="50%"
+                  >
+                    {/* Smaller white emitting center */}
+                    <stop offset="0%" stopColor="white" stopOpacity="1" />
+                    <stop offset="10%" stopColor="white" stopOpacity="1" />
+                    {/* Transition quickly to the LED color */}
+                    <stop offset="30%" stopColor={ledColor} stopOpacity="1" />
+                    <stop offset="100%" stopColor={ledColor} stopOpacity="0" />
+                  </radialGradient>
+                );
+              })}
+            </defs>
+            {cobPositions.map((pos, index) => (
+              <circle
+                key={index}
+                cx={pos.x}
+                cy={pos.y}
+                r={0.04 * floorWidthMeters}
+                fill={`url(#ledGradient-${index})`}
+                shapeRendering="geometricPrecision"
+                stroke="black"
+                strokeWidth={0.002 * floorWidthMeters} // adjust as needed for thinness
+              />
+            ))}
           </svg>
         </div>
         {/* Vertical Color Legend */}

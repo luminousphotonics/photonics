@@ -108,6 +108,9 @@ def simulation_progress(request):
     except ValueError:
         return StreamingHttpResponse("Invalid parameters", status=400)
 
+    # Read the compare flag – if "compare" equals "1", side-by-side simulation should run.
+    compare_flag = request.GET.get("compare") == "1"
+
     progress_queue = queue.Queue()
 
     def progress_callback(message):
@@ -115,7 +118,10 @@ def simulation_progress(request):
 
     def run_sim():
         try:
-            result = run_ml_simulation(floor_width, floor_length, target_ppfd, progress_callback=progress_callback)
+            # Pass the side_by_side flag to run_ml_simulation
+            result = run_ml_simulation(floor_width, floor_length, target_ppfd,
+                                       progress_callback=progress_callback,
+                                       side_by_side=compare_flag)
             progress_queue.put("RESULT:" + json.dumps(result))
         except Exception as e:
             progress_queue.put("ERROR:" + str(e))
@@ -136,6 +142,7 @@ def simulation_progress(request):
     response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
     response['Cache-Control'] = 'no-cache'
     return response
+
 
 def agenticai(request):
     return render(request, 'main/agenticai.html')

@@ -7,10 +7,15 @@ export interface SimulationData {
   floor_height: number;
   target_ppfd: number;
   fixtures: FixtureData[];
-  surface_graph?: string;  // Existing property
-  heatmap?: string;        // Existing property
+  surface_graph?: string;
+  heatmap?: string;
+  grid_surface_graph?: string;
+  grid_heatmap?: string;
+  grid_cob_arrangement?: { rows: number; cols: number };
+  grid_uniform_flux?: number;
+  grid_ppfd?: number;
+  grid_mad?: number;
 }
-
 
 export interface FixtureData {
   type: 'CenterUnit' | 'LinearUnit' | 'LShapedUnit' | 'ReverseLShapedUnit';

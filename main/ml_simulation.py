@@ -19,7 +19,6 @@ import matplotlib.tri as mtri
 from mpl_toolkits.mplot3d import Axes3D  # just for side-effects
 from scipy.interpolate import griddata, RegularGridInterpolator
 
-
 # ------------------------------
 # Configuration & Constants
 # ------------------------------
@@ -72,9 +71,8 @@ def compute_conversion_factor(spd_file):
 
 CONVERSION_FACTOR = compute_conversion_factor(SPD_FILE)
 
-
 # ------------------------------
-# Dynamic COB Positioning
+# Dynamic COB Positioning (Staggered)
 # ------------------------------
 def build_cob_positions(W, L, H):
     ft2m = 3.28084
@@ -84,10 +82,7 @@ def build_cob_positions(W, L, H):
     n = max(1, int(max_dim_ft / 2) - 1)
     
     positions = []
-    # Center (layer 0)
     positions.append((0, 0, H, 0))
-    
-    # Generate diamond pattern positions
     for i in range(1, n + 1):
         for x in range(-i, i + 1):
             y_abs = i - abs(x)
@@ -97,7 +92,6 @@ def build_cob_positions(W, L, H):
                 positions.append((x, y_abs, H, i))
                 positions.append((x, -y_abs, H, i))
     
-    # Rotate by 45° and scale separately
     theta = math.radians(45)
     cos_t = math.cos(theta)
     sin_t = math.sin(theta)
@@ -127,13 +121,25 @@ def pack_luminous_flux_dynamic(params, cob_positions):
         led_intensities.append(intensity)
     return np.array(led_intensities, dtype=np.float64)
 
+# ------------------------------
+# Grid COB Positioning (Uniform)
+# ------------------------------
+def build_grid_cob_positions(W, L, rows, cols, H):
+    # W, L in meters
+    xs = np.linspace(0, W, cols)
+    ys = np.linspace(0, L, rows)
+    Xg, Yg = np.meshgrid(xs, ys)
+    positions = []
+    for i in range(rows):
+        for j in range(cols):
+            positions.append((Xg[i, j], Yg[i, j], H, 0))
+    return np.array(positions, dtype=np.float64)
 
 # ------------------------------
-# Floor Grid & Direct Irradiance
+# Floor Grid & Direct Irradiance (unchanged)
 # ------------------------------
 @lru_cache(maxsize=32)
 def cached_build_floor_grid(W: float, L: float):
-    # Use linspace so domain 0..W, 0..L is included
     num_x = int(round(W / FLOOR_GRID_RES)) + 1
     num_y = int(round(L / FLOOR_GRID_RES)) + 1
     xs = np.linspace(0, W, num_x)
@@ -143,7 +149,6 @@ def cached_build_floor_grid(W: float, L: float):
 
 def build_floor_grid(W, L):
     return cached_build_floor_grid(W, L)
-
 
 @njit
 def compute_direct_floor(light_positions, light_fluxes, X, Y):
@@ -367,31 +372,25 @@ def compute_reflection_on_floor(X, Y, patch_centers, patch_normals, patch_areas,
 
 
 # ------------------------------
-# Simulation & Optimization
+# Simulation & Optimization (Optimized Simulation)
 # ------------------------------
 def simulate_lighting(params, W, L, H):
     cob_positions = build_cob_positions(W, L, H)
     led_intensities = pack_luminous_flux_dynamic(params, cob_positions)
     power_arr = led_intensities / LUMINOUS_EFFICACY
     X, Y = build_floor_grid(W, L)
-    
     direct_irr = compute_direct_floor(cob_positions, power_arr, X, Y)
-    
     patch_centers, patch_areas, patch_normals, patch_refl = build_patches(W, L, H)
     patch_direct = compute_patch_direct(cob_positions, power_arr, patch_centers, patch_normals, patch_areas)
-    
     patch_rad = iterative_radiosity_loop(
         patch_centers, patch_normals, patch_direct, patch_areas, patch_refl, NUM_RADIOSITY_BOUNCES
     )
-    
     reflect_irr = compute_reflection_on_floor(
         X, Y, patch_centers, patch_normals, patch_areas, patch_rad, patch_refl
     )
-    
     floor_irr = direct_irr + reflect_irr
     floor_ppfd = floor_irr * CONVERSION_FACTOR
     return floor_ppfd
-
 
 def objective_function(params, W, L, H, target_ppfd):
     floor_ppfd = simulate_lighting(params, W, L, H)
@@ -399,7 +398,6 @@ def objective_function(params, W, L, H, target_ppfd):
     mad = np.mean(np.abs(floor_ppfd - mean_ppfd))
     ppfd_penalty = (mean_ppfd - target_ppfd) ** 2
     return mad + 2.0 * ppfd_penalty
-
 
 def optimize_lighting(W, L, H, target_ppfd, progress_callback=None):
     cob_positions = build_cob_positions(W, L, H)
@@ -433,6 +431,25 @@ def optimize_lighting(W, L, H, target_ppfd, progress_callback=None):
         progress_callback(f"[WARN] Optimization did not converge: {res.message}")
     return res.x
 
+# ------------------------------
+# Grid Simulation (Uniform, no optimization)
+# ------------------------------
+def simulate_lighting_grid(uniform_flux, W, L, H, cob_positions):
+    # Use a uniform flux for all COBs.
+    power_arr = np.full(len(cob_positions), uniform_flux) / LUMINOUS_EFFICACY
+    X, Y = build_floor_grid(W, L)
+    direct_irr = compute_direct_floor(cob_positions, power_arr, X, Y)
+    patch_centers, patch_areas, patch_normals, patch_refl = build_patches(W, L, H)
+    patch_direct = compute_patch_direct(cob_positions, power_arr, patch_centers, patch_normals, patch_areas)
+    patch_rad = iterative_radiosity_loop(
+        patch_centers, patch_normals, patch_direct, patch_areas, patch_refl, NUM_RADIOSITY_BOUNCES
+    )
+    reflect_irr = compute_reflection_on_floor(
+        X, Y, patch_centers, patch_normals, patch_areas, patch_rad, patch_refl
+    )
+    floor_irr = direct_irr + reflect_irr
+    floor_ppfd = floor_irr * CONVERSION_FACTOR
+    return floor_ppfd
 
 # ------------------------------
 # Visualization
@@ -582,10 +599,9 @@ def generate_heatmap(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, cmap="jet",
 
 
 # ------------------------------
-# Final Entry Point
+# Main Entry Point: Run Simulation (with optional side-by-side comparison)
 # ------------------------------
-def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_callback=None):
-    # Ensure the floor dimensions and target_ppfd are floats.
+def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_callback=None, side_by_side=False):
     try:
         floor_width_ft = float(floor_width_ft)
         floor_length_ft = float(floor_length_ft)
@@ -598,21 +614,17 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_cal
     W_m = floor_width_ft / ft2m
     L_m = floor_length_ft / ft2m
     H_m = 3.0 / ft2m  # Constant LED height
+
     best_params = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback)
     final_ppfd = simulate_lighting(best_params, W_m, L_m, H_m)
     mean_ppfd = np.mean(final_ppfd)
     mad = np.mean(np.abs(final_ppfd - mean_ppfd))
     
-    # Generate graphs based on the floor grid.
-    X, Y = build_floor_grid(W_m, L_m)  # same shape as final_ppfd
+    X, Y = build_floor_grid(W_m, L_m)
     surface_graph_b64 = generate_surface_graph(X, Y, final_ppfd, cmap="jet")
     heatmap_b64 = generate_heatmap(X, Y, final_ppfd, cmap="jet", overlay_intensity=False)
     
-    if progress_callback:
-        progress_callback("PROGRESS:100")
-        progress_callback("[INFO] Simulation complete!")
-    
-    return {
+    result = {
         "optimized_lumens_by_layer": best_params.tolist(),
         "mad": float(mad),
         "optimized_ppfd": float(mean_ppfd),
@@ -624,11 +636,58 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, progress_cal
         "heatmap": heatmap_b64,
         "heatmapGrid": final_ppfd.tolist()
     }
+    
+    # If side-by-side comparison is enabled, run the grid simulation.
+    # If side-by-side comparison is enabled, run the grid simulation.
+    if side_by_side:
+        # Define mapping from floor size (ft) to grid dimensions.
+        grid_mapping = {
+            (2,2): (3,3),
+            (4,4): (4,4),
+            (6,6): (5,5),
+            (8,8): (6,6),
+            (10,10): (7,7),
+            (12,12): (8,8),
+            (14,14): (9,9),
+            (16,16): (10,10),
+            (12,16): (8,10)
+        }
+        key = (int(floor_width_ft), int(floor_length_ft))
+        grid_dims = grid_mapping.get(key, (8,8))
+        rows, cols = grid_dims
+        grid_cob_positions = build_grid_cob_positions(W_m, L_m, rows, cols, H_m)
+        # Run a test simulation with a flux of 1.
+        ppfd_test = simulate_lighting_grid(1.0, W_m, L_m, H_m, grid_cob_positions)
+        mean_ppfd_test = np.mean(ppfd_test)
+        # Compute the required uniform flux to reach target_ppfd.
+        required_flux = target_ppfd / mean_ppfd_test
+        grid_final_ppfd = simulate_lighting_grid(required_flux, W_m, L_m, H_m, grid_cob_positions)
+        grid_mean_ppfd = np.mean(grid_final_ppfd)
+        grid_mad = np.mean(np.abs(grid_final_ppfd - grid_mean_ppfd))
+        grid_surface_graph_b64 = generate_surface_graph(X, Y, grid_final_ppfd, cmap="jet")
+        grid_heatmap_b64 = generate_heatmap(X, Y, grid_final_ppfd, cmap="jet", overlay_intensity=False)
+        
+        # Add grid simulation results to the output.
+        result.update({
+            "grid_cob_arrangement": {"rows": rows, "cols": cols},
+            "grid_uniform_flux": required_flux,
+            "grid_ppfd": float(grid_mean_ppfd),
+            "grid_mad": float(grid_mad),
+            "grid_surface_graph": grid_surface_graph_b64,
+            "grid_heatmap": grid_heatmap_b64
+        })
 
-
+    
+    if progress_callback:
+        progress_callback("PROGRESS:100")
+        progress_callback("[INFO] Simulation complete!")
+    
+    return result
 
 def run_simulation(floor_width_ft=14.0, floor_length_ft=14.0, target_ppfd=1250.0):
-    result = run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd)
+    # For demonstration, we assume side-by-side is requested via an extra parameter.
+    # In production, this flag will be set based on the "compare" query parameter.
+    result = run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, side_by_side=True)
     print("\n[RESULT] Simulation Output:")
     print(result)
 

@@ -15,7 +15,8 @@ urlpatterns = [
     # Updated simulation endpoint URL to use an underscore to match the module name
     path('api/ml_simulation/', views.run_simulation, name='run_simulation'),
     path('simulation/', views.simulation_view, name='simulation_view'),
-    path('api/ml_simulation/progress/', views.simulation_progress, name='simulation_progress'),
+    #path('api/ml_simulation/progress/', views.simulation_progress, name='simulation_progress'),
+    path('api/ml_simulation/progress/<str:job_id>/', views.simulation_progress, name='simulation_progress'),
     path('agenticai/', views.agenticai, name='agenticai'),
     path('coolingsystem/', views.cooling_system, name='cooling_system'),
     path('cea/', views.cea, name='cea'),

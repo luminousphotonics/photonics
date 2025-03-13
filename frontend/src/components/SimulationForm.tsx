@@ -159,85 +159,78 @@ const SimulationForm: React.FC = () => {
   };
   
   // Start simulation on button click.
-  const startSimulation = () => {
+  const startSimulation = async () => {
     // Reset state.
     setProgress(0);
     setLogMessages([]);
     setSimulationResult(null);
-    simulationCompleteRef.current = false; // reset completion flag
+    simulationCompleteRef.current = false;
   
-    const params = new URLSearchParams({
-      start: "1",
+    // Build simulation parameters.
+    const params = {
       floor_width: formData.floor_width,
       floor_length: formData.floor_length,
       target_ppfd: formData.target_ppfd,
-      floor_height: formData.light_height, // key now matches backend
-    });
-  
-    // Append the compare flag if side-by-side is enabled.
-    if (enableComparison) {
-      params.append("compare", "1");
-    }
-    const url = `/api/ml_simulation/progress/?${params.toString()}`;
-    const es = new EventSource(url);
-    eventSourceRef.current = es;
-  
-    // --- NEW: onopen handler to prevent auto-reconnect ---
-    es.onopen = () => {
-      // If simulation is already complete, immediately close the connection.
-      if (simulationCompleteRef.current) {
-        es.close();
-      }
+      floor_height: formData.light_height,
+      compare: enableComparison ? "1" : "0",
     };
   
-    es.onmessage = (event) => {
-      const data: SseMessageData = JSON.parse(event.data);
-      const { message } = data;
+    try {
+      // Start the simulation asynchronously; get back a unique job ID.
+      const response = await fetch("/api/ml_simulation/start/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(params),
+      });
+      const data = await response.json();
+      const jobId: string = data.job_id;
+      setLogMessages((prev) => [...prev, `[INFO] Simulation started. Job ID: ${jobId}`]);
   
-      if (message.startsWith("RESULT:")) {
-        if (!simulationCompleteRef.current) {
-          try {
-            const jsonStr = message.replace("RESULT:", "");
-            const result: SimulationData = JSON.parse(jsonStr);
-            setSimulationResult(result);
-            simulationCompleteRef.current = true; // mark as complete
-            setLogMessages((prev) => [...prev, "[INFO] Simulation complete!"]);
-            es.close(); // explicitly close the connection to prevent reconnection
-          } catch (err) {
-            setLogMessages((prev) => [...prev, "[ERROR] Failed to parse result JSON"]);
+      // Poll for progress updates using the job ID.
+      const pollProgress = async (): Promise<void> => {
+        try {
+          const progressRes = await fetch(`/api/ml_simulation/progress/${jobId}/`);
+          const progressData: { status: string; progress: string[] } = await progressRes.json();
+          
+          // Update the log messages.
+          setLogMessages(progressData.progress);
+  
+          // Extract the latest progress percentage from messages.
+          const progressMsgs = progressData.progress.filter((msg: string) => msg.startsWith("PROGRESS:"));
+          if (progressMsgs.length > 0) {
+            const lastProgressMsg = progressMsgs[progressMsgs.length - 1];
+            const pctStr = lastProgressMsg.replace("PROGRESS:", "").trim();
+            const pct = parseFloat(pctStr);
+            if (!isNaN(pct)) {
+              setProgress(pct);
+            }
           }
+          
+  
+          if (progressData.status === "done") {
+            // Fetch the final simulation result.
+            const resultRes = await fetch(`/api/ml_simulation/result/${jobId}/`);
+            const resultData: SimulationData = await resultRes.json();
+            setSimulationResult(resultData);
+            setLogMessages(prev => [...prev, "[INFO] Simulation complete!"]);
+            simulationCompleteRef.current = true;
+          } else {
+            // Continue polling every 3 seconds.
+            setTimeout(pollProgress, 3000);
+          }
+        } catch (error) {
+          setLogMessages(prev => [...prev, "[ERROR] Error polling progress: " + error]);
+          setTimeout(pollProgress, 3000);
         }
-        return;
-      }
+      };
   
-      if (message.startsWith("ERROR:")) {
-        setLogMessages((prev) => [...prev, message]);
-        return;
-      }
-  
-      if (message.startsWith("PROGRESS:")) {
-        const pctStr = message.replace("PROGRESS:", "").trim();
-        const pct = parseFloat(pctStr);
-        if (!isNaN(pct)) {
-          setProgress(pct);
-        }
-        setLogMessages((prev) => [...prev, `[INFO] ${pct}% complete`]);
-      } else {
-        setLogMessages((prev) => [...prev, message]);
-      }
-    };
-  
-    es.onerror = (err) => {
-      // Do nothing if simulation has already completed.
-      if (simulationCompleteRef.current) return;
-      setLogMessages((prev) => [
-        ...prev,
-        "[WARN] Connection to server lost. Please try again.",
-      ]);
-      console.error("EventSource failed:", err);
-      es.close();
-    };
+      pollProgress();
+    } catch (error) {
+      setLogMessages((prev) => [...prev, "[ERROR] Failed to start simulation: " + error]);
+    }
   };
+  
+  
   
 
   return (

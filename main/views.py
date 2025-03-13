@@ -102,59 +102,6 @@ def run_simulation(request):
 def simulation_view(request):
     return render(request, 'main/simulation.html')
 
-def simulation_progress(request):
-    # Only start simulation if the query parameter "start" equals "1"
-    if request.GET.get("start") != "1":
-        def event_stream():
-            yield "data: {}\n\n"
-        return StreamingHttpResponse(event_stream(), content_type="text/event-stream")
-
-    try:
-        floor_width = float(request.GET.get("floor_width", 14.0))
-        floor_length = float(request.GET.get("floor_length", 14.0))
-        target_ppfd = float(request.GET.get("target_ppfd", 1250.0))
-    except ValueError:
-        return StreamingHttpResponse("Invalid parameters", status=400)
-
-    # Read the compare flag – if "compare" equals "1", side-by-side simulation should run.
-    compare_flag = request.GET.get("compare") == "1"
-
-    progress_queue = queue.Queue()
-
-    def progress_callback(message):
-        progress_queue.put(message)
-
-    def run_sim():
-        try:
-            # Pass the side_by_side flag to run_ml_simulation
-            result = run_ml_simulation(floor_width, floor_length, target_ppfd,
-                                       progress_callback=progress_callback,
-                                       side_by_side=compare_flag)
-            progress_queue.put("RESULT:" + json.dumps(result))
-        except Exception as e:
-            progress_queue.put("ERROR:" + str(e))
-        finally:
-            progress_queue.put(None)  # Sentinel
-
-    thread = threading.Thread(target=run_sim)
-    thread.start()
-
-    def event_stream():
-        while True:
-            msg = progress_queue.get()
-            if msg is None:
-                # Before breaking, instruct the client not to reconnect
-                yield "retry: 1000000\n\n"
-                break
-            data = {"message": msg}
-            yield f"data: {json.dumps(data)}\n\n"
-
-
-    response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
-    response['Cache-Control'] = 'no-cache'
-    return response
-
-
 def agenticai(request):
     return render(request, 'main/agenticai.html')
 
@@ -353,13 +300,15 @@ def miro(request):
 # New Endpoints for Asynchronous Heavy Payload Transfer
 # ----------------------------
 
-# Global in-memory store for simulation jobs.
+# Global job store to track each simulation job.
+# Each job is stored as a dictionary with keys: 'progress', 'status', and 'result'
 simulation_job_store = {}
 
 @csrf_exempt
 def simulation_start(request):
     """
-    Starts the simulation asynchronously and returns a unique job ID.
+    Starts a simulation asynchronously. Expects POST parameters for the simulation.
+    Initializes an entry in simulation_job_store for progress tracking.
     """
     if request.method == 'POST':
         try:
@@ -372,20 +321,36 @@ def simulation_start(request):
             return JsonResponse({'error': 'Invalid parameters: ' + str(e)}, status=400)
         
         job_id = str(uuid.uuid4())
+        # Initialize the job entry.
+        simulation_job_store[job_id] = {
+            'progress': [],
+            'status': 'running',  # or 'done' when complete
+            'result': None
+        }
+
+        # Define a callback that stores progress messages.
+        def progress_callback(message):
+            simulation_job_store[job_id]['progress'].append(message)
 
         def run_job():
             try:
+                # Run your simulation; pass the progress_callback so your simulation can log messages.
                 result = run_ml_simulation(
                     floor_width_ft=floor_width,
                     floor_length_ft=floor_length,
                     target_ppfd=target_ppfd,
                     floor_height=floor_height,
+                    progress_callback=progress_callback,
                     side_by_side=True
                 )
-                simulation_job_store[job_id] = result
+                simulation_job_store[job_id]['result'] = result
+                simulation_job_store[job_id]['status'] = 'done'
             except Exception as e:
-                simulation_job_store[job_id] = {'error': str(e)}
-        
+                simulation_job_store[job_id]['progress'].append("ERROR: " + str(e))
+                simulation_job_store[job_id]['status'] = 'done'
+                simulation_job_store[job_id]['result'] = {'error': str(e)}
+
+        # Run the simulation job in a new thread.
         thread = threading.Thread(target=run_job)
         thread.start()
         return JsonResponse({'job_id': job_id})
@@ -393,17 +358,32 @@ def simulation_start(request):
 
 def simulation_status(request, job_id):
     """
-    Returns the status of the simulation job.
+    Returns only the status of the simulation job ("running" or "done").
     """
-    if job_id in simulation_job_store:
-        return JsonResponse({'status': 'done'})
-    else:
-        return JsonResponse({'status': 'running'})
+    job = simulation_job_store.get(job_id)
+    if job is None:
+        return JsonResponse({'error': 'Job not found'}, status=404)
+    return JsonResponse({'status': job['status']})
+
 
 def simulation_result(request, job_id):
     """
-    Returns the heavy simulation result once the job is complete.
+    Returns the final heavy simulation result once the job is complete.
     """
-    if job_id in simulation_job_store:
-        return JsonResponse(simulation_job_store[job_id])
-    return JsonResponse({'error': 'Job not found or not complete.'}, status=404)
+    job = simulation_job_store.get(job_id)
+    if job is None or job['status'] != 'done':
+        return JsonResponse({'error': 'Job not found or not complete.'}, status=404)
+    return JsonResponse(job['result'])
+
+def simulation_progress(request, job_id):
+    """
+    Polling endpoint: returns the current status and accumulated progress messages
+    for the given simulation job.
+    """
+    job = simulation_job_store.get(job_id)
+    if job is None:
+        return JsonResponse({'error': 'Job not found'}, status=404)
+    return JsonResponse({
+        'status': job['status'],      # "running" or "done"
+        'progress': job['progress']   # List of progress log messages
+    })

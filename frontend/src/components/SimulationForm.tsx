@@ -186,14 +186,13 @@ const SimulationForm: React.FC = () => {
         try {
           const progressRes = await fetch(`/api/ml_simulation/progress/${jobId}/`);
           const progressData: { status: string; progress: string[] } = await progressRes.json();
-  
-          // Ensure progressData.progress is an array; otherwise default to an empty array.
+          console.log("Progress data:", progressData); // Debug log
+      
           const progressArray: string[] = Array.isArray(progressData.progress)
             ? progressData.progress
             : [];
           setLogMessages(progressArray);
-  
-          // Use the last progress message that starts with "PROGRESS:"
+      
           const progressMsgs = progressArray.filter((msg: string) => msg.startsWith("PROGRESS:"));
           if (progressMsgs.length > 0) {
             const lastProgressMsg = progressMsgs[progressMsgs.length - 1];
@@ -203,21 +202,22 @@ const SimulationForm: React.FC = () => {
               setProgress(pct);
             }
           }
-  
+      
           if (progressData.status === "done") {
             const resultRes = await fetch(`/api/ml_simulation/result/${jobId}/`);
             const resultData: SimulationData = await resultRes.json();
             setSimulationResult(resultData);
-            setLogMessages((prev) => [...prev, "[INFO] Simulation complete!"]);
+            setLogMessages(prev => [...prev, "[INFO] Simulation complete!"]);
             simulationCompleteRef.current = true;
           } else {
             setTimeout(pollProgress, 3000);
           }
         } catch (error: any) {
-          setLogMessages((prev) => [...prev, "[ERROR] Error polling progress: " + error]);
+          setLogMessages(prev => [...prev, "[ERROR] Error polling progress: " + error]);
           setTimeout(pollProgress, 3000);
         }
       };
+      
   
       pollProgress();
     } catch (error: any) {

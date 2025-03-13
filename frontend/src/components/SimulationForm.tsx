@@ -186,13 +186,14 @@ const SimulationForm: React.FC = () => {
         try {
           const progressRes = await fetch(`/api/ml_simulation/progress/${jobId}/`);
           const progressData: { status: string; progress: string[] } = await progressRes.json();
-          console.log("Progress data:", progressData); // Debug log
-      
+          
+          // Ensure progressData.progress is an array.
           const progressArray: string[] = Array.isArray(progressData.progress)
             ? progressData.progress
             : [];
           setLogMessages(progressArray);
-      
+          
+          // Filter for progress messages that begin with "PROGRESS:".
           const progressMsgs = progressArray.filter((msg: string) => msg.startsWith("PROGRESS:"));
           if (progressMsgs.length > 0) {
             const lastProgressMsg = progressMsgs[progressMsgs.length - 1];
@@ -202,7 +203,8 @@ const SimulationForm: React.FC = () => {
               setProgress(pct);
             }
           }
-      
+          
+          // Instead of solely relying on progress messages, check the status.
           if (progressData.status === "done") {
             const resultRes = await fetch(`/api/ml_simulation/result/${jobId}/`);
             const resultData: SimulationData = await resultRes.json();
@@ -217,6 +219,7 @@ const SimulationForm: React.FC = () => {
           setTimeout(pollProgress, 3000);
         }
       };
+      
       
   
       pollProgress();

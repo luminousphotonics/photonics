@@ -600,12 +600,12 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, floor_height
     H_m = floor_height / ft2m  # Use the input light height
 
     # Start heartbeat thread if progress_callback is provided.
-    heartbeat_active = [True]  # mutable flag
-
+    heartbeat_active = [True]  # mutable flag to control the heartbeat thread
     if progress_callback:
         def heartbeat():
             while heartbeat_active[0]:
-                # Send a heartbeat message (you can adjust the format as needed)
+                # Send a heartbeat message. This helps keep the client connection active,
+                # but you can consider disabling this entirely if you prefer relying solely on Redis updates.
                 progress_callback(": heartbeat")
                 time.sleep(15)
         hb_thread = threading.Thread(target=heartbeat)
@@ -687,11 +687,13 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, floor_height
         })
 
     if progress_callback:
-        heartbeat_active[0] = False  # signal heartbeat thread to stop
+        # Signal the heartbeat thread to stop once the simulation is complete.
+        heartbeat_active[0] = False
+        # Send a final progress update to ensure the frontend reaches 100%.
         progress_callback("PROGRESS:100")
-        #progress_callback("[INFO] Simulation complete!")
     
     return result
+
 
 def run_simulation(floor_width_ft=14.0, floor_length_ft=14.0, target_ppfd=1250.0, floor_height=3.0):
     result = run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, floor_height, side_by_side=True)

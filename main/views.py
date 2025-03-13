@@ -344,14 +344,16 @@ def simulation_start(request):
                     progress_callback=progress_callback,
                     side_by_side=True
                 )
-                # Push a final progress update to ensure the progress bar reaches 100%
+                # Push the final progress update:
                 progress_callback("PROGRESS:100")
                 redis_conn.set(f"{REDIS_PREFIX}:{job_id}:result", json.dumps(result))
                 redis_conn.set(f"{REDIS_PREFIX}:{job_id}:status", "done")
+                print(f"[INFO] Simulation job {job_id} complete with result: {result}")
             except Exception as e:
                 progress_callback("ERROR: " + str(e))
                 redis_conn.set(f"{REDIS_PREFIX}:{job_id}:status", "done")
                 redis_conn.set(f"{REDIS_PREFIX}:{job_id}:result", json.dumps({"error": str(e)}))
+
         
         thread = threading.Thread(target=run_job)
         thread.start()

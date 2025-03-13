@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from .forms import ContactForm
 import os
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .ml_simulation import run_ml_simulation  # Import from ml_simulation.py
@@ -13,7 +13,6 @@ from .blog_system import BlogPost, Like, Share  # our model file
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from .forms import BlogPostForm
-from django.http import HttpResponse, StreamingHttpResponse
 from .blog_system import BlogPost
 import mammoth
 from django.contrib.auth.decorators import user_passes_test
@@ -21,6 +20,7 @@ import io
 from .ml_simulation import run_ml_simulation
 import queue
 import threading
+import uuid
 
 def index(request):
     return render(request, 'main/index.html')
@@ -143,9 +143,12 @@ def simulation_progress(request):
         while True:
             msg = progress_queue.get()
             if msg is None:
+                # Before breaking, instruct the client not to reconnect
+                yield "retry: 1000000\n\n"
                 break
             data = {"message": msg}
             yield f"data: {json.dumps(data)}\n\n"
+
 
     response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
     response['Cache-Control'] = 'no-cache'
@@ -345,3 +348,62 @@ def approve_blog_post(request, slug):
 
 def miro(request):
     return render(request, 'main/miro.html')
+
+# ----------------------------
+# New Endpoints for Asynchronous Heavy Payload Transfer
+# ----------------------------
+
+# Global in-memory store for simulation jobs.
+simulation_job_store = {}
+
+@csrf_exempt
+def simulation_start(request):
+    """
+    Starts the simulation asynchronously and returns a unique job ID.
+    """
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            floor_width = float(data.get('floor_width', 12))
+            floor_length = float(data.get('floor_length', 12))
+            target_ppfd = float(data.get('target_ppfd', 1250))
+            floor_height = float(data.get('floor_height', 3.0))
+        except Exception as e:
+            return JsonResponse({'error': 'Invalid parameters: ' + str(e)}, status=400)
+        
+        job_id = str(uuid.uuid4())
+
+        def run_job():
+            try:
+                result = run_ml_simulation(
+                    floor_width_ft=floor_width,
+                    floor_length_ft=floor_length,
+                    target_ppfd=target_ppfd,
+                    floor_height=floor_height,
+                    side_by_side=True
+                )
+                simulation_job_store[job_id] = result
+            except Exception as e:
+                simulation_job_store[job_id] = {'error': str(e)}
+        
+        thread = threading.Thread(target=run_job)
+        thread.start()
+        return JsonResponse({'job_id': job_id})
+    return JsonResponse({'error': 'POST request required.'}, status=400)
+
+def simulation_status(request, job_id):
+    """
+    Returns the status of the simulation job.
+    """
+    if job_id in simulation_job_store:
+        return JsonResponse({'status': 'done'})
+    else:
+        return JsonResponse({'status': 'running'})
+
+def simulation_result(request, job_id):
+    """
+    Returns the heavy simulation result once the job is complete.
+    """
+    if job_id in simulation_job_store:
+        return JsonResponse(simulation_job_store[job_id])
+    return JsonResponse({'error': 'Job not found or not complete.'}, status=404)

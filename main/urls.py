@@ -32,6 +32,10 @@ urlpatterns = [
     path('blog/approve/<slug:slug>/', views.approve_blog_post, name='approve_blog_post'),
     path('ckeditor/', include('django_ckeditor_5.urls')),
     path('miro/', views.miro, name='miro'),
+    # New endpoints for asynchronous simulation job
+    path('api/ml_simulation/start/', views.simulation_start, name='simulation_start'),
+    path('api/ml_simulation/status/<str:job_id>/', views.simulation_status, name='simulation_status'),
+    path('api/ml_simulation/result/<str:job_id>/', views.simulation_result, name='simulation_result'),
 ]
 
 if settings.DEBUG:

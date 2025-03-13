@@ -164,7 +164,8 @@ const SimulationForm: React.FC = () => {
     setProgress(0);
     setLogMessages([]);
     setSimulationResult(null);
-
+    simulationCompleteRef.current = false; // reset completion flag
+  
     const params = new URLSearchParams({
       start: "1",
       floor_width: formData.floor_width,
@@ -172,8 +173,7 @@ const SimulationForm: React.FC = () => {
       target_ppfd: formData.target_ppfd,
       floor_height: formData.light_height, // key now matches backend
     });
-    
-
+  
     // Append the compare flag if side-by-side is enabled.
     if (enableComparison) {
       params.append("compare", "1");
@@ -181,11 +181,19 @@ const SimulationForm: React.FC = () => {
     const url = `/api/ml_simulation/progress/?${params.toString()}`;
     const es = new EventSource(url);
     eventSourceRef.current = es;
-
+  
+    // --- NEW: onopen handler to prevent auto-reconnect ---
+    es.onopen = () => {
+      // If simulation is already complete, immediately close the connection.
+      if (simulationCompleteRef.current) {
+        es.close();
+      }
+    };
+  
     es.onmessage = (event) => {
       const data: SseMessageData = JSON.parse(event.data);
       const { message } = data;
-    
+  
       if (message.startsWith("RESULT:")) {
         if (!simulationCompleteRef.current) {
           try {
@@ -201,12 +209,12 @@ const SimulationForm: React.FC = () => {
         }
         return;
       }
-    
+  
       if (message.startsWith("ERROR:")) {
         setLogMessages((prev) => [...prev, message]);
         return;
       }
-    
+  
       if (message.startsWith("PROGRESS:")) {
         const pctStr = message.replace("PROGRESS:", "").trim();
         const pct = parseFloat(pctStr);
@@ -218,10 +226,9 @@ const SimulationForm: React.FC = () => {
         setLogMessages((prev) => [...prev, message]);
       }
     };
-    
-
+  
     es.onerror = (err) => {
-      // If the simulation is complete, ignore the error
+      // Do nothing if simulation has already completed.
       if (simulationCompleteRef.current) return;
       setLogMessages((prev) => [
         ...prev,
@@ -230,8 +237,8 @@ const SimulationForm: React.FC = () => {
       console.error("EventSource failed:", err);
       es.close();
     };
-    
   };
+  
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto" }}>

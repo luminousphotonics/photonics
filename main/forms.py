@@ -17,7 +17,10 @@ class BlogPostForm(forms.ModelForm):
 
     class Meta:
         model = BlogPost
-        fields = ['title', 'slug', 'content', 'title_image', 'content_doc']
+        fields = [
+            'title', 'slug', 'content', 'title_image', 'content_doc',
+            'meta_keywords', 'meta_title', 'meta_description'
+        ]
         widgets = {
             'content': CKEditor5Widget(config_name='default'),
         }

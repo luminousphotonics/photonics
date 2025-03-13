@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
 import ModularVisualization from "../components/ModularVisualization";
 import { SimulationData } from "../types";
 import GridVisualization from "../components/GridVisualization";
@@ -54,14 +55,16 @@ interface FormDataState {
   floor_width: string;
   floor_length: string;
   target_ppfd: string;
+  light_height: string; // New field
 }
 
 const SimulationForm: React.FC = () => {
-  // Form state
+
   const [formData, setFormData] = useState<FormDataState>({
     floor_width: "12",
     floor_length: "12",
     target_ppfd: "1250",
+    light_height: "3", // default light height in feet
   });
 
   // State for plant growth stage and selected plant
@@ -77,6 +80,16 @@ const SimulationForm: React.FC = () => {
   const [simulationResult, setSimulationResult] = useState<SimulationData | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const logOutputRef = useRef<HTMLDivElement>(null);
+
+  // Show Explain Metrics Button
+
+  const [showMetricsModal, setShowMetricsModal] = useState<boolean>(false);
+  const [showMethodologyModal, setShowMethodologyModal] = useState<boolean>(false);
+
+  // Hover Effects for Start Simulation and Explain Metrics Buttons
+  const [blueHover, setBlueHover] = useState<boolean>(false);
+  const [metricsHover, setMetricsHover] = useState<boolean>(false);
+  const [methodologyHover, setMethodologyHover] = useState<boolean>(false);
 
   // Auto-scroll log output when messages update.
   useEffect(() => {
@@ -153,7 +166,10 @@ const SimulationForm: React.FC = () => {
       floor_width: formData.floor_width,
       floor_length: formData.floor_length,
       target_ppfd: formData.target_ppfd,
+      floor_height: formData.light_height, // key now matches backend
     });
+    
+
     // Append the compare flag if side-by-side is enabled.
     if (enableComparison) {
       params.append("compare", "1");
@@ -386,114 +402,345 @@ const SimulationForm: React.FC = () => {
         </label>
       </div>
 
-      {/* Start Simulation Button */}
-      <button
-        onClick={startSimulation}
-        style={{
-          display: "inline-block",
-          padding: "10px 20px",
-          background: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          fontSize: "1em",
-        }}
-      >
-        Start Simulation
-      </button>
+        {/* Start Simulation Button */}
+        <button
+          onClick={startSimulation}
+          onMouseEnter={() => setBlueHover(true)}
+          onMouseLeave={() => setBlueHover(false)}
+          style={{
+            display: "inline-block",
+            padding: "12px 25px",
+            backgroundColor: blueHover ? "#F0F0F0" : "#0078BE",
+            color: blueHover ? "#0078BE" : "#F0F0F0",
+            textDecoration: "none",
+            borderRadius: "5px",
+            fontSize: "1.1em",
+            transition: "background-color 0.3s ease",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Start Simulation
+        </button>
 
-      {/* Final Result & Visualization */}
-      {simulationResult && (
-        <div style={{ marginTop: "30px" }}>
-          <h2>Simulation Results</h2>
-          <p>
-            <strong>Minimized MAD:</strong> {simulationResult.mad.toFixed(2)}
-          </p>
-          <p>
-            <strong>Optimized PPFD:</strong> {simulationResult.optimized_ppfd.toFixed(2)} µmol/m²/s
-          </p>
-          <h3>Optimized Lumens by Layer</h3>
-          <ul>
-            {simulationResult.optimized_lumens_by_layer.map((lumens, i) => (
-              <li key={i}>
-                {i === 0 ? "Center COB" : `Layer ${i + 1}`}: {lumens.toFixed(2)} lumens
-              </li>
-            ))}
-          </ul>
-          <div style={{ marginTop: "20px" }}>
-            <ModularVisualization
-              mad={simulationResult.mad}
-              optimized_ppfd={simulationResult.optimized_ppfd}
-              floorWidth={simulationResult.floor_width}
-              floorLength={simulationResult.floor_length}
-              floorHeight={simulationResult.floor_height}
-              optimizedLumensByLayer={simulationResult.optimized_lumens_by_layer}
-              simulationResult={simulationResult}
-            />
+
+        {/* Final Result & Visualization */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h2 style={{ marginRight: "10px" }}>Simulation Results</h2>
+          {simulationResult && (
+            <>
+            <button
+              onClick={() => setShowMetricsModal(true)}
+              onMouseEnter={() => setMetricsHover(true)}
+              onMouseLeave={() => setMetricsHover(false)}
+              style={{
+                display: "inline-block",
+                padding: "12px 25px",
+                backgroundColor: metricsHover ? "#F0F0F0" : "red",
+                color: metricsHover ? "red" : "#F0F0F0",
+                textDecoration: "none",
+                borderRadius: "5px",
+                fontSize: "1.1em",
+                transition: "background-color 0.3s ease",
+                border: "none",
+                cursor: "pointer",
+                marginRight: "10px",
+              }}
+            >
+              Explain the Metrics
+            </button>
+            <button
+              onClick={() => setShowMethodologyModal(true)}
+              onMouseEnter={() => setMethodologyHover(true)}
+              onMouseLeave={() => setMethodologyHover(false)}
+              style={{
+                display: "inline-block",
+                padding: "12px 25px",
+                backgroundColor: methodologyHover ? "#F0F0F0" : "red",
+                color: methodologyHover ? "red" : "#F0F0F0",
+                textDecoration: "none",
+                borderRadius: "5px",
+                fontSize: "1.1em",
+                transition: "background-color 0.3s ease",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Explain the Methodology
+            </button>
+
+            </>
+          )}
+        </div>
+
+        {/* Metrics Modal */}
+        {showMetricsModal && (
+          <div
+            className="modal-overlay"
+            onClick={() => setShowMetricsModal(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
+              transition: "opacity 0.3s ease",
+            }}
+          >
+            <div
+              className="modal-content"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                padding: "20px",
+                borderRadius: "5px",
+                maxWidth: "600px",
+                maxHeight: "80%",
+                overflowY: "auto",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+              }}
+            >
+              <MathJaxContext>
+                <div className="metrics-explanation" style={{ marginTop: "20px" }}>
+                  <ol>
+                    <li style={{ marginBottom: "1em" }}>
+                      <strong>
+                        Average PPFD (<MathJax inline>{"\\(\\text{PPFD}_{\\text{avg}}\\)"}</MathJax>):
+                      </strong>{" "}
+                      The average PPFD is simply the arithmetic mean of all PPFD measurements:
+                      <MathJax>{"\\(\\text{PPFD}_{\\text{avg}} = \\frac{1}{n} \\sum_{i=1}^{n} P_i\\)"}</MathJax>
+                    </li>
+                    <li style={{ marginBottom: "1em" }}>
+                      <strong>Root Mean Squared Error (RMSE):</strong>{" "}
+                      RMSE quantifies the difference between the measured PPFD values and the average PPFD:
+                      <MathJax>{"\\(\\text{RMSE} = \\sqrt{\\frac{\\sum_{i=1}^{n} (P_i - \\text{PPFD}_{\\text{avg}})^2}{n}}\\)"}</MathJax>
+                    </li>
+                    <li style={{ marginBottom: "1em" }}>
+                      <strong>Degree of Uniformity (DOU):</strong>{" "}
+                      DOU is calculated based on the RMSE and the average PPFD:
+                      <MathJax>{"\\(\\text{DOU} = 100 \\times \\left(1 - \\frac{\\text{RMSE}}{\\text{PPFD}_{\\text{avg}}}\\right)\\)"}</MathJax>
+                    </li>
+                    <li style={{ marginBottom: "1em" }}>
+                      <strong>Mean Absolute Deviation (MAD):</strong>{" "}
+                      MAD measures the average absolute difference between each PPFD value and the average PPFD:
+                      <MathJax>{"\\(\\text{MAD} = \\frac{1}{n} \\sum_{i=1}^{n} |P_i - \\text{PPFD}_{\\text{avg}}|\\)"}</MathJax>
+                    </li>
+                    <li style={{ marginBottom: "1em" }}>
+                      <strong>Coefficient of Variation (CV):</strong>{" "}
+                      CV is the ratio of the standard deviation (
+                      <MathJax inline>{"\\(\\sigma\\)"}</MathJax>
+                      ) to the average PPFD, expressed as a percentage:
+                      <MathJax>{"\\(\\text{CV} = 100 \\times \\frac{\\sigma}{\\text{PPFD}_{\\text{avg}}}\\)"}</MathJax>
+                      where the standard deviation, <MathJax inline>{"\\(\\sigma\\)"}</MathJax>, is calculated as:
+                      <MathJax>{"\\(\\sigma = \\sqrt{\\frac{\\sum_{i=1}^{n} (P_i - \\text{PPFD}_{\\text{avg}})^2}{n}}\\)"}</MathJax>
+                      <em>Note:</em> In this specific case, since we are calculating sample statistics and using all data points, the sample and population standard deviations are equivalent.
+                    </li>
+                  </ol>
+                </div>
+              </MathJaxContext>
+            </div>
           </div>
-          <div style={{ marginTop: "30px" }}>
-            <h2>Surface Graph &amp; Heatmap</h2>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-              <div style={{ flex: "1 1 300px" }}>
-                <h3>Optimized (Staggered) Simulation</h3>
-                <img
-                  src={`data:image/png;base64,${simulationResult.surface_graph}`}
-                  alt="Surface Graph"
-                  style={{ maxWidth: "100%" }}
-                />
-                <img
-                  src={`data:image/png;base64,${simulationResult.heatmap}`}
-                  alt="Heatmap"
-                  style={{ maxWidth: "100%", marginTop: "10px" }}
-                />
+        )}
+
+        {/* Methodology Modal */}
+        {showMethodologyModal && (
+          <div
+            className="modal-overlay"
+            onClick={() => setShowMethodologyModal(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
+              transition: "opacity 0.3s ease",
+            }}
+          >
+            <div
+              className="modal-content"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "#fff",
+                padding: "20px",
+                borderRadius: "5px",
+                maxWidth: "600px",
+                maxHeight: "80%",
+                overflowY: "auto",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+              }}
+            >
+              <div style={{ marginTop: "20px" }}>
+                <p>
+                  The <b>Chip-On-Board</b> (COB) LEDs are arranged in a centered square pattern sequence, which enables the separation of the COBs into concentric square layers for the application of layer-wise intensity assignments.
+                </p>
+                <p>
+                  Our <b>differential evolution-based global optimization algorithm</b> finds the optimal intensities to apply to each layer of COBs for the purpose of maximizing the <b>Degree of Uniformity</b> (DOU) of <b>Photosynthetic Photon Flux Density</b> (PPFD) while meeting the target PPFD.
+                </p>
+                <p>
+                  The reason the algorithm converges on a solution where there’s a large concentration of luminous flux assigned to outer layers of COBs with inner layers receiving lower luminous flux assignments is quite simple:
+                  The algorithm converges on a solution with higher luminous flux assigned to the outer COB layers because of the combined effects of the <b>inverse square law</b> and the overlapping emission patterns of the COBs. The inverse square law dictates that the light intensity from each individual COB decreases with the square of the distance. Because the inner COBs have more neighboring COBs, their overlapping light contributions, each diminishing according to the inverse square law, create a higher overall PPFD in the center of the illuminated plane. Conversely, the outer COBs have fewer neighbors, and some of their light is emitted outside the target area, leading to a lower PPFD at the edges.
+                </p>
+                <p>
+                  Although COBs have a circular <b>Light Emitting Surface</b> (LES), they typically do not emit light omnidirectionally. Many COBs have an emission pattern that approximates a <b>Lambertian distribution</b>, where the intensity is highest perpendicular to the surface and decreases with the cosine of the viewing angle. This, along with the physical arrangement of the COBs, leads to overlapping light patterns, with light traveling from the inner layers toward the outer layers, and vice versa, due to overlapping emission cones.
+                </p>
+                <p>
+                  Therefore, we can take advantage of these natural phenomena by assigning a concentration of luminous flux to the outer perimeter layers of the lighting array, which fills in the deficit of photons along the perimeter, and flattens out the photon distribution across the entire illuminated plane.
+                </p>
+                <p>
+                  <b>In summation</b>:
+                  By separating the COBs into concentric square layers via the centered square pattern sequence, and assigning a concentration of luminous flux to outer perimeter layers of COBs, light fills in the naturally occurring deficit of photons at the perimeter layers of the illuminated plane, with the remainder of this intensity concentration traveling inward to flatten out the PPFD across the entire illuminated plane.
+                </p>
               </div>
-              {simulationResult.grid_surface_graph && simulationResult.grid_heatmap && (
+            </div>
+          </div>
+        )}
+
+        {simulationResult && (
+          <div style={{ marginTop: "30px" }}>
+            <h2>Simulation Results</h2>
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Minimized MAD:</strong></td>
+                  <td>{simulationResult.mad.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td><strong>Average PPFD:</strong></td>
+                  <td>{simulationResult.optimized_ppfd.toFixed(2)} µmol/m²/s</td>
+                </tr>
+                <tr>
+                  <td><strong>Minimized RMSE:</strong></td>
+                  <td>{simulationResult.rmse.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td><strong>Maximized DOU:</strong></td>
+                  <td>{simulationResult.dou.toFixed(2)}%</td>
+                </tr>
+                <tr>
+                  <td><strong>Minimized CV:</strong></td>
+                  <td>{simulationResult.cv.toFixed(2)}%</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Optimized Lumens by Layer</h3>
+            <ul>
+              {simulationResult.optimized_lumens_by_layer.map((lumens, i) => (
+                <li key={i}>
+                  {i === 0 ? "Center COB" : `Layer ${i + 1}`}: {lumens.toFixed(2)} lumens
+                </li>
+              ))}
+            </ul>
+
+            <div style={{ marginTop: "20px" }}>
+              <ModularVisualization
+                mad={simulationResult.mad}
+                optimized_ppfd={simulationResult.optimized_ppfd}
+                floorWidth={simulationResult.floor_width}
+                floorLength={simulationResult.floor_length}
+                floorHeight={simulationResult.floor_height}
+                optimizedLumensByLayer={simulationResult.optimized_lumens_by_layer}
+                simulationResult={simulationResult}
+              />
+            </div>
+
+            <div style={{ marginTop: "30px" }}>
+              <h2>Surface Graph &amp; Heatmap</h2>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
                 <div style={{ flex: "1 1 300px" }}>
-                  <h3>Uniform Grid Simulation (Images)</h3>
+                  <h3>Optimized (Staggered) Simulation</h3>
                   <img
-                    src={`data:image/png;base64,${simulationResult.grid_surface_graph}`}
-                    alt="Grid Surface Graph"
+                    src={`data:image/png;base64,${simulationResult.surface_graph}`}
+                    alt="Surface Graph"
                     style={{ maxWidth: "100%" }}
                   />
                   <img
-                    src={`data:image/png;base64,${simulationResult.grid_heatmap}`}
-                    alt="Grid Heatmap"
+                    src={`data:image/png;base64,${simulationResult.heatmap}`}
+                    alt="Heatmap"
                     style={{ maxWidth: "100%", marginTop: "10px" }}
                   />
                 </div>
-              )}
-            </div>
-          </div>
-          {simulationResult.grid_cob_arrangement &&
-            simulationResult.grid_uniform_flux !== undefined &&
-            simulationResult.grid_mad !== undefined &&
-            simulationResult.grid_ppfd !== undefined && (
-              <div style={{ marginTop: "30px" }}>
-                <h3>Uniform Grid Simulation Results</h3>
-                <p>
-                  <strong>Uniform COB Lumen:</strong> {simulationResult.grid_uniform_flux.toFixed(2)} lumens
-                </p>
-                <p>
-                  <strong>Uniform PPFD:</strong> {simulationResult.grid_ppfd.toFixed(2)} µmol/m²/s
-                </p>
-                <p>
-                  <strong>Uniform MAD:</strong> {simulationResult.grid_mad.toFixed(2)}
-                </p>
-                <div style={{ marginTop: "30px" }}>
-                  <GridVisualization
-                    floorWidth={simulationResult.floor_width}
-                    floorLength={simulationResult.floor_length}
-                    floorHeight={simulationResult.floor_height}
-                    uniformFlux={simulationResult.grid_uniform_flux}
-                    gridArrangement={simulationResult.grid_cob_arrangement}
-                    gridPPFD={simulationResult.grid_ppfd}
-                  />
-                </div>
+                {simulationResult.grid_surface_graph && simulationResult.grid_heatmap && (
+                  <div style={{ flex: "1 1 300px" }}>
+                    <h3>Uniform Grid Simulation</h3>
+                    <img
+                      src={`data:image/png;base64,${simulationResult.grid_surface_graph}`}
+                      alt="Grid Surface Graph"
+                      style={{ maxWidth: "100%" }}
+                    />
+                    <img
+                      src={`data:image/png;base64,${simulationResult.grid_heatmap}`}
+                      alt="Grid Heatmap"
+                      style={{ maxWidth: "100%", marginTop: "10px" }}
+                    />
+                  </div>
+                )}
               </div>
-            )}
-        </div>
-      )}
+            </div>
+
+            {simulationResult.grid_cob_arrangement &&
+              simulationResult.grid_uniform_flux !== undefined &&
+              simulationResult.grid_rmse !== undefined &&
+              simulationResult.grid_dou !== undefined &&
+              simulationResult.grid_cv !== undefined &&
+              simulationResult.grid_mad !== undefined &&
+              simulationResult.grid_ppfd !== undefined && (
+                <div style={{ marginTop: "30px" }}>
+                  <h3>Uniform Grid Simulation Results</h3>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td><strong>Lumens Per COB:</strong></td>
+                        <td>{simulationResult.grid_uniform_flux.toFixed(2)} lumens</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Average PPFD:</strong></td>
+                        <td>{simulationResult.grid_ppfd.toFixed(2)} µmol/m²/s</td>
+                      </tr>
+                      <tr>
+                        <td><strong>MAD:</strong></td>
+                        <td>{simulationResult.grid_mad.toFixed(2)}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>RMSE:</strong></td>
+                        <td>{simulationResult.grid_rmse.toFixed(2)}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>DOU:</strong></td>
+                        <td>{simulationResult.grid_dou.toFixed(2)}%</td>
+                      </tr>
+                      <tr>
+                        <td><strong>CV:</strong></td>
+                        <td>{simulationResult.grid_cv.toFixed(2)}%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style={{ marginTop: "30px" }}>
+                    <GridVisualization
+                      floorWidth={simulationResult.floor_width}
+                      floorLength={simulationResult.floor_length}
+                      floorHeight={simulationResult.floor_height}
+                      uniformFlux={simulationResult.grid_uniform_flux}
+                      gridArrangement={simulationResult.grid_cob_arrangement}
+                      gridPPFD={simulationResult.grid_ppfd}
+                    />
+                  </div>
+                </div>
+              )}
+          </div>
+        )}
+
+
     </div>
   );
 };

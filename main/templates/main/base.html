@@ -3,7 +3,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}My Site{% endblock %}</title>
+    <title>
+        {% if post %}
+          {{ post.meta_title|default:post.title }}
+        {% else %}
+          Default Title
+        {% endif %}
+      </title>
+      {% if post %}
+        <meta name="keywords" content="{{ post.meta_keywords }}">
+        <meta name="description" content="{{ post.meta_description }}">
+      {% endif %}
+      
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>

@@ -127,6 +127,7 @@ const ModularVisualization: React.FC<ModularVisualizationProps> = ({
 
   return (
     <div className="modular-visualization-container">
+      <h3>Staggered COB Arrangement</h3>
       <div className="visualization-wrapper" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
         {/* SVG Visualization */}
         <div

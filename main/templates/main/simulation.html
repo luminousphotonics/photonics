@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lighting Simulation Progress</title>
+    <title>Global Optimization Algorithm</title>
     {% load static %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -63,21 +63,7 @@
             color: red;
             text-align: center;
         }
-        /* Button styling */
-        #startSimulationBtn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        #startSimulationBtn:hover {
-            background: #0056b3;
-        }
+        /* Removed redundant Start Simulation button styling block */
         /* Plant selector styling */
         .plant-selector {
             margin-top: 10px;
@@ -106,6 +92,8 @@
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
+
+
     </style>
 </head>
 <body>
@@ -116,61 +104,9 @@
         {% csrf_token %}        
     </div>
 
-    <script>
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        const csrftoken = getCookie('csrftoken');
+    <!-- Removed the JS code that referenced startSimulationBtn since React handles it -->
 
-        document.getElementById('startSimulationBtn').addEventListener('click', function() {
-            // Optionally, collect simulation parameters from form fields or URL parameters.
-            // For example, here we simply use defaults.
-            const params = new URLSearchParams({
-                start: "1",
-                floor_width: "14.0",
-                floor_length: "14.0",
-                target_ppfd: "1250.0"
-            });
-            if (!!window.EventSource) {
-                const source = new EventSource('/api/ml_simulation/progress/?' + params.toString());
-                source.onmessage = function(event) {
-                    const data = JSON.parse(event.data);
-                    // Update progress bar if data contains progress percentage.
-                    if (data.progress !== undefined) {
-                        document.getElementById('progressBar').style.width = data.progress + '%';
-                        document.getElementById('progressText').innerText = data.progress + '%';
-                    }
-                    // Append log message.
-                    if (data.message) {
-                        const logOutput = document.getElementById('logOutput');
-                        const newLog = document.createElement('div');
-                        newLog.textContent = data.message;
-                        logOutput.appendChild(newLog);
-                        // Auto-scroll to bottom.
-                        logOutput.scrollTop = logOutput.scrollHeight;
-                    }
-                };
-                source.onerror = function(err) {
-                    console.error("EventSource failed:", err);
-                };
-            } else {
-                console.warn("Your browser does not support Server-Sent Events.");
-            }
-        });
-    </script>
-
-    <script src="{% static 'js/main.ce19070b.js' %}"></script>
+    <script src="{% static 'js/main.86f2badd.js' %}"></script>
     {% include 'main/footer.html' %}
 </body>
 </html>

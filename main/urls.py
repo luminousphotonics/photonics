@@ -31,6 +31,7 @@ urlpatterns = [
     path('blogs/<slug:slug>/', views.blog_detail, name='blog_detail'),
     path('blog/approve/<slug:slug>/', views.approve_blog_post, name='approve_blog_post'),
     path('ckeditor/', include('django_ckeditor_5.urls')),
+    path('miro/', views.miro, name='miro'),
 ]
 
 if settings.DEBUG:

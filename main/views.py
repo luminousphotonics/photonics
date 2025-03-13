@@ -66,14 +66,21 @@ def contact_success(request):
 
 @csrf_exempt
 def run_simulation(request):
-    if request.method == 'POST':
-        print("DEBUG: run_simulation POST received")
+    if request.method in ['GET', 'POST']:
         try:
-            data = json.loads(request.body)
-            print("DEBUG: Received data:", data)
-            floor_width = data.get('floor_width')
-            floor_length = data.get('floor_length')
-            target_ppfd = data.get('target_ppfd')
+            if request.method == 'POST':
+                data = json.loads(request.body)
+                print("DEBUG: Received POST data:", data)
+                floor_width = data.get('floor_width')
+                floor_length = data.get('floor_length')
+                target_ppfd = data.get('target_ppfd')
+                floor_height = data.get('floor_height', 3.0)
+            else:
+                print("DEBUG: GET parameters:", request.GET)
+                floor_width = request.GET.get('floor_width')
+                floor_length = request.GET.get('floor_length')
+                target_ppfd = request.GET.get('target_ppfd')
+                floor_height = request.GET.get('floor_height', 3.0)
 
             if floor_width is None or floor_length is None or target_ppfd is None:
                 return JsonResponse({'error': 'Missing required parameters'}, status=400)
@@ -81,7 +88,8 @@ def run_simulation(request):
             simulation_results = run_ml_simulation(
                 floor_width_ft=floor_width,
                 floor_length_ft=floor_length,
-                target_ppfd=target_ppfd
+                target_ppfd=target_ppfd,
+                floor_height_ft=floor_height
             )
             print("DEBUG: Simulation completed. Results:", simulation_results)
             return JsonResponse(simulation_results)
@@ -168,28 +176,40 @@ def blog_admin_panel(request):
     return render(request, 'main/blog_admin_panel.html', {'posts': posts})
 
 @require_POST
-@login_required
 def toggle_like(request):
     post_slug = request.POST.get('slug')
     if not post_slug:
         return HttpResponseBadRequest("Missing post slug.")
     
     post = get_object_or_404(BlogPost, slug=post_slug)
-    like, created = Like.objects.get_or_create(post=post, user=request.user)
-    if not created:
-        # Already liked, so remove like
-        like.delete()
-        liked = False
+    
+    # For authenticated users, use the database
+    if request.user.is_authenticated:
+        like, created = Like.objects.get_or_create(post=post, user=request.user)
+        if not created:
+            like.delete()
+            liked = False
+        else:
+            liked = True
     else:
-        liked = True
+        # For anonymous users, track likes in the session
+        liked_posts = request.session.get('liked_posts', [])
+        if post_slug in liked_posts:
+            liked_posts.remove(post_slug)
+            liked = False
+        else:
+            liked_posts.append(post_slug)
+            liked = True
+        request.session['liked_posts'] = liked_posts
 
+    # Note: The like_count here only reflects database likes.
+    # To incorporate anonymous likes, you'll need additional handling.
     return JsonResponse({
         'liked': liked,
         'like_count': post.likes.count()
     })
 
 @require_POST
-@login_required
 def log_share(request):
     post_slug = request.POST.get('slug')
     platform = request.POST.get('platform')
@@ -197,15 +217,30 @@ def log_share(request):
         return HttpResponseBadRequest("Missing parameters.")
     
     post = get_object_or_404(BlogPost, slug=post_slug)
-    share = Share.objects.create(post=post, user=request.user, platform=platform)
     
-    return JsonResponse({
-        'share_id': share.id,
-        'platform': share.platform,
-        'share_count': post.shares.count()
-    })
-
-import mammoth
+    if request.user.is_authenticated:
+        share = Share.objects.create(post=post, user=request.user, platform=platform)
+    else:
+        # For anonymous users, track shares in the session.
+        shares = request.session.get('shares', {})
+        share_key = f"{post_slug}_{platform}"
+        shares[share_key] = shares.get(share_key, 0) + 1
+        request.session['shares'] = shares
+        share = None  # No database record for anonymous share
+    
+    # Calculate total share count: combine DB records with session count.
+    session_shares = request.session.get('shares', {})
+    anonymous_count = session_shares.get(f"{post_slug}_{platform}", 0)
+    db_count = post.shares.filter(platform=platform).count()
+    total_count = db_count + anonymous_count
+    
+    response_data = {
+        'platform': platform,
+        'share_count': total_count
+    }
+    if share:
+        response_data['share_id'] = share.id
+    return JsonResponse(response_data)
 
 @login_required
 def create_blog_post(request):
@@ -308,3 +343,5 @@ def approve_blog_post(request, slug):
         )
     return redirect('blog_admin_panel')
 
+def miro(request):
+    return render(request, 'main/miro.html')

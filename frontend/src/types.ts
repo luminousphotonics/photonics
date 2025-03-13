@@ -2,6 +2,9 @@ export interface SimulationData {
   optimized_lumens_by_layer: number[];
   mad: number;
   optimized_ppfd: number;
+  rmse: number;
+  dou: number;
+  cv: number;
   floor_width: number;
   floor_length: number;
   floor_height: number;
@@ -15,6 +18,9 @@ export interface SimulationData {
   grid_uniform_flux?: number;
   grid_ppfd?: number;
   grid_mad?: number;
+  grid_rmse?: number;
+  grid_dou?: number;
+  grid_cv?: number;
 }
 
 export interface FixtureData {

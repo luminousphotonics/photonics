@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Miro Board Embed</title>  <!-- Changed title to be more specific -->
+    <meta name="description" content="Interactive Miro board embedded on our website."> <!-- Added a description -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Style for the container holding the iframe.  Important for responsiveness! */
+        .miro-container {
+            position: relative;
+            width: 100%;          /* Make the container take up the full width */
+            padding-bottom: 56.25%; /* 16:9 aspect ratio (9 / 16 = 0.5625 or 56.25%) */
+            height: 0;            /* Set actual height to 0, padding-bottom controls the aspect ratio */
+            overflow: hidden;    /* Hide any overflowing content */
+        }
+
+        .miro-container iframe {
+            position: absolute;   /* Position the iframe absolutely within the container */
+            top: 0;
+            left: 0;
+            width: 100%;          /* Make the iframe fill the container */
+            height: 100%;          /* Make the iframe fill the container */
+            border: none;         /* Remove any default iframe border */
+        }
+         /* Add some padding/margin around the container for visual spacing */
+        .miro-wrapper {
+            padding: 20px; /* Add padding around the entire Miro container */
+            max-width: 1200px; /* Optional: Limit the maximum width for very large screens */
+            margin: 0 auto;  /* Center the container horizontally */
+        }
+
+        .centered-heading {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    {% include 'main/navbar.html' %}
+    <header>
+        <!-- You can add header content here if needed -->
+    </header>
+
+    <main>
+        {% block content %}
+        <div class="miro-wrapper">  <!-- Added a wrapper for padding and max-width -->
+             <h2 class="centered-heading">Interactive Miro Board</h2>
+            <div class="miro-container">
+                <iframe width="768" height="432" src="https://miro.com/app/live-embed/uXjVIR7-93M=/?moveToViewport=-992,-1583,5192,2523&embedId=666112206092" frameborder="0" scrolling="no" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen></iframe>
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+
+    <footer>
+        <!-- Footer content from base.html -->
+    </footer>
+    {% include 'main/footer.html' %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

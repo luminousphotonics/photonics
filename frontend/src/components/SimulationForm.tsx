@@ -47,10 +47,6 @@ const plantDisplayNames: Record<string, string> = {
   leafy: "Leafy Greens",
 };
 
-interface SseMessageData {
-  message: string;
-}
-
 interface FormDataState {
   floor_width: string;
   floor_length: string;
@@ -78,7 +74,6 @@ const SimulationForm: React.FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [logMessages, setLogMessages] = useState<string[]>([]);
   const [simulationResult, setSimulationResult] = useState<SimulationData | null>(null);
-  const eventSourceRef = useRef<EventSource | null>(null);
   const logOutputRef = useRef<HTMLDivElement>(null);
 
   // Show Explain Metrics Button

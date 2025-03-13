@@ -91,6 +91,10 @@ const SimulationForm: React.FC = () => {
   const [metricsHover, setMetricsHover] = useState<boolean>(false);
   const [methodologyHover, setMethodologyHover] = useState<boolean>(false);
 
+  // Check if Simulation is Complete to Avoid EventSource Error
+  const simulationCompleteRef = useRef(false);
+
+
   // Auto-scroll log output when messages update.
   useEffect(() => {
     if (logOutputRef.current) {
@@ -181,24 +185,28 @@ const SimulationForm: React.FC = () => {
     es.onmessage = (event) => {
       const data: SseMessageData = JSON.parse(event.data);
       const { message } = data;
-
+    
       if (message.startsWith("RESULT:")) {
-        try {
-          const jsonStr = message.replace("RESULT:", "");
-          const result: SimulationData = JSON.parse(jsonStr);
-          setSimulationResult(result);
-          setLogMessages((prev) => [...prev, "[INFO] Simulation complete!"]);
-        } catch (err) {
-          setLogMessages((prev) => [...prev, "[ERROR] Failed to parse result JSON"]);
+        if (!simulationCompleteRef.current) {
+          try {
+            const jsonStr = message.replace("RESULT:", "");
+            const result: SimulationData = JSON.parse(jsonStr);
+            setSimulationResult(result);
+            simulationCompleteRef.current = true; // mark as complete
+            setLogMessages((prev) => [...prev, "[INFO] Simulation complete!"]);
+            es.close(); // explicitly close the connection to prevent reconnection
+          } catch (err) {
+            setLogMessages((prev) => [...prev, "[ERROR] Failed to parse result JSON"]);
+          }
         }
         return;
       }
-
+    
       if (message.startsWith("ERROR:")) {
         setLogMessages((prev) => [...prev, message]);
         return;
       }
-
+    
       if (message.startsWith("PROGRESS:")) {
         const pctStr = message.replace("PROGRESS:", "").trim();
         const pct = parseFloat(pctStr);
@@ -210,8 +218,11 @@ const SimulationForm: React.FC = () => {
         setLogMessages((prev) => [...prev, message]);
       }
     };
+    
 
     es.onerror = (err) => {
+      // If the simulation is complete, ignore the error
+      if (simulationCompleteRef.current) return;
       setLogMessages((prev) => [
         ...prev,
         "[WARN] Connection to server lost. Please try again.",
@@ -219,6 +230,7 @@ const SimulationForm: React.FC = () => {
       console.error("EventSource failed:", err);
       es.close();
     };
+    
   };
 
   return (

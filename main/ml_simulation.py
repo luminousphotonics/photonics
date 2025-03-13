@@ -19,6 +19,9 @@ import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 from mpl_toolkits.mplot3d import Axes3D  # just for side-effects
 from scipy.interpolate import griddata, RegularGridInterpolator
+import threading
+import time
+
 
 # ------------------------------
 # Configuration & Constants
@@ -595,6 +598,20 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, floor_height
     W_m = floor_width_ft / ft2m
     L_m = floor_length_ft / ft2m
     H_m = floor_height / ft2m  # Use the input light height
+
+    # Start heartbeat thread if progress_callback is provided.
+    heartbeat_active = [True]  # mutable flag
+
+    if progress_callback:
+        def heartbeat():
+            while heartbeat_active[0]:
+                # Send a heartbeat message (you can adjust the format as needed)
+                progress_callback(": heartbeat")
+                time.sleep(15)
+        hb_thread = threading.Thread(target=heartbeat)
+        hb_thread.daemon = True
+        hb_thread.start()
+
     # Optimize lighting using the new geometry with variable light height.
     best_params, geo = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback)
     final_ppfd = simulate_lighting(best_params, geo)
@@ -604,11 +621,10 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, floor_height
     dou = 100 * (1 - rmse / mean_ppfd)
     cv = 100 * (np.std(final_ppfd) / mean_ppfd)
 
-    
     X, Y = geo[1], geo[2]
     surface_graph_b64 = generate_surface_graph(X, Y, final_ppfd, cmap="jet")
     heatmap_b64 = generate_heatmap(X, Y, final_ppfd, cmap="jet", overlay_intensity=False)
-    
+
     result = {
         "optimized_lumens_by_layer": best_params.tolist(),
         "mad": float(mad),
@@ -671,8 +687,9 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, floor_height
         })
 
     if progress_callback:
+        heartbeat_active[0] = False  # signal heartbeat thread to stop
         progress_callback("PROGRESS:100")
-        progress_callback("[INFO] Simulation complete!")
+        #progress_callback("[INFO] Simulation complete!")
     
     return result
 

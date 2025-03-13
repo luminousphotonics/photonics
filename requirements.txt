@@ -34,3 +34,5 @@ mammoth>=1.9.0
 cobble>=0.1.4
 django-js-asset>=3.1.2
 django-ckeditor-5==0.2.17
+django-redis==5.4.0
+redis==5.2.1

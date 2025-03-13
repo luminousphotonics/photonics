@@ -21,6 +21,10 @@ from .ml_simulation import run_ml_simulation
 import queue
 import threading
 import uuid
+from django_redis import get_redis_connection
+
+# Use Redis keys with a prefix for clarity.
+REDIS_PREFIX = "simulation_job"
 
 def index(request):
     return render(request, 'main/index.html')
@@ -307,8 +311,7 @@ simulation_job_store = {}
 @csrf_exempt
 def simulation_start(request):
     """
-    Starts a simulation asynchronously. Expects POST parameters for the simulation.
-    Initializes an entry in simulation_job_store for progress tracking.
+    Starts a simulation asynchronously using Redis to store progress.
     """
     if request.method == 'POST':
         try:
@@ -321,20 +324,18 @@ def simulation_start(request):
             return JsonResponse({'error': 'Invalid parameters: ' + str(e)}, status=400)
         
         job_id = str(uuid.uuid4())
-        # Initialize the job entry.
-        simulation_job_store[job_id] = {
-            'progress': [],
-            'status': 'running',  # or 'done' when complete
-            'result': None
-        }
-
-        # Define a callback that stores progress messages.
-        def progress_callback(message):
-            simulation_job_store[job_id]['progress'].append(message)
-
+        redis_conn = get_redis_connection("default")
+        # Initialize keys in Redis.
+        redis_conn.delete(f"{REDIS_PREFIX}:{job_id}:progress")
+        redis_conn.set(f"{REDIS_PREFIX}:{job_id}:status", "running")
+        redis_conn.delete(f"{REDIS_PREFIX}:{job_id}:result")
+        
+        # Define a callback that pushes progress messages into Redis.
+        def progress_callback(message: str):
+            redis_conn.rpush(f"{REDIS_PREFIX}:{job_id}:progress", message)
+        
         def run_job():
             try:
-                # Run your simulation; pass the progress_callback so your simulation can log messages.
                 result = run_ml_simulation(
                     floor_width_ft=floor_width,
                     floor_length_ft=floor_length,
@@ -343,47 +344,58 @@ def simulation_start(request):
                     progress_callback=progress_callback,
                     side_by_side=True
                 )
-                simulation_job_store[job_id]['result'] = result
-                simulation_job_store[job_id]['status'] = 'done'
+                redis_conn.set(f"{REDIS_PREFIX}:{job_id}:result", json.dumps(result))
+                redis_conn.set(f"{REDIS_PREFIX}:{job_id}:status", "done")
             except Exception as e:
-                simulation_job_store[job_id]['progress'].append("ERROR: " + str(e))
-                simulation_job_store[job_id]['status'] = 'done'
-                simulation_job_store[job_id]['result'] = {'error': str(e)}
-
-        # Run the simulation job in a new thread.
+                progress_callback("ERROR: " + str(e))
+                redis_conn.set(f"{REDIS_PREFIX}:{job_id}:status", "done")
+                redis_conn.set(f"{REDIS_PREFIX}:{job_id}:result", json.dumps({"error": str(e)}))
+        
         thread = threading.Thread(target=run_job)
         thread.start()
         return JsonResponse({'job_id': job_id})
     return JsonResponse({'error': 'POST request required.'}, status=400)
 
-def simulation_status(request, job_id):
+def simulation_progress(request, job_id):
     """
-    Returns only the status of the simulation job ("running" or "done").
+    Returns current progress and status from Redis for the given job.
     """
-    job = simulation_job_store.get(job_id)
-    if job is None:
+    redis_conn = get_redis_connection("default")
+    status = redis_conn.get(f"{REDIS_PREFIX}:{job_id}:status")
+    if status is None:
         return JsonResponse({'error': 'Job not found'}, status=404)
-    return JsonResponse({'status': job['status']})
-
+    # Decode bytes to string.
+    status = status.decode("utf-8")
+    # Get all progress messages.
+    progress = redis_conn.lrange(f"{REDIS_PREFIX}:{job_id}:progress", 0, -1)
+    # Convert each item from bytes to string.
+    progress = [msg.decode("utf-8") for msg in progress]
+    return JsonResponse({
+        'status': status,
+        'progress': progress
+    })
 
 def simulation_result(request, job_id):
     """
-    Returns the final heavy simulation result once the job is complete.
+    Returns the final simulation result from Redis once the job is complete.
     """
-    job = simulation_job_store.get(job_id)
-    if job is None or job['status'] != 'done':
+    redis_conn = get_redis_connection("default")
+    status = redis_conn.get(f"{REDIS_PREFIX}:{job_id}:status")
+    if status is None or status.decode("utf-8") != "done":
         return JsonResponse({'error': 'Job not found or not complete.'}, status=404)
-    return JsonResponse(job['result'])
+    result_data = redis_conn.get(f"{REDIS_PREFIX}:{job_id}:result")
+    if result_data is None:
+        return JsonResponse({'error': 'Result not available.'}, status=404)
+    result = json.loads(result_data.decode("utf-8"))
+    return JsonResponse(result)
 
-def simulation_progress(request, job_id):
+def simulation_status(request, job_id):
     """
-    Polling endpoint: returns the current status and accumulated progress messages
-    for the given simulation job.
+    Returns only the status of the simulation job ("running" or "done") from Redis.
     """
-    job = simulation_job_store.get(job_id)
-    if job is None:
+    redis_conn = get_redis_connection("default")
+    status = redis_conn.get(f"simulation_job:{job_id}:status")
+    if status is None:
         return JsonResponse({'error': 'Job not found'}, status=404)
-    return JsonResponse({
-        'status': job['status'],      # "running" or "done"
-        'progress': job['progress']   # List of progress log messages
-    })
+    return JsonResponse({'status': status.decode("utf-8")})
+

@@ -154,7 +154,7 @@ const SimulationForm: React.FC = () => {
   };
   
   // Start simulation on button click.
-  const startSimulation = async () => {
+  const startSimulation = async (): Promise<void> => {
     // Reset state.
     setProgress(0);
     setLogMessages([]);
@@ -186,12 +186,15 @@ const SimulationForm: React.FC = () => {
         try {
           const progressRes = await fetch(`/api/ml_simulation/progress/${jobId}/`);
           const progressData: { status: string; progress: string[] } = await progressRes.json();
-          
-          // Update the log messages.
-          setLogMessages(progressData.progress);
   
-          // Extract the latest progress percentage from messages.
-          const progressMsgs = progressData.progress.filter((msg: string) => msg.startsWith("PROGRESS:"));
+          // Ensure progressData.progress is an array; otherwise default to an empty array.
+          const progressArray: string[] = Array.isArray(progressData.progress)
+            ? progressData.progress
+            : [];
+          setLogMessages(progressArray);
+  
+          // Use the last progress message that starts with "PROGRESS:"
+          const progressMsgs = progressArray.filter((msg: string) => msg.startsWith("PROGRESS:"));
           if (progressMsgs.length > 0) {
             const lastProgressMsg = progressMsgs[progressMsgs.length - 1];
             const pctStr = lastProgressMsg.replace("PROGRESS:", "").trim();
@@ -200,34 +203,28 @@ const SimulationForm: React.FC = () => {
               setProgress(pct);
             }
           }
-          
   
           if (progressData.status === "done") {
-            // Fetch the final simulation result.
             const resultRes = await fetch(`/api/ml_simulation/result/${jobId}/`);
             const resultData: SimulationData = await resultRes.json();
             setSimulationResult(resultData);
-            setLogMessages(prev => [...prev, "[INFO] Simulation complete!"]);
+            setLogMessages((prev) => [...prev, "[INFO] Simulation complete!"]);
             simulationCompleteRef.current = true;
           } else {
-            // Continue polling every 3 seconds.
             setTimeout(pollProgress, 3000);
           }
-        } catch (error) {
-          setLogMessages(prev => [...prev, "[ERROR] Error polling progress: " + error]);
+        } catch (error: any) {
+          setLogMessages((prev) => [...prev, "[ERROR] Error polling progress: " + error]);
           setTimeout(pollProgress, 3000);
         }
       };
   
       pollProgress();
-    } catch (error) {
+    } catch (error: any) {
       setLogMessages((prev) => [...prev, "[ERROR] Failed to start simulation: " + error]);
     }
   };
   
-  
-  
-
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto" }}>
       <h1>Lighting Simulation Progress</h1>

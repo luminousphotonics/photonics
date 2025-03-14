@@ -40,7 +40,7 @@ CEIL_SUBDIVS_X = 10
 CEIL_SUBDIVS_Y = 10
 
 # Floor grid resolution (meters)
-FLOOR_GRID_RES = 0.05
+FLOOR_GRID_RES = 0.08
 
 MIN_LUMENS = 1000.0
 MAX_LUMENS_MAIN = 24000.0
@@ -485,7 +485,7 @@ def generate_surface_graph(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, cmap="je
 
     triang = mtri.Triangulation(x_, y_)
 
-    step = 0.02
+    step = 0.15
     x_grid, y_grid = np.mgrid[x_.min():x_.max():step, y_.min():y_.max():step]
     interp_lin = mtri.LinearTriInterpolator(triang, z_)
     z_grid = interp_lin(x_grid, y_grid)

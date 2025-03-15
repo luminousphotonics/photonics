@@ -14,6 +14,7 @@ ALLOWED_HOSTS = [
     'luminousphotonics.com',
     '127.0.0.1',
     'localhost',
+    '*',
 ]
 
 #CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"

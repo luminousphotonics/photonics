@@ -52,7 +52,7 @@
 
         <div>
             <h2 class="section-title">Uniform Photon Flux Principle (UPFP)</h2>
-            <p>
+            <p class="section-description">
                 Our research has led to the development of the Uniform Photon Flux Principle (UPFP), a groundbreaking approach to optimizing Photosynthetic Photon Flux Density (PPFD) distribution in controlled-environment agriculture.
                 The UPFP leverages a particular arrangement of Chip-on-Board (CoB) LED elements, positioned according to the centered square number integer sequence (<b>Online Encyclopedia of Integer Sequences</b>: A001844) pattern logic. By carefully assigning optimal intensities to each layer, as informed by our proprietary differential evolution-based global optimization algorithm, we achieve unprecedented uniformity in PPFD across the growing area.
             </p>
@@ -133,12 +133,12 @@
             </div>
             <div>
                 <h1 class="section-title" id="ls">Visualizing Light Uniformity</h1>
-                <p>
+                <p class="section-description">
                     Below are graphical representations that demonstrate the effectiveness of employing the UPFP in our patented technology to achieve truly uniform light distribution. Each set of graphs offers a simple comparison to highlight our UPFP-based approach: Each simulation uses the same centered square sequence pattern arrangement of LEDs, but the graphs on the right show a simulation where the same luminous flux was applied to each LED, while the graphs on the left show layer-wise luminous flux assignments that are informed by our differential evolution-based global optimization algorithm.
                 </p>
             
                 <h2 class="section-title">Beam Profile</h2>
-                <p>These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the left demonstrates a more uniform beam spread with significantly reduced energy waste.</p>
+                <p class="section-description">These graphs illustrate the spatial distribution of light intensity, highlighting the "superfluous energy" outside the target PPFD range. The UPFP-based graph on the left demonstrates a more uniform beam spread with significantly reduced energy waste.</p>
                 <div class="image-container hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/beam_profile_1.webp' %}" type="image/webp">
@@ -152,7 +152,7 @@
                 <p class="image-caption">Figure 1: Comparison of Beam Profiles. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
             
                 <h2 class="section-title">PPFD Surface Graphs</h2>
-                <p>These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange square shows the target PPFD range. Note how the UPFP-based graph on the left exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target PPFD range).</p>
+                <p class="section-description">These 3D graphs illustrate the spatial distribution of PPFD, as presented in our research. The colors represent different intensity levels, with blue being low and red being high. The orange square shows the target PPFD range. Note how the UPFP-based graph on the left exhibits a more uniform distribution with minimal "superfluous energy" (light outside the target PPFD range).</p>
                 <div class="image-container hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/ppfd_surface_graph_1.webp' %}" type="image/webp">
@@ -164,23 +164,34 @@
                     </picture>
                 </div>
                 <p class="image-caption">Figure 2: Comparison of PPFD Surface Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
-            
+                <p class="section-description">In the surface graphs below, which represent data from a larger floor size of 30' x 30', versus the 12' x 12' floor size referenced above, it can be seen that the non-uniformity for the uniform grid matrix of LEDs with all the same luminous flux applied to the LEDs is exacerbated, while the UPFP-based methodology has increased uniformity.</p>
+                <div class="image-container hidden">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/30x30-our-surface-graph.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/30x30-our-surface-graph.png' %}" alt="30x30 PPFD Surface Graph - Our UPFP" id="ppfd-surface-3" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/30x30-compy-surface-graph.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/30x30-compy-surface-graph.png' %}" alt="30x30 PPFD Surface Graph - Competitor" id="ppfd-surface-4" loading="lazy">
+                    </picture>
+                </div>
+                <p class="image-caption">Figure 3: Comparison of 30x30 PPFD Surface Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
                 <h2 class="section-title">2D Variance Graphs</h2>
-                <p>These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (left) demonstrates significantly reduced variance in photon distribution, showcasing far superior uniformity.</p>
+                <p class="section-description">These graphs provide a top-down view of the PPFD distribution, highlighting the variance from the target PPFD. The UPFP-based approach (left) demonstrates significantly reduced variance in photon distribution, showcasing far superior uniformity.</p>
                 <div class="image-container hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/2d_variance_graph_1.webp' %}" type="image/webp">
-                        <img src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional" id="2d-variance-1" loading="lazy">
+                        <img src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="2D Variance Graph - Traditional" id="variance-graph-1" loading="lazy">
                     </picture>
                     <picture>
                         <source srcset="{% static 'main/images/webp/2d_variance_graph_2.webp' %}" type="image/webp">
-                        <img src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP" id="2d-variance-2" loading="lazy">
+                        <img src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="2D Variance Graph - UPFP" id="variance-graph-2" loading="lazy">
                     </picture>
                 </div>
-                <p class="image-caption">Figure 3: Comparison of 2D Variance Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
-            
+                <p class="image-caption">Figure 4: Comparison of 2D Variance Graphs. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
+                
                 <h2 class="section-title">Heatmaps</h2>
-                <p>Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (left) displays a more consistent color across the growing area, signifying superior uniformity. The competitor displays a pronounced concentration of photons toward the center of the illuminated area, as can be seen by the circular radiation pattern.</p>
+                <p class="section-description">Heatmaps offer another intuitive way to visualize PPFD distribution. Warmer colors (reds) represent higher PPFD, while cooler colors (blues) represent lower PPFD. The UPFP-based heatmap (left) displays a more consistent color across the growing area, signifying superior uniformity. The competitor displays a pronounced concentration of photons toward the center of the illuminated area, as can be seen by the circular radiation pattern.</p>
                 <div class="image-container hidden">
                     <picture>
                         <source srcset="{% static 'main/images/webp/heatmap_1.webp' %}" type="image/webp">
@@ -191,23 +202,34 @@
                         <img src="{% static 'main/images/heatmap_2.png' %}" alt="Heatmap - UPFP" id="heatmap-2" loading="lazy">
                     </picture>
                 </div>
-                <p class="image-caption">Figure 4: Comparison of PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
-
+                <p class="image-caption">Figure 5: Comparison of PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
+                <div class="image-container hidden">
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/30x30-our-heatmap.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/30x30-our-heatmap.png' %}" alt="30x30 Heatmap - Our UPFP" id="heatmap-3" loading="lazy">
+                    </picture>
+                    <picture>
+                        <source srcset="{% static 'main/images/webp/30x30-compy-heatmap.webp' %}" type="image/webp">
+                        <img src="{% static 'main/images/30x30-compy-heatmap.png' %}" alt="30x30 Heatmap - Competitor" id="heatmap-4" loading="lazy">
+                    </picture>
+                </div>
+                <p class="image-caption">Figure 6: Comparison of 30x30 PPFD Heatmaps. Right: Traditional distribution. Left: Optimized UPFP distribution.</p>
+                
                 <div style="text-align: center; margin-top: 20px;">
                     <a href="{% url 'lighting_simulation' %}" class="dive-deeper-button">Dive Deeper into the Simulation</a>
                 </div>
                 <div style="text-align: center; margin-top: 20px;">
                     <a href="{% url 'dialux_simulation' %}" class="dive-deeper-button">Check out a DIALux Simulation</a>
                 </div>
-                <h1 class="section-title" id="ml">Differential Evolution-Based Global Optimization Algorithm for Enhanced Uniformity</h1>
-                <p>
+                <h2 class="section-title" id="ml">Differential Evolution-Based Global Optimization Algorithm</h2>
+                <p class="section-description">
                     Utilizing our physics-based radiosity simulation, we employ a sophisticated differential evolution-based global optimization algorithm to refine and optimize the luminous flux settings of our LED arrays. This optimization process leverages the accuracy of the radiosity model to achieve unprecedented levels of PPFD uniformity and energy efficiency.
                 </p>
                 <div style="text-align: center; margin-top: 20px;">
                     <a href="{% url 'simulation_view' %}" class="dive-deeper-button">Interact with the Algorithm</a>
                 </div>               
-                <h3 class="subsubsection-title">3.1. Parameterization</h3>
-                <p>
+                <h3 class="subsection-title">Parameterization</h3>
+                <p class="section-description">
                     The optimization algorithm works with a 15-element parameter vector, representing the following:
                 </p>
                 <ul class="section-list">
@@ -216,8 +238,8 @@
                     <li><b>Corner COB Intensities (elements 11-14):</b> The luminous flux for the four corner COB LEDs in the outermost layer.</li>
                 </ul>
                 
-                <h3 class="subsubsection-title">3.2. Objective Function</h3>
-                <p>
+                <h3 class="subsection-title">Objective Function</h3>
+                <p class="section-description">
                    The optimization algorithm's goal is to find the set of parameters (LED intensities) that minimize an objective function. The objective function aims to minimize the Root Mean Squared Error (RMSE) between the simulated PPFD and a target PPFD, while also incorporating constraints to ensure realistic and desirable results. The objective function is defined as:
                 </p>
                 
@@ -247,32 +269,32 @@
                 <div class="code-block-container">
                     <div class="code-block-title">Objective Function (Python - Simplified)</div>
                     <pre class="code-block"><code class="language-python">
-                def objective_function(x, target_ppfd, fixed_base_height, rmse_weight=1.0, dou_penalty_weight=50.0):
-                    """
-                    Calculates the objective function value.
-                
-                    Args:
-                        x (np.ndarray): The 15-element parameter vector (LED intensities).
-                        target_ppfd (float): The target PPFD value.
-                        fixed_base_height (float):  Height of the LEDs above the floor.
-                        rmse_weight (float): Weight for the RMSE term.
-                        dou_penalty_weight (float): Weight for the DOU penalty.
-                
-                    Returns:
-                        float: The objective function value.
-                    """
-                    avg_ppfd, rmse, dou = simulate_lighting(x, fixed_base_height, plot_result=False)
-                    penalty = 0.0
-                    if dou < 96:
-                        penalty = dou_penalty_weight * (96 - dou)**2
-                    obj_val = rmse_weight * rmse + penalty
-                    print(f"Obj: {obj_val:.3f} | RMSE: {rmse:.3f}, DOU: {dou:.3f}, Penalty: {penalty:.3f}") #Optional Print Statement
-                    return obj_val
+def objective_function(x, target_ppfd, fixed_base_height, rmse_weight=1.0, dou_penalty_weight=50.0):
+    """
+    Calculates the objective function value.
+
+    Args:
+        x (np.ndarray): The 15-element parameter vector (LED intensities).
+        target_ppfd (float): The target PPFD value.
+        fixed_base_height (float):  Height of the LEDs above the floor.
+        rmse_weight (float): Weight for the RMSE term.
+        dou_penalty_weight (float): Weight for the DOU penalty.
+
+    Returns:
+        float: The objective function value.
+    """
+    avg_ppfd, rmse, dou = simulate_lighting(x, fixed_base_height, plot_result=False)
+    penalty = 0.0
+    if dou < 96:
+        penalty = dou_penalty_weight * (96 - dou)**2
+    obj_val = rmse_weight * rmse + penalty
+    print(f"Obj: {obj_val:.3f} | RMSE: {rmse:.3f}, DOU: {dou:.3f}, Penalty: {penalty:.3f}") #Optional Print Statement
+    return obj_val
                 </code></pre>
                 </div>
                 
-                <h3 class="subsubsection-title">3.3. Global Optimization Algorithm: Differential Evolution</h3>
-                <p>
+                <h3 class="subsection-title">Global Optimization Algorithm: Differential Evolution</h3>
+                <p class="section-description">
                     We use the Differential Evolution (DE) algorithm, a powerful global optimization method, to minimize the objective function. DE is well-suited for this task because:
                 </p>
                 <ul class="section-list">
@@ -290,34 +312,34 @@
                 <div class="code-block-container">
                     <div class="code-block-title">Global Optimization with Differential Evolution (Python)</div>
                     <pre class="code-block"><code class="language-python">
-                from scipy.optimize import differential_evolution, NonlinearConstraint
-                
-                def constraint_lower(x, target_ppfd, fixed_base_height):
-                    avg_ppfd, _, _ = simulate_lighting(x, fixed_base_height, plot_result=False)
-                    return avg_ppfd - target_ppfd  # Must be >= 0
-                
-                def constraint_upper(x, target_ppfd, fixed_base_height):
-                    avg_ppfd, _, _ = simulate_lighting(x, fixed_base_height, plot_result=False)
-                    return target_ppfd + 250 - avg_ppfd  # Must be >= 0
-                
-                def optimize_lighting_global(target_ppfd, fixed_base_height):
-                    """
-                    Use differential evolution for global optimization.
-                    """
-                    bounds = [(1000.0, 15000.0)] * 15  # Bounds for each parameter
-                    nc_lower = NonlinearConstraint(lambda x: constraint_lower(x, target_ppfd, fixed_base_height), 0, np.inf)
-                    nc_upper = NonlinearConstraint(lambda x: constraint_upper(x, target_ppfd, fixed_base_height), 0, np.inf)
-                    constraints = [nc_lower, nc_upper]
-                    result = differential_evolution(
-                        lambda x: objective_function(x, target_ppfd, fixed_base_height),
-                        bounds,
-                        constraints=constraints,
-                        maxiter=1000,
-                        popsize=15,
-                        recombination=0.7,
-                        disp=True  # Display progress
-                    )
-                    return result
+from scipy.optimize import differential_evolution, NonlinearConstraint
+
+def constraint_lower(x, target_ppfd, fixed_base_height):
+    avg_ppfd, _, _ = simulate_lighting(x, fixed_base_height, plot_result=False)
+    return avg_ppfd - target_ppfd  # Must be >= 0
+
+def constraint_upper(x, target_ppfd, fixed_base_height):
+    avg_ppfd, _, _ = simulate_lighting(x, fixed_base_height, plot_result=False)
+    return target_ppfd + 250 - avg_ppfd  # Must be >= 0
+
+def optimize_lighting_global(target_ppfd, fixed_base_height):
+    """
+    Use differential evolution for global optimization.
+    """
+    bounds = [(1000.0, 15000.0)] * 15  # Bounds for each parameter
+    nc_lower = NonlinearConstraint(lambda x: constraint_lower(x, target_ppfd, fixed_base_height), 0, np.inf)
+    nc_upper = NonlinearConstraint(lambda x: constraint_upper(x, target_ppfd, fixed_base_height), 0, np.inf)
+    constraints = [nc_lower, nc_upper]
+    result = differential_evolution(
+        lambda x: objective_function(x, target_ppfd, fixed_base_height),
+        bounds,
+        constraints=constraints,
+        maxiter=1000,
+        popsize=15,
+        recombination=0.7,
+        disp=True  # Display progress
+    )
+    return result
                 </code></pre>
                 </div>
                 <p><b>Key elements of this code:</b></p>
@@ -333,8 +355,8 @@
                                 </ul>
                             </li>
                         </ul>
-                <h3 class="subsubsection-title">3.4. Integration with Radiosity</h3>
-                <p>
+                <h3 class="subsection-title">Integration with Radiosity</h3>
+                <p class="section-description">
                 The global optimization algorithm works by repeatedly calling the `simulate_lighting` function (which contains the full radiosity model).  This is the crucial link:
                 </p>
                 <ol class="section-list">
@@ -353,7 +375,7 @@
                 </div>
                 <div>
                     <h1 class="section-title">Experimental Validation</h1>
-                    <p>
+                    <p class="section-description">
                         We are committed to rigorous experimental validation of our UPFP technology. We will be using Apogee Instruments spectroradiometers (PS series for lab testing and the MS-100 handheld for field testing) to empirically verify the principle across the 380–1000 nm range. These measurements will enable us to:
                     </p>
                 </div>

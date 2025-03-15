@@ -1,101 +1,118 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import math
-from mpl_toolkits.mplot3d import Axes3D
+import numpy as np  # Import numpy
 
-# Define layers for "Diamond: 61" pattern
-layers = [
-    [(0, 0)],
-    [(-1, 0), (1, 0), (0, -1), (0, 1)],
-    [(-1, -1), (1, -1), (-1, 1), (1, 1),
-     (-2, 0), (2, 0), (0, -2), (0, 2)],
-    [(-2, -1), (2, -1), (-2, 1), (2, 1),
-     (-1, -2), (1, -2), (-1, 2), (1, 2),
-     (-3, 0), (3, 0), (0, -3), (0, 3)],
-    [(-2, -2), (2, -2), (-2, 2), (2, 2),
-     (-3, -1), (3, -1), (-3, 1), (3, 1),
-     (-1, -3), (1, -3), (-1, 3), (1, 3),
-     (-4, 0), (4, 0), (0, -4), (0, 4)],
-    [(-3, -2), (3, -2), (-3, 2), (3, 2),
-     (-2, -3), (2, -3), (-2, 3), (2, 3),
-     (-4, -1), (4, -1), (-4, 1), (4, 1),
-     (-1, -4), (1, -4), (-1, 4), (1, 4),
-     (-5, 0), (5, 0), (0, -5), (0, 5)]
-]
+def visualize_cob_overlap_geometric(pattern_option, light_array_width_ft, light_array_height_ft, cob_beam_angle_degrees=120):
+    """
+    Generates a geometric visualization of COB LED arrangement with beam overlap,
+    emphasizing the interaction between neighboring COBs.
 
-# Array dimensions and spacing
-light_array_width_ft = 10.0
-light_array_height_ft = 10.0
-spacing_x = light_array_width_ft / 7.2
-spacing_y = light_array_height_ft / 7.2
+    Args:
+        pattern_option: The pattern string (e.g., "Diamond: 61").
+        light_array_width_ft: Width of the LED array in feet.
+        light_array_height_ft: Height of the LED array in feet.
+        cob_beam_angle_degrees: Beam angle of each COB LED in degrees.
+    """
 
-center_x, center_y = 0.0, 0.0
-theta = math.radians(45)  # Rotate by 45 degrees
+    center_x = light_array_width_ft / 2
+    center_y = light_array_height_ft / 2
+    center_source = (center_x, center_y)
 
-# Build LED list with assigned intensities (center LED from layer 0)
-leds = []
-leds.append({'pos': (center_x, center_y), 'I': 1})
+    if pattern_option == "Diamond: 61":
+        layers = [
+            [(0, 0)],
+            [(-1, 0), (1, 0), (0, -1), (0, 1)],
+            [(-1, -1), (1, -1), (-1, 1), (1, 1),
+             (-2, 0), (2, 0), (0, -2), (0, 2)],
+            [(-2, -1), (2, -1), (-2, 1), (2, 1),
+             (-1, -2), (1, -2), (-1, 2), (1, 2),
+             (-3, 0), (3, 0), (0, -3), (0, 3)],
+            [(-2, -2), (2, -2), (-2, 2), (2, 2),
+             (-3, -1), (3, -1), (-3, 1), (3, 1),
+             (-1, -3), (1, -3), (-1, 3), (1, 3),
+             (-4, 0), (4, 0), (0, -4), (0, 4)],
+            [(-3, -2), (3, -2), (-3, 2), (3, 2),
+             (-2, -3), (2, -3), (-2, 3), (2, 3),
+             (-4, -1), (4, -1), (-4, 1), (4, 1),
+             (-1, -4), (1, -4), (-1, 4), (1, 4),
+             (-5, 0), (5, 0), (0, -5), (0, 5)]
+        ]
 
-for layer_index, layer in enumerate(layers):
-    if layer_index == 0:
-        continue  # Center already added
-    intensity = 1 + layer_index  # Increase intensity for outer layers
-    for dot in layer:
-        # Apply spacing and rotation
-        x_offset = spacing_x * dot[0]
-        y_offset = spacing_y * dot[1]
-        rotated_x = x_offset * math.cos(theta) - y_offset * math.sin(theta)
-        rotated_y = x_offset * math.sin(theta) + y_offset * math.cos(theta)
-        pos = (center_x + rotated_x, center_y + rotated_y)
-        leds.append({'pos': pos, 'I': intensity})
+        spacing_x = light_array_width_ft / 7.2
+        spacing_y = light_array_height_ft / 7.2
+        light_sources = [center_source]  # Initialize with the center light
 
-# Parameters for target plane (above the LED array)
-h = 5.0   # height above the array
-epsilon = 1e-6  # avoid division by zero
+        for layer_index, layer in enumerate(layers):
+            if layer_index == 0:
+                continue  # Skip the center for diamond patterns
 
-# Create grid for the target plane where PPFD is computed
-grid_range = np.linspace(-10, 10, 400)
-X, Y = np.meshgrid(grid_range, grid_range)
-PPFD = np.zeros_like(X)
+            for dot in layer:
+                x_offset = spacing_x * dot[0]
+                y_offset = spacing_y * dot[1]
+                theta = math.radians(45)
+                rotated_x_offset = x_offset * math.cos(theta) - y_offset * math.sin(theta)
+                rotated_y_offset = x_offset * math.sin(theta) + y_offset * math.cos(theta)
+                light_pos = (center_x + rotated_x_offset, center_y + rotated_y_offset)
+                light_sources.append(light_pos)
+    else:
+        print("Invalid pattern option.")
+        return
 
-# Compute PPFD from each LED using a combined inverse square and cosine drop-off model
-for led in leds:
-    led_x, led_y = led['pos']
-    I_led = led['I']
-    dx = X - led_x
-    dy = Y - led_y
-    distance = np.sqrt(dx**2 + dy**2 + h**2) + epsilon
-    PPFD += I_led * h / (distance**3)
+    fig, ax = plt.subplots()
+    ax.set_aspect('equal')
 
-# 3D visualization of the PPFD surface
-fig = plt.figure(figsize=(8, 6))
-ax = fig.add_subplot(111, projection='3d')
-surf = ax.plot_surface(X, Y, PPFD, cmap='viridis', edgecolor='none')
-fig.colorbar(surf, ax=ax, shrink=0.5, aspect=10, label='PPFD (a.u.)')
+    # --- Calculate beam radius and intersection points ---
+    beam_radius = max(spacing_x, spacing_y) * 1.2 * (cob_beam_angle_degrees / 120.0)
 
-ax.set_title('3D PPFD Distribution with Rotated COB LED Array')
-ax.set_xlabel('X coordinate')
-ax.set_ylabel('Y coordinate')
-ax.set_zlabel('PPFD (a.u.)')
+    for i, (x1, y1) in enumerate(light_sources):
+        cob_circle = patches.Circle((x1, y1), radius=0.05, color='black', zorder=3)
+        ax.add_patch(cob_circle)
 
-# Helper: compute PPFD at a single (x,y) point
-def compute_ppfd_at_point(x, y, leds, h, epsilon=1e-6):
-    total = 0
-    for led in leds:
-        led_x, led_y = led['pos']
-        d = np.sqrt((x - led_x)**2 + (y - led_y)**2 + h**2) + epsilon
-        total += led['I'] * h / (d**3)
-    return total
+        # Draw the beam circle with a *thicker* line and *no fill*
+        beam_circle = patches.Circle((x1, y1), radius=beam_radius, color='blue', alpha=1.0, zorder=1, linewidth=2, fill=False) # No fill
+        ax.add_patch(beam_circle)
 
-# Overlay LED positions by computing their PPFD on the target plane
-led_xs, led_ys, led_zs = [], [], []
-for led in leds:
-    x, y = led['pos']
-    led_xs.append(x)
-    led_ys.append(y)
-    led_zs.append(compute_ppfd_at_point(x, y, leds, h))
+        # --- Find and draw intersections ---
+        for j, (x2, y2) in enumerate(light_sources):
+            if i == j:  # Don't compare a circle to itself
+                continue
 
-ax.scatter(led_xs, led_ys, led_zs, color='red', s=50, label='LED Positions')
-ax.legend()
+            # Calculate distance between circle centers
+            distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-plt.show()
+            # Check for intersection
+            if distance < 2 * beam_radius and distance > 1e-6: # Check if distance is less than sum of radii, avoiding division by zero
+
+                # Calculate intersection points (using numpy for vector operations)
+                a = (beam_radius**2 - beam_radius**2 + distance**2) / (2 * distance)
+                h = math.sqrt(beam_radius**2 - a**2)
+                x_mid = x1 + a * (x2 - x1) / distance
+                y_mid = y1 + a * (y2 - y1) / distance
+
+                ix1 = x_mid + h * (y2 - y1) / distance
+                iy1 = y_mid - h * (x2 - x1) / distance
+                ix2 = x_mid - h * (y2 - y1) / distance
+                iy2 = y_mid + h * (x2 - x1) / distance
+
+                # Draw small red circles at the intersection points
+                intersection1 = patches.Circle((ix1, iy1), radius=0.08, color='red', zorder=2)
+                intersection2 = patches.Circle((ix2, iy2), radius=0.08, color='red', zorder=2)
+                ax.add_patch(intersection1)
+                ax.add_patch(intersection2)
+
+    ax.set_xlim(0, light_array_width_ft)
+    ax.set_ylim(0, light_array_height_ft)
+    ax.set_xlabel("Width (ft)")
+    ax.set_ylabel("Height (ft)")
+    ax.set_title(f"{pattern_option} COB LED Arrangement - Geometric Overlap")
+    plt.grid(True)
+    plt.show()
+
+# Example Usage
+pattern = "Diamond: 61"
+width = 10
+height = 10
+beam_angle = 120
+
+visualize_cob_overlap_geometric(pattern, width, height, beam_angle)

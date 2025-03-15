@@ -405,6 +405,13 @@ p {
     margin-bottom: 0px;
 }
 
+#viewerContainer {
+    width: 100%;
+    height: 500px;
+    display: none;
+    margin-top: 20px;
+}
+
 .subsection-title {
     margin-bottom: 0px;
 }

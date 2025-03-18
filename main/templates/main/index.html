@@ -11,13 +11,7 @@
 
     gtag('config', 'G-YNV5LYTT2C');
     </script>
-    <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.174.0/build/three.module.js"
-      }
-    }
-    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="{% static 'main/images/webp/homeleaf.webp' %}" />
@@ -127,10 +121,6 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                 </div>
             </div>
         </div>
-        </div>
-        <div id="modelViewerSection" style="text-align: center; max-width: 1000px; margin: 20px auto;">
-            <button id="show3DModelBtn" class="learn-more">Show 3D Model</button>
-            <div id="viewerContainer"></div>
         </div>
         <div class="grey-background lazy-load-bg" data-bg="{% static 'main/images/webp/hydro.webp' %}">
             <div class="overlay">
@@ -313,164 +303,6 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
     
     <!-- Optional: your custom scripts.js -->
     <script src="{% static 'js/scripts.js' %}"></script>
-    
-    <script type="module">
-        import * as THREE from 'https://unpkg.com/three@0.174.0/build/three.module.js';
-        import { TrackballControls } from 'https://unpkg.com/three@0.174.0/examples/jsm/controls/TrackballControls.js';
-        import { GLTFLoader } from 'https://unpkg.com/three@0.174.0/examples/jsm/loaders/GLTFLoader.js';
       
-        // URL for your glTF file
-        const modelUrl = "{% static 'models/fixture.glb' %}";
-      
-        function init3DViewer() {
-          const container = document.getElementById('viewerContainer');
-          container.innerHTML = "";
-          container.style.position = "relative";
-      
-          // Progress bar overlay (fixed size, centered)
-          const progressBarContainer = document.createElement('div');
-          progressBarContainer.id = 'progressBarContainer';
-          progressBarContainer.style.position = 'absolute';
-          progressBarContainer.style.top = '50%';
-          progressBarContainer.style.left = '50%';
-          progressBarContainer.style.transform = 'translate(-50%, -50%)';
-          progressBarContainer.style.width = '200px';
-          progressBarContainer.style.height = '10px';
-          progressBarContainer.style.backgroundColor = '#ccc';
-          progressBarContainer.style.borderRadius = '5px';
-          progressBarContainer.style.overflow = 'hidden';
-          progressBarContainer.style.zIndex = '10';
-      
-          const progressBar = document.createElement('div');
-          progressBar.id = 'progressBar';
-          progressBar.style.width = '0%';
-          progressBar.style.height = '100%';
-          progressBar.style.backgroundColor = '#0078BE';
-          progressBar.style.borderRadius = '5px';
-          progressBarContainer.appendChild(progressBar);
-          container.appendChild(progressBarContainer);
-      
-          // Info box overlay (instructions, initially hidden)
-          const infoBox = document.createElement('div');
-          infoBox.id = 'infoBox';
-          infoBox.style.position = 'absolute';
-          infoBox.style.top = '50%';
-          infoBox.style.left = '50%';
-          infoBox.style.transform = 'translate(-50%, -50%)';
-          infoBox.style.backgroundColor = 'rgba(255,255,255,0.95)';
-          infoBox.style.padding = '20px';
-          infoBox.style.border = '1px solid #ccc';
-          infoBox.style.borderRadius = '5px';
-          infoBox.style.zIndex = '11';
-          infoBox.style.textAlign = 'center';
-          infoBox.style.display = 'none';
-          
-          const infoText = document.createElement('p');
-          infoText.textContent = 'Click and hold your left mouse button while moving the mouse to orbit around the 3D model. Scroll to zoom in and out.';
-          infoBox.appendChild(infoText);
-          
-          const okButton = document.createElement('button');
-          okButton.textContent = 'Ok!';
-          okButton.style.marginTop = '10px';
-          okButton.addEventListener('click', () => {
-            infoBox.style.display = 'none';
-          });
-          infoBox.appendChild(okButton);
-          container.appendChild(infoBox);
-      
-          // Main scene, camera, and renderer.
-          const scene = new THREE.Scene();
-          scene.background = new THREE.Color(0xdddddd);
-      
-          // Fixed camera parameters.
-          const camera = new THREE.PerspectiveCamera(
-            45,
-            container.clientWidth / container.clientHeight,
-            0.1,
-            20000
-          );
-          // Use a fixed camera position (previously known to work well).
-          camera.position.set(100, 200, 300);
-          camera.up.set(0, 1, 0);
-      
-          const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-          renderer.setSize(container.clientWidth, container.clientHeight);
-          renderer.setClearColor(scene.background, 1);
-          renderer.domElement.style.zIndex = "1";
-          container.appendChild(renderer.domElement);
-      
-          // Original lighting settings that you liked.
-          const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
-          hemiLight.position.set(0, 300, 0);
-          scene.add(hemiLight);
-      
-          const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-          dirLight.position.set(100, 300, 100);
-          scene.add(dirLight);
-      
-          const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
-          scene.add(ambientLight);
-      
-          // TrackballControls for full free orbiting.
-          const controls = new TrackballControls(camera, renderer.domElement);
-          controls.rotateSpeed = 2.0;
-          controls.zoomSpeed = 1.2;
-          controls.panSpeed = 0.8;
-          controls.dynamicDampingFactor = 0.3;
-      
-          // Load glTF model with progress callbacks.
-          const loader = new GLTFLoader();
-          loader.load(
-            modelUrl,
-            (gltf) => {
-              const object = gltf.scene;
-              // Compute bounding box and subtract center to recenter the model.
-              const box = new THREE.Box3().setFromObject(object);
-              const center = box.getCenter(new THREE.Vector3());
-              object.position.sub(center);
-              scene.add(object);
-              // Set orbit controls target to the model's center.
-              controls.target.copy(center);
-              controls.update();
-              // Hide progress bar and show info box.
-              progressBarContainer.style.display = 'none';
-              infoBox.style.display = 'block';
-            },
-            (xhr) => {
-              if (xhr.lengthComputable) {
-                const percentComplete = (xhr.loaded / xhr.total) * 100;
-                progressBar.style.width = percentComplete + '%';
-              }
-            },
-            (error) => {
-              console.error('Error loading glTF model:', error);
-              progressBarContainer.innerText = 'Error loading model';
-            }
-          );
-      
-          function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-          }
-          animate();
-        }
-      
-        document.getElementById('show3DModelBtn').addEventListener('click', () => {
-          const container = document.getElementById('viewerContainer');
-          if (container.style.display === 'none' || container.style.display === '') {
-            container.style.display = 'block';
-            if (!container.hasChildNodes()) {
-              init3DViewer();
-            }
-          } else {
-            container.style.display = 'none';
-          }
-        });
-      </script>
-      
-      
-      
-
 </body>
 </html>

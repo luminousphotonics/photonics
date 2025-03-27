@@ -2,9 +2,10 @@
 """
 Lighting Simulation Script
 
-This stand-alone script simulates lighting in a room using a prebuilt geometry.
+This stand-alone script simulates lighting in a room using pre-built geometry.
 All machine learning, surrogate modeling, progress callbacks, and visualization
 functions have been removed.
+
 Usage: Run the script directly to see summary PPFD results.
 """
 
@@ -23,7 +24,10 @@ REFL_FLOOR = 0.1
 LUMINOUS_EFFICACY = 182.0         # lm/W
 SPD_FILE = "./backups/spd_data.csv"
 
-NUM_RADIOSITY_BOUNCES = 5
+# Adaptive Radiosity parameters
+MAX_RADIOSITY_BOUNCES = 10
+RADIOSITY_CONVERGENCE_THRESHOLD = 1e-3
+
 WALL_SUBDIVS_X = 10
 WALL_SUBDIVS_Y = 5
 CEIL_SUBDIVS_X = 10
@@ -32,8 +36,10 @@ CEIL_SUBDIVS_Y = 10
 # Floor grid resolution (meters)
 FLOOR_GRID_RES = 0.08
 
-# Default candidate layers count
-FIXED_NUM_LAYERS = 10
+# Default candidate layers count (determines COB arrangement)
+FIXED_NUM_LAYERS = 6
+
+MC_SAMPLES = 16  # Number of Monte Carlo samples for indirect contributions
 
 # ------------------------------
 # SPD Conversion Factor
@@ -80,12 +86,16 @@ def prepare_geometry(W, L, H):
     return (cob_positions, X, Y, patches)
 
 def build_cob_positions(W, L, H):
-    ft2m = 3.28084
-    floor_width_ft = W * ft2m
-    floor_length_ft = L * ft2m
-    max_dim_ft = max(floor_width_ft, floor_length_ft)
-    n = max(1, int(max_dim_ft / 2) - 1)
+    """
+    Builds COB positions arranged in a diamond pattern (rotated 45°)
+    such that the overall array tightly fills the room dimensions.
     
+    Instead of converting to feet, we now use FIXED_NUM_LAYERS to determine
+    the number of layers (with layer 0 at the center). The outermost layer 
+    (n = FIXED_NUM_LAYERS - 1) is scaled so that, after a 45° rotation,
+    the COB array spans nearly the full room (from 0 to W in x and 0 to L in y).
+    """
+    n = FIXED_NUM_LAYERS - 1  # outermost layer index; total layers = FIXED_NUM_LAYERS
     positions = []
     positions.append((0, 0, H, 0))
     for i in range(1, n + 1):
@@ -102,8 +112,10 @@ def build_cob_positions(W, L, H):
     sin_t = math.sin(theta)
     centerX = W / 2
     centerY = L / 2
-    scale_x = (W / 2 * 0.95 * math.sqrt(2)) / n
-    scale_y = (L / 2 * 0.95 * math.sqrt(2)) / n
+    # Scale factors chosen so that the farthest point (n,0) maps to the room edge:
+    # For (n,0) after rotation: rx = n/sqrt2, so we set scale_x such that centerX + (n/sqrt2)*scale_x = W.
+    scale_x = (W/2 * math.sqrt(2)) / n
+    scale_y = (L/2 * math.sqrt(2)) / n
     
     transformed = []
     for (x, y, h, layer) in positions:
@@ -111,6 +123,7 @@ def build_cob_positions(W, L, H):
         ry = x * sin_t + y * cos_t
         px = centerX + rx * scale_x
         py = centerY + ry * scale_y
+        # COBs are placed slightly below the ceiling (95% of H)
         transformed.append((px, py, H * 0.95, layer))
     
     return np.array(transformed, dtype=np.float64)
@@ -276,10 +289,11 @@ def compute_patch_direct(light_positions, light_fluxes, patch_centers, patch_nor
     return out
 
 @njit
-def iterative_radiosity_loop(patch_centers, patch_normals, patch_direct, patch_areas, patch_refl, num_bounces):
+def iterative_radiosity_loop(patch_centers, patch_normals, patch_direct, patch_areas, patch_refl, max_bounces, convergence_threshold):
     Np = patch_direct.shape[0]
     patch_rad = patch_direct.copy()
-    for _ in range(num_bounces):
+    epsilon = 1e-6
+    for bounce in range(max_bounces):
         new_flux = np.zeros(Np, dtype=np.float64)
         for j in range(Np):
             if patch_refl[j] <= 0:
@@ -311,11 +325,25 @@ def iterative_radiosity_loop(patch_centers, patch_normals, patch_direct, patch_a
                     continue
                 ff = (cos_j * cos_i) / (math.pi * dist2)
                 new_flux[i] += outF * ff
-        patch_rad = patch_direct + new_flux / patch_areas
+        new_patch_rad = np.empty_like(patch_rad)
+        max_rel_change = 0.0
+        for i in range(Np):
+            new_patch_rad[i] = patch_direct[i] + new_flux[i] / patch_areas[i]
+            change = abs(new_patch_rad[i] - patch_rad[i])
+            denom = abs(patch_rad[i]) + epsilon
+            rel_change = change / denom
+            if rel_change > max_rel_change:
+                max_rel_change = rel_change
+        patch_rad = new_patch_rad.copy()
+        if max_rel_change < convergence_threshold:
+            break
     return patch_rad
 
-@njit
-def compute_reflection_on_floor(X, Y, patch_centers, patch_normals, patch_areas, patch_rad, patch_refl):
+def compute_reflection_on_floor(X, Y, patch_centers, patch_normals, patch_areas, patch_rad, patch_refl, mc_samples=MC_SAMPLES):
+    """
+    Computes indirect irradiance on the floor using Monte Carlo integration
+    to estimate the form factors from each patch to each floor grid point.
+    """
     rows, cols = X.shape
     out = np.zeros((rows, cols), dtype=np.float64)
     for r in range(rows):
@@ -328,24 +356,45 @@ def compute_reflection_on_floor(X, Y, patch_centers, patch_normals, patch_areas,
                     continue
                 outF = patch_rad[p] * patch_areas[p] * patch_refl[p]
                 pc = patch_centers[p]
-                dx = fx - pc[0]
-                dy = fy - pc[1]
-                dz = -pc[2]
-                dist2 = dx*dx + dy*dy + dz*dz
-                if dist2 < 1e-15:
-                    continue
-                dist = math.sqrt(dist2)
-                n = patch_normals[p]
-                norm_n = math.sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2])
-                dot_p = dx*n[0] + dy*n[1] + dz*n[2]
-                cos_p = dot_p/(dist*norm_n)
-                if cos_p < 0:
-                    cos_p = 0
-                cos_f = -dz/dist
-                if cos_f < 0:
-                    cos_f = 0
-                ff = (cos_p * cos_f) / (math.pi * dist2)
-                val += outF * ff
+                n = np.array(patch_normals[p])
+                # Determine tangent vectors for the patch plane
+                if abs(n[2]) < 0.99:
+                    tangent1 = np.array([-n[1], n[0], 0.0])
+                else:
+                    tangent1 = np.array([1.0, 0.0, 0.0])
+                tangent1_norm = np.linalg.norm(tangent1)
+                if tangent1_norm > 0:
+                    tangent1 = tangent1 / tangent1_norm
+                else:
+                    tangent1 = np.array([1.0, 0.0, 0.0])
+                tangent2 = np.cross(n, tangent1)
+                tangent2_norm = np.linalg.norm(tangent2)
+                if tangent2_norm > 0:
+                    tangent2 = tangent2 / tangent2_norm
+                else:
+                    tangent2 = np.array([0.0, 1.0, 0.0])
+                half_side = math.sqrt(patch_areas[p]) / 2.0
+                sample_sum = 0.0
+                for _ in range(mc_samples):
+                    offset1 = np.random.uniform(-half_side, half_side)
+                    offset2 = np.random.uniform(-half_side, half_side)
+                    sample_point = np.array(pc) + offset1 * tangent1 + offset2 * tangent2
+                    dx = fx - sample_point[0]
+                    dy = fy - sample_point[1]
+                    dz = -sample_point[2]
+                    dist2 = dx*dx + dy*dy + dz*dz
+                    if dist2 < 1e-15:
+                        continue
+                    dist = math.sqrt(dist2)
+                    cos_f = -dz/dist if (-dz/dist) > 0 else 0.0
+                    dot_p = dx*n[0] + dy*n[1] + dz*n[2]
+                    cos_p = dot_p/(dist* np.linalg.norm(n))
+                    if cos_p < 0:
+                        cos_p = 0.0
+                    ff = (cos_p * cos_f) / (math.pi * dist2)
+                    sample_sum += ff
+                avg_ff = sample_sum / mc_samples
+                val += outF * avg_ff
             out[r, c] = val
     return out
 
@@ -364,7 +413,8 @@ def simulate_lighting(params, geo):
     direct_irr = compute_direct_floor(cob_positions, power_arr, X, Y)
     # Calculate irradiance from patches (direct + radiosity)
     patch_direct = compute_patch_direct(cob_positions, power_arr, p_centers, p_normals, p_areas)
-    patch_rad = iterative_radiosity_loop(p_centers, p_normals, patch_direct, p_areas, p_refl, NUM_RADIOSITY_BOUNCES)
+    patch_rad = iterative_radiosity_loop(p_centers, p_normals, patch_direct, p_areas, p_refl,
+                                         MAX_RADIOSITY_BOUNCES, RADIOSITY_CONVERGENCE_THRESHOLD)
     reflect_irr = compute_reflection_on_floor(X, Y, p_centers, p_normals, p_areas, patch_rad, p_refl)
 
     return (direct_irr + reflect_irr) * CONVERSION_FACTOR
@@ -374,12 +424,21 @@ def simulate_lighting(params, geo):
 # ------------------------------
 def main():
     # Room dimensions (meters)
-    W = 5.0   # Room width
-    L = 5.0   # Room length
-    H = 3.0   # Room height
+    W = 3.6576   # Room width
+    L = 3.6576   # Room length
+    H = 0.9144      # Room height
 
     # Default lighting parameters for each layer (in lumens)
-    params = np.array([8000.0] * FIXED_NUM_LAYERS, dtype=np.float64)
+    #params = np.array([8000.0] * FIXED_NUM_LAYERS, dtype=np.float64)
+
+    # With FIXED_NUM_LAYERS = 6, we define luminous flux per layer as follows:
+    #  - Center COB (Layer 1, index 0):  1000.00 lumens
+    #  - Layer 2 (index 1):              1000.00 lumens
+    #  - Layer 3 (index 2):              5016.69 lumens
+    #  - Layer 4 (index 3):              1000.00 lumens
+    #  - Layer 5 (index 4):              5564.06 lumens
+    #  - Layer 6 (index 5):              24000.00 lumens
+    params = np.array([1000.00, 1000.00, 5016.69, 1000.00, 5564.06, 24000.00], dtype=np.float64)
 
     # Prepare geometry for the room
     geo = prepare_geometry(W, L, H)
@@ -387,11 +446,21 @@ def main():
     # Run the lighting simulation
     floor_ppfd = simulate_lighting(params, geo)
 
+    mean_ppfd = np.mean(floor_ppfd)
+    mad = np.mean(np.abs(floor_ppfd - mean_ppfd))
+    rmse = np.sqrt(np.mean((floor_ppfd - mean_ppfd)**2))
+    dou = 100 * (1 - rmse / mean_ppfd)
+    cv = 100 * (np.std(floor_ppfd) / mean_ppfd)
+
     # Compute and print summary statistics
     mean_ppfd = np.mean(floor_ppfd)
     print(f"Average PPFD: {mean_ppfd:.2f} µmol/m²/s")
     print("Floor PPFD distribution:")
     print(floor_ppfd)
+    print(f"MAD: {mad:.2f}")
+    print(f"RMSE: {rmse:.2f}")
+    print(f"DOU (%): {dou:.2f}")
+    print(f"CV (%): {cv:.2f}")
 
 if __name__ == "__main__":
     main()

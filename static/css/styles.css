@@ -8,6 +8,10 @@ body {
     color: #000000;           /* Black text */
 }
 
+h1 {
+    font-family: 'Avenier Next', 'Helvetica Neue', sans-serif;
+}
+
 @font-face {
     font-family: 'Avenir Next';
     src: url('/static/fonts/AvenirNext-Regular.woff2') format('woff2'),
@@ -283,6 +287,7 @@ body {
     margin-left: 100px;
     line-height: 1.2;
     font-size: 35px; /* Default font size for larger screens */
+    margin-top: 0px;
 }
 
 @media (max-width: 480px) {
@@ -415,6 +420,32 @@ p {
 .subsection-title {
     margin-bottom: 0px;
 }
+
+.intro-section {
+    overflow: hidden;          /* Prevents content from bleeding into other sections */
+    max-width: 100%;           /* Ensures the content doesn't exceed its container */
+    padding-bottom: 20px;      /* Adds spacing at the bottom */
+}
+
+.intro-section ul {
+    padding-left: 20px;        /* Improves readability of lists */
+}
+
+.intro-section p,
+.intro-section ul {
+    margin-right: 10px;        /* Ensures content has breathing room from adjacent columns or elements */
+}
+
+.two-col-section {
+    position: relative; /* Establishes positioning context */
+}
+
+.two-col-section pre {
+    position: relative;
+    top: 80px; /* Adjust this value to move both boxes down evenly */
+}
+
+
 
 .section-description {
     margin-top: 0px;

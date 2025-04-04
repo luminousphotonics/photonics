@@ -8,43 +8,170 @@ import math # Added for build_cob_positions if needed elsewhere
 # NEW Known successful configurations (Flux Params per Layer) - Validated Data (June 2024)
 known_configs = {
     10: np.array([ # W=6.096m (20ft), H=0.9144m, PPFD=1248.11
-        8000, 9000, 11000, 14500, 13500, 8000, 5500, 13500, 20000, 20000
+        #8000, 9000, 11000, 14500, 13500, 8000, 5500, 13500, 20000, 20000
+        1500, 2000, 3500, 8000, 14000, 8000, 5500, 13500, 20000, 20000
     ], dtype=np.float64),
     11: np.array([ # W=6.7056m (22ft), H=0.9144m, PPFD=1250.48
-        9500, 9000, 7000, 12000, 16000, 14000, 3500, 6500, 14000, 20000, 20000
+        1500, 2000, 3500, 8000, 14000, 8000, 5500, 13500, 11000 ,20000, 20000
     ], dtype=np.float64),
     12: np.array([ # W=7.3152m (24ft), H=0.9144m, PPFD=1248.60
-        9500, 13000, 11000, 3000, 15000, 17000, 8000, 4000, 10000, 12000, 20000, 20000
+        1500, 2000, 3500, 8000, 14000, 8000, 5500, 13500, 11000, 8000, 20000, 20000
     ], dtype=np.float64),
     13: np.array([ # W=7.9248m (26ft), H=0.9144m, PPFD=1259.86
-        9500, 13000, 11000, 3000, 13000, 17000, 12000, 6000, 7000, 10000, 11000, 20000, 20000
+    1809.2240,     # Center COB (Layer 0)
+    2293.8688,     # Layer 1
+    4000.4619,     # Layer 2
+    9924.8194,     # Layer 3
+    12712.7576,     # Layer 4
+    15500.0116,     # Layer 5
+    11000.7460,     # Layer 6
+    6500.3283,     # Layer 7
+    14000.8321,     # Layer 8
+    13000.5068,     # Layer 9
+    18000.1397,     # Layer 10
+    20000,          # Layer 11
+    20000.0000,     # Outer Layer (12)    
     ], dtype=np.float64),
     14: np.array([ # W=8.5344m (28ft), H=0.9144m, PPFD=1259.84
-        8000, 14000, 14000, 4000, 7000, 15000, 14000, 13000, 7000, 8000, 7000, 11000, 20000, 20000
+    1793.7002,     # Center COB (Layer 0)
+    2282.2461,     # Layer 1
+    5791.1873,     # Layer 2
+    10100.9620,     # Layer 3
+    12992.0085,     # Layer 4
+    12244.8012,     # Layer 5
+    8697.4482,     # Layer 6
+    12071.4660,     # Layer 7
+    15427.9418,     # Layer 8
+    13177.4845,     # Layer 9
+    10922.3296,     # Layer 10
+    15500.2503,     # Layer 11
+    20000,          # Layer 12
+    20000.0000,     # Outer Layer (13)    
     ], dtype=np.float64),
     15: np.array([ # W=9.144m (30ft), H=0.9144m, PPFD=1250.59
-        8000, 12000, 15000, 6000, 9000, 5000, 13000, 17500, 9500, 8000, 7000, 7000, 11500, 20000, 20000
+    1377.5256,     # Center COB (Layer 0)
+    2755.1979,     # Layer 1
+    6067.7779,     # Layer 2
+    9900.8287,     # Layer 3
+    12839.9137,     # Layer 4
+    13470.5960,     # Layer 5
+    10976.2018,     # Layer 6
+    11106.1617,     # Layer 7
+    14667.7526,     # Layer 8
+    13796.9121,     # Layer 9
+    10722.2285,     # Layer 10
+    9778.4527,     # Layer 11
+    17000.2248,     # Layer 12
+    20000,     # Layer 13
+    20000.0000,     # Outer Layer (14)    
     ], dtype=np.float64),
     16: np.array([ # W=9.7536m (32ft), H=0.9144m, PPFD=1252.00
-        6000, 8000, 11000, 13000, 15000, 4000, 2000, 16500, 15500, 11000, 7000, 7000, 6000, 12000, 20000, 20000
+    1073.7628,     # Center COB (Layer 0)
+    3439.8049,     # Layer 1
+    6507.2727,     # Layer 2
+    9599.6373,     # Layer 3
+    12040.3698,     # Layer 4
+    13152.9411,     # Layer 5
+    12396.7115,     # Layer 6
+    11840.1553,     # Layer 7
+    13777.9490,     # Layer 8
+    13849.2836,     # Layer 9
+    11672.8241,     # Layer 10
+    9772.8964,     # Layer 11
+    10698.8823,     # Layer 12
+    16500.9626,     # Layer 13
+    20000,          # Layer 14
+    20000.0000,     # Outer Layer (15)    
     ], dtype=np.float64),
     17: np.array([ # W=9.10.3632 (34ft), H=0.9144m, PPFD=1249.59
-    4612.7476, 10601.7316, 12225.2797, 11233.8901, 9378.0608, 8406.3522, 9253.4791, 10783.1226, 11575.3645, 11181.6309, 10140.7523, 9035.7677, 8449.7164, 8965.6376, 11166.5705, 15635.5543, 20000.0000,     
+    830.1469,     # Center COB (Layer 0)
+    4065.8452,     # Layer 1
+    6966.5249,     # Layer 2
+    9394.0490,     # Layer 3
+    11210.2804,     # Layer 4
+    12277.0822,     # Layer 5
+    12491.5632,     # Layer 6
+    12675.9863,     # Layer 7
+    13799.1802,     # Layer 8
+    13868.4179,     # Layer 9
+    12168.7824,     # Layer 10
+    10195.7170,     # Layer 11
+    9561.1343,     # Layer 12
+    11848.7538,     # Layer 13
+    16866.1820,     # Layer 14
+    20000,          # Layer 15
+    20000.0000,     # Outer Layer (16)    
     ], dtype=np.float64),
     18: np.array([ # W=9.10.9728 (36ft), H=0.9144m, PPFD=1249.59
-    4479.0225, 10412.5155, 12146.2339, 11298.3421, 9487.0047, 8330.0463, 8847.3014, 10230.1356, 11321.7999, 11317.6453, 10516.8130, 9434.1654, 8584.5645, 8478.1138, 9451.9112, 11625.0138, 15102.5620, 20000.0000,
+    535.3940,     # Center COB (Layer 0)
+    4782.7393,     # Layer 1
+    7575.9957,     # Layer 2
+    9323.6141,     # Layer 3
+    10434.0456,     # Layer 4
+    11315.7411,     # Layer 5
+    12373.1262,     # Layer 6
+    13607.0019,     # Layer 7
+    14300.9275,     # Layer 8
+    13977.7658,     # Layer 9
+    12629.4362,     # Layer 10
+    10973.1652,     # Layer 11
+    9854.7147,     # Layer 12
+    10119.8466,     # Layer 13
+    12554.6217,     # Layer 14
+    16638.6397,     # Layer 15
+    20000,     # Layer 16
+    20000.0000,     # Outer Layer (17)    
     ], dtype=np.float64),
     19: np.array([ # W=9.11.5824 (38ft), H=0.9144m, PPFD=1249.59
-    4457.8784, 10211.6949, 12042.3028, 11376.5219, 9641.1723, 8263.0738, 8379.0505, 9554.9527, 10827.1349, 11300.8096, 10877.1854, 9966.6900, 8988.0460, 8359.9758, 8486.8064, 9589.4539, 11762.4015, 15097.6294, 20000.0000,
+    537.7200,     # Center COB (Layer 0)
+    5000.8087,     # Layer 1
+    8000.4165,     # Layer 2
+    8634.2820,     # Layer 3
+    11500.1437,     # Layer 4
+    10000.7405,     # Layer 5
+    9000.8108,     # Layer 6
+    13923.5367,     # Layer 7
+    14386.5752,     # Layer 8
+    14188.3497,     # Layer 9
+    13181.1405,     # Layer 10
+    12000.8626,     # Layer 11
+    10416.4598,     # Layer 12
+    9817.5627,     # Layer 13
+    10513.8019,     # Layer 14
+    12986.9756,     # Layer 15
+    16839.3841,     # Layer 16
+    20000.0000,     # Layer 17
+    20000.0000,     # Outer Layer (18)
     ], dtype=np.float64),
-    # Removed old N=17, N=18 data
+    20: np.array([ # W=9.10.9728 (36ft), H=0.9144m, PPFD=1249.59
+    255.1611,     # Center COB (Layer 0)
+    5190.6092,     # Layer 1
+    7966.5669,     # Layer 2
+    9235.1307,     # Layer 3
+    9648.3969,     # Layer 4
+    9858.4618,     # Layer 5
+    10517.4218,     # Layer 6
+    12149.5244,     # Layer 7
+    13911.2899,     # Layer 8
+    14527.3446,     # Layer 9
+    14017.6439,     # Layer 10
+    12755.7656,     # Layer 11
+    11270.1080,     # Layer 12
+    10105.3292,     # Layer 13
+    9806.0876,     # Layer 14
+    10917.0412,     # Layer 15
+    13767.1928,     # Layer 16
+    17309.2410,     # Layer 17
+    19954.9191,     # Layer 18
+    20000.0000,     # Outer Layer (19)
+    ], dtype=np.float64),
 }
 # Target Average PPFD
-TARGET_PPFD = 1250.0
+TARGET_PPFD = 1500.0
 
 # Desired number of layers for prediction
 # --- Target N=17 (Reduced from 20 for less extrapolation) ---
-NUM_LAYERS_TARGET = 22
+NUM_LAYERS_TARGET = 12
 # --- Target N=17 ---
 
 EXTRAPOLATION_BOOST_FACTOR = 1.033 # Boost for predicted flux when extrapolating
@@ -134,7 +261,6 @@ def build_cob_positions(FIXED_NUM_LAYERS, W, L, H):
     return np.array(transformed, dtype=np.float64)
 # --- End Helper function ---
 
-
 def prepare_spline_data(known_configs):
     n_list = []
     x_norm_list = []
@@ -178,16 +304,17 @@ def fit_and_predict_ratio(n_target, known_configs, target_ppfd=TARGET_PPFD, poly
     valid_n = []
     # --- Update with N=18 actual PPFD ---
     actual_ppfds = {
-        10: 1248.11,
-        11: 1250.48,
-        12: 1248.60,
-        13: 1259.86,
-        14: 1259.84,
-        15: 1250.59,
-        16: 1252.00,
-        17: 1249.59, # From validated N=17 run
-        18: 1249.52, # From validated N=18 run (using corrected fluxes)
-        19: 1246.90,
+        10: 1251.15,
+        11: 1271.96,
+        #12: 1246.82,
+        13: 1502.56,
+        14: 1501.81,
+        15: 1508.63,
+        16: 1502.46,
+        17: 1502.71, # From validated N=17 run
+        18: 1513.04, # From validated N=18 run (using corrected fluxes)
+        19: 1500.53,
+        20: 1510.09,
     }
 
     print("\nCalculating PPFD/Lumen ratio and fitting trend vs N:")

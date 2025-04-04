@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flux Optimization Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f7f7f7; }
+    h1 { text-align: center; }
+    .chart { margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <h1>Flux Optimization Results</h1>
+  <input type="file" id="fileInput" accept=".csv">
+  <div id="summary" class="chart"></div>
+  <div id="lossHeatmap" class="chart"></div>
+  <div id="mdouScatter" class="chart"></div>
+  <div id="ppfdVsTarget" class="chart"></div>
+
+  <script>
+    document.getElementById('fileInput').addEventListener('change', function(evt) {
+      const file = evt.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const rows = e.target.result.split('\n').slice(1).filter(Boolean);
+        const data = rows.map(row => {
+          const [timestamp, layer, height_ft, target_ppfd, final_ppfd, mDOU, loss] = row.split(',');
+          return {
+            timestamp,
+            layer: +layer,
+            height: +height_ft,
+            targetPPFD: +target_ppfd,
+            finalPPFD: +final_ppfd,
+            mDOU: +mDOU,
+            loss: +loss
+          };
+        });
+
+        // Summarize runs
+        const total = data.length;
+        const above95 = data.filter(d => d.mDOU >= 95).length;
+        document.getElementById('summary').innerHTML =
+          `<h3>Total Runs: ${total} | mDOU >= 95%: ${above95} (${(100 * above95 / total).toFixed(1)}%)</h3>`;
+
+        // Heatmap: Layer vs PPFD Target by Loss
+        const layers = [...new Set(data.map(d => d.layer))];
+        const ppfdTargets = [...new Set(data.map(d => d.targetPPFD))];
+        const z = layers.map(layer => ppfdTargets.map(ppfd => {
+          const match = data.find(d => d.layer === layer && d.targetPPFD === ppfd);
+          return match ? match.loss : null;
+        }));
+
+        Plotly.newPlot('lossHeatmap', [{
+          z, x: ppfdTargets, y: layers,
+          type: 'heatmap', colorscale: 'YlOrRd'
+        }], { title: 'Loss Heatmap (Layer vs Target PPFD)', xaxis: {title: 'Target PPFD'}, yaxis: {title: 'Layer Count'} });
+
+        // Scatter: mDOU by Layer
+        Plotly.newPlot('mdouScatter', [{
+          x: data.map(d => d.layer),
+          y: data.map(d => d.mDOU),
+          mode: 'markers', type: 'scatter',
+          marker: { size: 8, color: 'blue' }
+        }], { title: 'mDOU Distribution by Layer', xaxis: {title: 'Layer'}, yaxis: {title: 'mDOU (%)'} });
+
+        // Line: Final PPFD vs Target PPFD
+        Plotly.newPlot('ppfdVsTarget', [
+          {
+            x: data.map(d => d.targetPPFD),
+            y: data.map(d => d.finalPPFD),
+            mode: 'markers',
+            name: 'Final PPFD',
+            marker: { color: 'green' }
+          },
+          {
+            x: data.map(d => d.targetPPFD),
+            y: data.map(d => d.targetPPFD),
+            mode: 'lines',
+            name: 'Target = Final',
+            line: { dash: 'dot', color: 'black' }
+          }
+        ], {
+          title: 'Final vs Target PPFD',
+          xaxis: { title: 'Target PPFD' },
+          yaxis: { title: 'Final PPFD' }
+        });
+      };
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>

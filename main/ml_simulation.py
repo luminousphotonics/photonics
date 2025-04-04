@@ -782,181 +782,306 @@ def run_ml_simulation(floor_width_ft, floor_length_ft, target_ppfd, floor_height
     if progress_callback:
         progress_callback("[INFO] Simulation started.")
         progress_callback("PROGRESS:5")
-        
+
+    # --- Input Conversion and Validation ---
     try:
         floor_width_ft = float(floor_width_ft)
         floor_length_ft = float(floor_length_ft)
         target_ppfd = float(target_ppfd)
-        floor_height = float(floor_height)
-    except Exception as e:
-        print("Error converting inputs to float:", e)
-        return {}
-    
-    ft2m = 3.28084
-    W_m = floor_width_ft / ft2m
-    L_m = floor_length_ft / ft2m
-    H_m = floor_height / ft2m
+        floor_height = float(floor_height) # This is likely ceiling height for the room volume
+    except ValueError as e: # Catch specific error
+        error_msg = f"Error converting inputs to float: {e}"
+        print(error_msg)
+        if progress_callback:
+            progress_callback(f"[ERROR] {error_msg}")
+        # Return error structure compatible with frontend checks
+        return {"error": error_msg}
+    except Exception as e: # Catch other potential errors
+        error_msg = f"Unexpected error during input processing: {e}"
+        print(error_msg)
+        if progress_callback:
+             progress_callback(f"[ERROR] {error_msg}")
+        return {"error": error_msg}
+
+
+    # --- Constants and Conversions ---
+    FT_TO_METER = 0.3048 # More standard conversion factor name
+    W_m = floor_width_ft * FT_TO_METER
+    L_m = floor_length_ft * FT_TO_METER
+    H_m = floor_height * FT_TO_METER # This is ceiling height (H_ceiling)
+
+    # --- Define PPFD Calculation Height ---
+    # This is the height above the floor where the PPFD grid is calculated.
+    # Adjust this value if your simulation calculates it differently.
+    PPFD_CALC_HEIGHT_M = 0.05 # e.g., 5 cm above the floor
 
     if progress_callback:
         progress_callback("[INFO] Preparing geometry...")
         progress_callback("PROGRESS:10")
-    
-    # Prepare geometry.
-    geo = prepare_geometry(W_m, L_m, H_m)
-    # Determine the dynamic layer count from the COB positions
-    dynamic_layer_count = int(np.max(geo[0][:, 3])) + 1
-    
-    if progress_callback:
-        progress_callback("[INFO] Loading training data...")
-        progress_callback("PROGRESS:15")
-    
-    # Try loading precomputed training data.
-    X_train, y_train, G_train = load_training_data()
-    
-    # Current input features for matching: [floor_width_ft, floor_length_ft, target_ppfd, floor_height]
-    current_geom_features = np.array([floor_width_ft, floor_length_ft, target_ppfd, floor_height])
-    
-    # If training data exists, check for a near instantaneous candidate.
-    if X_train is not None:
-        # Define thresholds for a "close enough" match.
-        thresholds = np.array([0.5, 0.5, 100.0, 0.5])  # Adjust thresholds as needed.
-        differences = np.abs(G_train - current_geom_features)
-        matching_indices = np.where((differences <= thresholds).all(axis=1))[0]
-        if len(matching_indices) > 0:
-            index = matching_indices[0]
-            candidate_norm = X_train[index]
-            M = 10  # number of spline samples used in training data
-            best_params_full = inverse_transform(candidate_norm[0], np.linspace(0, 1, M), candidate_norm[1:], FIXED_NUM_LAYERS)
-            if progress_callback:
-                progress_callback("[INFO] Found matching training data sample. Using cached candidate.")
+
+    # --- Prepare Geometry ---
+    # Assuming prepare_geometry returns a tuple/list where:
+    # geo[0] = COB positions numpy array [x, y, z, layer]
+    # geo[1] = X meshgrid numpy array for the floor plane
+    # geo[2] = Y meshgrid numpy array for the floor plane
+    try:
+        geo = prepare_geometry(W_m, L_m, H_m) # H_m here is ceiling height
+        if not isinstance(geo, (list, tuple)) or len(geo) < 3:
+             raise TypeError("prepare_geometry did not return expected structure (list/tuple of length >= 3)")
+        if not isinstance(geo[1], np.ndarray) or not isinstance(geo[2], np.ndarray):
+             raise TypeError("geo[1] (X) or geo[2] (Y) is not a numpy array")
+        if geo[1].shape != geo[2].shape or len(geo[1].shape) != 2:
+             raise ValueError("X and Y meshgrids have incompatible shapes or are not 2D")
+
+        # Get grid resolution from the shape of the meshgrid arrays
+        # Shape is typically (num_y_points, num_x_points)
+        res_y, res_x = geo[1].shape
+        X, Y = geo[1], geo[2] # Assign for later use
+
+        # Determine the dynamic layer count from the COB positions
+        # Add check in case geo[0] is empty
+        if geo[0].size > 0:
+             dynamic_layer_count = int(np.max(geo[0][:, 3])) + 1
         else:
-            if progress_callback:
-                progress_callback("[INFO] No matching training sample found. Running surrogate optimization...")
-                progress_callback("[INFO] Training surrogate model...")
-                progress_callback("PROGRESS:20")
-            gp_model = train_surrogate(X_train, y_train)
-            
-            if progress_callback:
-                progress_callback("[INFO] Predicting initial guess via regression...")
-                progress_callback("PROGRESS:30")
-            informed_candidate = predict_initial_guess_regression(current_geom_features.tolist(), FIXED_NUM_LAYERS)
-            
-            if progress_callback:
-                progress_callback("[INFO] Refining candidate with surrogate optimization...")
-                progress_callback("PROGRESS:40")
-            candidate = optimize_with_surrogate(geo, target_ppfd, gp_model, x0=informed_candidate)
-            print(f"[INFO] Surrogate candidate: {candidate}")
-            if progress_callback:
-                progress_callback(f"[INFO] Using surrogate candidate as initial guess: {candidate}")
-            
-            if progress_callback:
-                progress_callback("[INFO] Running full optimization...")
-                progress_callback("PROGRESS:50")
-            best_params_full, _ = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback, x0=candidate)
-            
-            if progress_callback:
-                progress_callback("[INFO] Updating training data with new sample...")
-                progress_callback("PROGRESS:70")
-            new_sample = generate_new_sample(geo, target_ppfd, best_params_full)
-            update_training_data(geo, target_ppfd, new_sample, current_geom_features.tolist())
-    else:
+             dynamic_layer_count = 0 # No layers if no COBs
+
+    except Exception as e:
+        error_msg = f"Error during geometry preparation: {e}"
+        print(error_msg)
         if progress_callback:
-            progress_callback("[INFO] No training data found, running full optimization...")
-            progress_callback("PROGRESS:20")
-        best_params_full, _ = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback)
-    
-    if progress_callback:
-        progress_callback("[INFO] Computing final PPFD and metrics...")
-        progress_callback("PROGRESS:80")
-    # Compute final PPFD using the optimized candidate.
-    final_ppfd = simulate_lighting(best_params_full, geo)
-    mean_ppfd = np.mean(final_ppfd)
-    mad = np.mean(np.abs(final_ppfd - mean_ppfd))
-    rmse = np.sqrt(np.mean((final_ppfd - mean_ppfd)**2))
-    if mean_ppfd:
-        dou = 100 * (1 - rmse / mean_ppfd)
-        cv = 100 * (np.std(final_ppfd) / mean_ppfd)
-    else:
-        dou = 0
-        cv = 0
+            progress_callback(f"[ERROR] {error_msg}")
+        return {"error": error_msg}
 
-    if progress_callback:
-        progress_callback("[INFO] Generating visualizations...")
-        progress_callback("PROGRESS:90")
-    X, Y = geo[1], geo[2]
-    surface_graph_b64 = generate_surface_graph(X, Y, final_ppfd, cmap="jet")
-    heatmap_b64 = generate_heatmap(X, Y, final_ppfd, cmap="jet", overlay_intensity=False)
 
-    result = {
-        "optimized_lumens_by_layer": best_params_full[:dynamic_layer_count].tolist(),
-        "mad": float(mad),
-        "optimized_ppfd": float(mean_ppfd),
-        "rmse": float(rmse),
-        "dou": float(dou),
-        "cv": float(cv),
-        "floor_width": floor_width_ft,
-        "floor_length": floor_length_ft,
-        "target_ppfd": target_ppfd,
-        "floor_height": floor_height,
-        "surface_graph": surface_graph_b64,
-        "heatmap": heatmap_b64,
-        "heatmapGrid": final_ppfd.tolist()
-    }
-
-    if side_by_side:
+    # --- Optimization Logic ---
+    # (Your existing logic for loading data, checking cache, running optimization)
+    best_params_full = None # Initialize
+    try:
         if progress_callback:
-            progress_callback("[INFO] Running side-by-side (grid) simulation...")
-            progress_callback("PROGRESS:95")
-        grid_mapping = {
-            (2,2): (3,3),
-            (4,4): (4,4),
-            (6,6): (5,5),
-            (8,8): (6,6),
-            (10,10): (7,7),
-            (12,12): (8,8),
-            (14,14): (9,9),
-            (16,16): (10,10),
-            (12,16): (8,10)
+            progress_callback("[INFO] Loading training data...")
+            progress_callback("PROGRESS:15")
+        X_train, y_train, G_train = load_training_data()
+        current_geom_features = np.array([floor_width_ft, floor_length_ft, target_ppfd, floor_height])
+
+        if X_train is not None and G_train is not None: # Check G_train too
+            thresholds = np.array([0.5, 0.5, 100.0, 0.5])
+            # Ensure shapes are compatible for broadcasting if needed, though subtraction should work if G_train rows match features
+            if G_train.shape[1] == len(current_geom_features):
+                differences = np.abs(G_train - current_geom_features)
+                matching_indices = np.where((differences <= thresholds).all(axis=1))[0]
+            else:
+                 matching_indices = [] # Cannot compare if shapes mismatch
+                 print(f"[WARN] Shape mismatch between G_train ({G_train.shape}) and current features ({current_geom_features.shape}). Skipping cache check.")
+
+
+            if len(matching_indices) > 0:
+                index = matching_indices[0]
+                candidate_norm = X_train[index]
+                M = 10 # Assuming this is fixed or retrieved correctly
+                # Ensure FIXED_NUM_LAYERS is defined/available
+                if 'FIXED_NUM_LAYERS' not in locals() and 'FIXED_NUM_LAYERS' not in globals():
+                     raise NameError("FIXED_NUM_LAYERS is not defined for inverse_transform")
+                best_params_full = inverse_transform(candidate_norm[0], np.linspace(0, 1, M), candidate_norm[1:], FIXED_NUM_LAYERS)
+                if progress_callback:
+                    progress_callback("[INFO] Found matching training data sample. Using cached candidate.")
+            else:
+                # ... (Surrogate optimization logic as before) ...
+                if progress_callback: progress_callback("[INFO] No matching training sample found. Running surrogate optimization...")
+                if progress_callback: progress_callback("PROGRESS:20")
+                gp_model = train_surrogate(X_train, y_train)
+                if progress_callback: progress_callback("PROGRESS:30")
+                informed_candidate = predict_initial_guess_regression(current_geom_features.tolist(), FIXED_NUM_LAYERS) # Ensure FIXED_NUM_LAYERS is correct
+                if progress_callback: progress_callback("PROGRESS:40")
+                candidate = optimize_with_surrogate(geo, target_ppfd, gp_model, x0=informed_candidate)
+                if progress_callback: progress_callback(f"[INFO] Using surrogate candidate as initial guess: {candidate}")
+                if progress_callback: progress_callback("PROGRESS:50")
+                best_params_full, _ = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback, x0=candidate)
+                # ... (Update training data logic as before) ...
+                if progress_callback: progress_callback("PROGRESS:70")
+                # Check if best_params_full is valid before generating sample
+                if best_params_full is not None:
+                    new_sample = generate_new_sample(geo, target_ppfd, best_params_full)
+                    update_training_data(geo, target_ppfd, new_sample, current_geom_features.tolist())
+                else:
+                     print("[WARN] Optimization did not yield parameters, skipping training data update.")
+
+        else:
+            # ... (Full optimization logic as before) ...
+            if progress_callback: progress_callback("[INFO] No training data found, running full optimization...")
+            if progress_callback: progress_callback("PROGRESS:20")
+            best_params_full, _ = optimize_lighting(W_m, L_m, H_m, target_ppfd, progress_callback=progress_callback)
+
+        # Handle case where optimization fails to return parameters
+        if best_params_full is None:
+             raise ValueError("Optimization failed to determine light parameters.")
+
+    except Exception as e:
+        error_msg = f"Error during optimization process: {e}"
+        print(error_msg)
+        # Potentially log traceback here: import traceback; traceback.print_exc()
+        if progress_callback:
+            progress_callback(f"[ERROR] {error_msg}")
+        return {"error": error_msg}
+
+
+    # --- Final Simulation & Metrics ---
+    try:
+        if progress_callback:
+            progress_callback("[INFO] Computing final PPFD and metrics...")
+            progress_callback("PROGRESS:80")
+
+        # Compute final PPFD using the optimized parameters.
+        # Ensure simulate_lighting uses the correct height reference if needed internally
+        final_ppfd = simulate_lighting(best_params_full, geo) # Result is the 2D PPFD grid
+        if not isinstance(final_ppfd, np.ndarray) or final_ppfd.shape != (res_y, res_x):
+             raise ValueError(f"simulate_lighting returned unexpected shape. Expected {(res_y, res_x)}, got {final_ppfd.shape if isinstance(final_ppfd, np.ndarray) else type(final_ppfd)}")
+
+        # Calculate metrics
+        mean_ppfd = np.mean(final_ppfd)
+        # Handle potential NaN/inf values if simulation can produce them
+        if not np.isfinite(mean_ppfd): mean_ppfd = 0
+        mad = np.mean(np.abs(final_ppfd[np.isfinite(final_ppfd)] - mean_ppfd)) # Calculate MAD only on finite values
+        rmse = np.sqrt(np.mean((final_ppfd[np.isfinite(final_ppfd)] - mean_ppfd)**2))
+        if mean_ppfd > 1e-6: # Use a small threshold instead of direct zero check for float precision
+            dou = max(0.0, 100.0 * (1.0 - rmse / mean_ppfd)) # Ensure DOU >= 0
+            cv = 100.0 * (np.std(final_ppfd[np.isfinite(final_ppfd)]) / mean_ppfd)
+        else:
+            dou = 0.0
+            cv = 0.0 # Or np.inf if preferred for zero mean
+
+        # Ensure metrics are finite, default to 0 otherwise
+        mad = mad if np.isfinite(mad) else 0.0
+        rmse = rmse if np.isfinite(rmse) else 0.0
+        dou = dou if np.isfinite(dou) else 0.0
+        cv = cv if np.isfinite(cv) else 0.0
+
+        if progress_callback:
+            progress_callback("[INFO] Generating visualizations...")
+            progress_callback("PROGRESS:90")
+        # Generate base64 images
+        surface_graph_b64 = generate_surface_graph(X, Y, final_ppfd, cmap="jet")
+        heatmap_b64 = generate_heatmap(X, Y, final_ppfd, cmap="jet", overlay_intensity=False)
+
+        # --- CONSTRUCT PPFD GRID DATA FOR FRONTEND ---
+        ppfd_grid_data = {
+            "values": final_ppfd.tolist(),   # The 2D list of PPFD values
+            "resolution_x": res_x,           # Number of points along width
+            "resolution_y": res_y,           # Number of points along length
+            "width_m": W_m,                  # Actual width in meters grid covers
+            "length_m": L_m,                 # Actual length in meters grid covers
+            "height_m": PPFD_CALC_HEIGHT_M   # Height (meters) grid was calculated at
         }
-        key = (int(floor_width_ft), int(floor_length_ft))
-        grid_dims = grid_mapping.get(key, (8,8))
-        rows, cols = grid_dims
-        grid_cob_positions = build_grid_cob_positions(W_m, L_m, rows, cols, H_m)
-        ppfd_test = simulate_lighting_grid(1.0, W_m, L_m, H_m, grid_cob_positions)
-        mean_ppfd_test = np.mean(ppfd_test)
-        if mean_ppfd_test == 0:
-            required_flux = 0
-        else:
-            required_flux = target_ppfd / mean_ppfd_test
-        grid_final_ppfd = simulate_lighting_grid(required_flux, W_m, L_m, H_m, grid_cob_positions)
-        grid_mean_ppfd = np.mean(grid_final_ppfd)
-        grid_mad = np.mean(np.abs(grid_final_ppfd - grid_mean_ppfd))
-        grid_rmse = np.sqrt(np.mean((grid_final_ppfd - grid_mean_ppfd)**2))
-        if grid_mean_ppfd:
-            grid_dou = 100 * (1 - grid_rmse / grid_mean_ppfd)
-            grid_cv = 100 * (np.std(grid_final_ppfd) / grid_mean_ppfd)
-        else:
-            grid_dou = 0
-            grid_cv = 0
-        grid_surface_graph_b64 = generate_surface_graph(X, Y, grid_final_ppfd, cmap="jet")
-        grid_heatmap_b64 = generate_heatmap(X, Y, grid_final_ppfd, cmap="jet", overlay_intensity=False)
-        result.update({
-            "grid_cob_arrangement": {"rows": rows, "cols": cols},
-            "grid_uniform_flux": required_flux,
-            "grid_ppfd": float(grid_mean_ppfd),
-            "grid_mad": float(grid_mad),
-            "grid_rmse": float(grid_rmse),
-            "grid_dou": float(grid_dou),
-            "grid_cv": float(grid_cv),
-            "grid_surface_graph": grid_surface_graph_b64,
-            "grid_heatmap": grid_heatmap_b64
-        })
+        # --- END OF PPFD GRID DATA CONSTRUCTION ---
+
+        # --- Assemble Final Result Dictionary ---
+        result = {
+            # Optimized results
+            "optimized_lumens_by_layer": best_params_full[:dynamic_layer_count].tolist() if dynamic_layer_count > 0 else [],
+            "mad": float(mad),
+            "optimized_ppfd": float(mean_ppfd),
+            "rmse": float(rmse),
+            "dou": float(dou),
+            "cv": float(cv),
+            # Input parameters (useful for frontend display/context)
+            "floor_width": floor_width_ft,   # Return in feet as received
+            "floor_length": floor_length_ft, # Return in feet as received
+            "target_ppfd": target_ppfd,
+            "floor_height": floor_height,    # Return ceiling height in feet as received
+            # Visualizations (Base64 Images)
+            "surface_graph": surface_graph_b64,
+            "heatmap": heatmap_b64,
+            # --- ADD THE STRUCTURED GRID DATA ---
+            "ppfd_grid_data": ppfd_grid_data,
+            # Remove the old flat list key:
+            # "heatmapGrid": final_ppfd.tolist() # REMOVED
+        }
+
+    except Exception as e:
+        error_msg = f"Error during final simulation/metrics: {e}"
+        print(error_msg)
+        # import traceback; traceback.print_exc() # Uncomment for detailed debug traceback
+        if progress_callback:
+            progress_callback(f"[ERROR] {error_msg}")
+        return {"error": error_msg}
+
+
+    # --- Side-by-Side Comparison (Optional) ---
+    if side_by_side:
+        try:
+            if progress_callback:
+                progress_callback("[INFO] Running side-by-side (grid) simulation...")
+                progress_callback("PROGRESS:95")
+            # ... (Your existing grid mapping logic) ...
+            grid_mapping = {
+                (2,2): (3,3), (4,4): (4,4), (6,6): (5,5), (8,8): (6,6), (10,10): (7,7),
+                (12,12): (8,8), (14,14): (9,9), (16,16): (10,10), (12,16): (8,10)
+            }
+            key = (int(floor_width_ft), int(floor_length_ft))
+            grid_dims = grid_mapping.get(key, (8,8)) # Default grid size
+            rows, cols = grid_dims
+
+            # Use ceiling height H_m for grid COB positioning if that's how it's intended
+            grid_cob_positions = build_grid_cob_positions(W_m, L_m, rows, cols, H_m)
+
+            # Simulate with flux=1.0 to find scaling factor
+            # Ensure simulate_lighting_grid uses the same calculation plane (X, Y from geo)
+            ppfd_test = simulate_lighting_grid(1.0, W_m, L_m, H_m, grid_cob_positions) # Pass geo if needed
+            mean_ppfd_test = np.mean(ppfd_test[np.isfinite(ppfd_test)]) # Use finite values
+            required_flux = (target_ppfd / mean_ppfd_test) if mean_ppfd_test > 1e-6 else 0
+
+            # Simulate with required flux
+            grid_final_ppfd = simulate_lighting_grid(required_flux, W_m, L_m, H_m, grid_cob_positions) # Pass geo if needed
+            grid_mean_ppfd = np.mean(grid_final_ppfd[np.isfinite(grid_final_ppfd)])
+            if not np.isfinite(grid_mean_ppfd): grid_mean_ppfd = 0
+
+            # Calculate grid metrics safely
+            grid_finite_ppfd = grid_final_ppfd[np.isfinite(grid_final_ppfd)]
+            grid_mad = np.mean(np.abs(grid_finite_ppfd - grid_mean_ppfd))
+            grid_rmse = np.sqrt(np.mean((grid_finite_ppfd - grid_mean_ppfd)**2))
+            if grid_mean_ppfd > 1e-6:
+                grid_dou = max(0.0, 100.0 * (1.0 - grid_rmse / grid_mean_ppfd))
+                grid_cv = 100.0 * (np.std(grid_finite_ppfd) / grid_mean_ppfd)
+            else:
+                grid_dou = 0.0
+                grid_cv = 0.0
+
+            grid_mad = grid_mad if np.isfinite(grid_mad) else 0.0
+            grid_rmse = grid_rmse if np.isfinite(grid_rmse) else 0.0
+            grid_dou = grid_dou if np.isfinite(grid_dou) else 0.0
+            grid_cv = grid_cv if np.isfinite(grid_cv) else 0.0
+
+            # Generate grid visualizations
+            grid_surface_graph_b64 = generate_surface_graph(X, Y, grid_final_ppfd, cmap="jet")
+            grid_heatmap_b64 = generate_heatmap(X, Y, grid_final_ppfd, cmap="jet", overlay_intensity=False)
+
+            # Update result dictionary with grid comparison data
+            result.update({
+                "grid_cob_arrangement": {"rows": rows, "cols": cols},
+                "grid_uniform_flux": float(required_flux), # Ensure float conversion
+                "grid_ppfd": float(grid_mean_ppfd),
+                "grid_mad": float(grid_mad),
+                "grid_rmse": float(grid_rmse),
+                "grid_dou": float(grid_dou),
+                "grid_cv": float(grid_cv),
+                "grid_surface_graph": grid_surface_graph_b64,
+                "grid_heatmap": grid_heatmap_b64
+                # Note: We don't typically send the raw grid PPFD values unless needed for another viz
+            })
+        except Exception as e:
+             # Don't let grid comparison failure break the whole result
+             error_msg = f"Error during side-by-side grid simulation: {e}"
+             print(error_msg)
+             if progress_callback:
+                 progress_callback(f"[WARN] {error_msg}")
+             # Optionally add a warning to the main result
+             result["grid_error"] = error_msg
+
 
     if progress_callback:
         progress_callback("PROGRESS:100")
-    
-    return result
 
+    # Return the final result dictionary
+    return result
 
 
 def run_simulation(floor_width_ft=14.0, floor_length_ft=14.0, target_ppfd=1250.0, floor_height=3.0):

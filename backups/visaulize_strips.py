@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 # ==============================================================================
 NUM_LAYERS_TARGET = 5      # Example: Visualize for N=5 layers
 SIM_W = 10.9728             # 40 ft in meters
-SIM_L = 10.9728             # 40 ft in meters
+SIM_L = 5.4864             # 40 ft in meters
 SIM_H = 0.9144              # 3 ft in meters (Height primarily for Z, less critical for XY plot)
 
 # ==============================================================================

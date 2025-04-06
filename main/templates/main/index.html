@@ -28,72 +28,25 @@
 <body>
     {% include 'main/navbar.html' %}
 
+    <div class="hero hidden">
+        <div class="video-overlay"></div>
+        <video autoplay loop muted playsinline class="lazy-load">
+            <source data-src="{% static 'main/images/tomatocut.mp4' %}" type="video/mp4">
+        </video>
+        <h2>LIGHTING SCIENCE THAT DELIVERS</h2>
+        <h3>Grow Room Lighting <div style="color: #FFD700;">PERFECTED</div></h3>
+    </div>
+
     <div class="container">
-        <div class="hero hidden">
-            <div class="video-overlay"></div>
-            <video autoplay loop muted playsinline class="lazy-load">
-                <source data-src="{% static 'main/images/tomatocut.mp4' %}" type="video/mp4">
-            </video>
-            <h2>Revolutionizing Horticultural Lighting</h2>
-        </div>
-        <div>
-            <h1 style="color: #0078BE; text-align: center; font-size: 60px;">WELCOME TO LUMINOUS PHOTONICS</h1>
-        </div>
+
         <div>
             <p class="intro-paragraph hidden" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                We are pioneers in horticultural lighting. Our <a  href="https://patents.google.com/patent/US10687478B2" target="_blank" style="font-size: 0.9em;">patented</a>, infinitely scalable, modular LED lighting system delivers <i>homogenous PAR distribution</i>, maximizing energy efficiency and plant growth in controlled environments.
-            </p>
-        </div>
-        <div class="two-col-section hidden" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 40px;">
-        <div class="intro-section">
-            <h2 class="subsection-title" style="color: #0078BE;">WHAT IS HOMOGENEOUS PAR DISTRIBUTION?</h2>
-            <p class="section-description">
-                Homogeneous PAR (<i>Photosynthetically Active Radiation</i>) distribution means every plant receives the same amount of usable light—no matter where it sits under the lights. Instead of some plants or leaves getting more light than others, our lighting evenly covers the entire growing area, giving every plant consistent conditions for optimal growth.
-            </p>
-        
-            <h2 class="subsection-title" style="color: #0078BE;">WHY IS THIS IMPORTANT?</h2>
-            <p class="section-description">
-                Uniform lighting boosts photosynthesis equally across all plants, maximizing growth, health, and yield. Academic research supports that uniform PAR:
-            </p>
-            <ul>
-                <li>Enhances photosynthesis across entire plants, improving overall productivity.</li>
-                <li>Prevents lower leaves from dying prematurely due to inadequate light.</li>
-                <li>Helps all leaves efficiently produce and share energy.</li>
-                <li>Encourages healthier plant hormone balances, promoting stronger and more consistent growth.</li>
-            </ul>
-            <p><strong>In short:</strong> uniform lighting ensures healthier plants, better yields, and increased efficiency in controlled growing environments.</p>
-        </div>
-            <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content;">
-                <code>
-If the PPFD is spatially uniform at an appropriate level in a plant canopy regardless of the canopy's depth, the net photosynthetic rate of the whole plant canopy should increase significantly, and the decrease in net photosynthetic capacity of lower leaves due to their senescence may be prevented.
-
-— (Zhang et al., 2015; Joshi et al., 2017), <cite><a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">Zhang, X., He, D., Niu, G., Yan, Z., & Song, J. (2015). A Combination of Downward Lighting and Supplemental Upward Lighting Improves Plant Growth in a Closed Plant Factory with Artificial Lighting.</a> <i>Hortscience, 52</i>(6), 831-835.</cite>
-                </code>
-            </pre>
-            <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content; margin-top: 20px;">
-                <code>
-<b>A uniform light environment in a plant canopy has the following effects:</b>
-(1) Geometrical relationships between the source (photosynthesizing parts) and sink (accumulating parts of translocated carbohydrates) of plants are changed; (2) All leaves of a plant canopy relatively equally act as producers of carbohydrates; (3) Senescence of lower leaves
-due to low PPFD is suppressed; and (4) Phytohormone balances in individual plants are changed.
-
-— (Kozai, 2022), <cite>Kozai, T. (2022). Role and characteristics of PFALs. In <i>Plant Factory Basics, Applications and Advances</i> (p. 46). Academic Press.</cite>
-                </code>
-            </pre>
-        </div>
-        <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <h3 style="color: #0078BE; margin-bottom: -20px; font-size: 28px;">WHAT SETS US APART FROM CONVENTIONAL SOLUTIONS?</h3>
-            <p>
-                Our lighting technology combines evenly distributed PAR, advanced Chip-On-Board (COB) LEDs, validated heat management, and a modular design that scales to any size grow space. By utilizing advanced optimization algorithms, we precisely tune each lighting setup to deliver maximum plant growth and energy efficiency. Simply put: We're setting a new standard for horticultural lighting.
-                <br>
-            </p>
-            <h3 style="color: #0078BE; margin-bottom: -20px;">HORTICULTURAL LIGHTING: AN OPTIMIZATION CHALLENGE</h3>
-            <p>
-                Designing horticultural lighting isn't guesswork—it's a mathematical challenge. Our approach optimizes plant yield while minimizing energy use. We carefully balance LED type, spacing, fixture layout, and intensity through advanced algorithms, ensuring every plant receives exactly the right amount of light for optimal growth.
+                Our <a  href="https://patents.google.com/patent/US10687478B2" target="_blank" style="font-size: 0.9em;">patented</a>, infinitely scalable, modular LED lighting system delivers <i>truly uniform PAR distribution</i>, maximizing energy efficiency and plant growth in controlled environments.
             </p>
         </div>
         <div class="info-box-container hidden">
             <div class="info-box" data-info="agentic-ai">
-                <h2>Infinitely Scalable, Modular Design</h2>
+                <h2>INFINITELY SCALABLE</h2>
                 <div class="info-box-content">
                     <p>The modularized, infinitely scalable nature of our novel system perfects and simplifies scalability across any given size square or rectangular space.</p>
                     <div class="cta-section1">
@@ -104,7 +57,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                 </div>
             </div>
             <div class="info-box" data-info="lighting-simulations">
-                <h2>Lighting Simulation</h2>
+                <h2>LIGHTING SIMULATION</h2>
                 <div class="info-box-content">
                     <p>Explore a DIALux lighting simulation comparison between our patented lighting system and a conventional methodology for horticultural lighting.</p>
                     <div class="cta-section1">
@@ -115,9 +68,9 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                 </div>
             </div>
             <div class="info-box" data-info="ml-optimization">
-                <h2>Global Optimization Algorithm</h2>
+                <h2>OPTIMIZATION ALGORITHM</h2>
                 <div class="info-box-content">
-                    <p>Our differential evolution-based global optimization algorithm optimizes the lighting system luminous flux layer by layer, achieving near-homogenous PAR distribution.</p>
+                    <p>Our differential evolution-based global optimization algorithm optimizes the lighting system luminous flux layer by layer, achieving truly uniform PAR distribution.</p>
                     <div class="cta-section1">
                         <a href="{% url 'technology' %}#ml" class="learn-more-link">
                             <button class="learn-more">Learn More</button>
@@ -126,7 +79,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                 </div>
             </div>
             <div class="info-box" data-info="cooling-system">
-                <h2>Advanced Thermal Management</h2>
+                <h2>THERMAL MANAGEMENT</h2>
                 <div class="info-box-content">
                     <p>Our state-of-the-art cooling system maintains optimal operating temperatures for the lighting elements, resulting in a maximum light output to energy input ratio. We utilize Computational Fluid Dynamics (CFD) to validate the cooling system.</p>
                     <div class="cta-section1">
@@ -137,7 +90,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                 </div>
             </div>
         </div>
-        </div>
+    </div>
         <div class="grey-background lazy-load-bg" data-bg="{% static 'main/images/webp/hydro.webp' %}">
             <div class="overlay">
             <div class="content-wrapper">
@@ -145,7 +98,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
                     <div class="key-features-section">
                         <h3 class="panel-title">Key Features</h3>
                         <ul class="feature-list">
-                            <li class="feature-item">Homogeneous PAR Distribution</li>
+                            <li class="feature-item">Uniform PAR Distribution</li>
                             <li class="feature-item">Optimized Energy Efficiency</li>
                             <li class="feature-item">Infinitely Scalable</li>
                             <li class="feature-item">Agentic AI Control</li>
@@ -167,34 +120,67 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
             </div>
         </div>
         </div>
- 
-        <div class="features" style="padding-top: 20px;">
-            <div class="feature hidden" style="margin-top: 20px;">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/low-price.webp' %}" type="image/webp">
-                    <img data-src="{% static 'main/images/low-price.png' %}" alt="Scalability Icon" width="100" height="100" class="lazy-load">
-                </picture>
-                <h3>UNPARALLELED ENERGY EFFICIENCY</h3>
-                <p>Reduce energy consumption while maximizing light output.</p>
-            </div>
-            <div class="feature hidden" style="margin-top: 20px;">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/recycle.webp' %}" type="image/webp">
-                    <img data-src="{% static 'main/images/recycle.png' %}" alt="Growth Icon" width="100" height="100" class="lazy-load">
-                </picture>
-                <h3>ENHANCED PLANT GROWTH</h3>
-                <p>Promote healthier, more uniform plant development with optimized light distribution.</p>
-            </div>
-            <div class="feature hidden" style="margin-top: 20px;">
-                <picture>
-                    <source srcset="{% static 'main/images/webp/energy-system.webp' %}" type="image/webp">
-                    <img data-src="{% static 'main/images/energy-system.png' %}" alt="Efficiency Icon" width="100" height="100" class="lazy-load">
-                </picture>
-                <h3>INFINITELY SCALABLE</h3>
-                <p>Adapt our system to any grow space, from small research setups to large commercial greenhouses.</p>
+        <div class="carousel-container">
+            <div class="carousel">
+                <a href="{% url 'technology' %}#beam-profile-1">
+                    <div class="carousel-item">
+                        <picture>
+                            <source srcset="{% static 'main/images/webp/caro1.webp' %}" type="image/webp">
+                            <img data-src="{% static 'main/images/caro1.png' %}" alt="Carousel Image 1">
+                        </picture>
+                        <div class="carousel-overlay">Sustainable Farming Through Smarter Lighting</div>
+                    </div>
+                </a>
+                <a href="{% url 'technology' %}#beam-profile-2">
+                    <div class="carousel-item">
+                        <picture>
+                            <source srcset="{% static 'main/images/webp/caro2.webp' %}" type="image/webp">
+                            <img data-src="{% static 'main/images/caro2.png' %}" alt="Carousel Image 2">
+                        </picture>
+                        <div class="carousel-overlay">Revolutionzing Indoor Farming</div>
+                    </div>
+                </a>
+                <a href="{% url 'technology' %}#csn-image">
+                    <div class="carousel-item">
+                        <picture>
+                            <source srcset="{% static 'main/images/webp/caro3.webp' %}" type="image/webp">
+                            <img data-src="{% static 'main/images/caro3.png' %}" alt="Carousel Image 3">
+                        </picture>
+                        <div class="carousel-overlay">The Cost of Light</div>
+                    </div>
+                </a>
+                <a href="{% url 'technology' %}#csn22-image">
+                    <div class="carousel-item">
+                        <picture>
+                            <source srcset="{% static 'main/images/webp/caro4.webp' %}" type="image/webp">
+                            <img data-src="{% static 'main/images/caro4.png' %}" alt="Carousel Image 4">
+                        </picture>
+                        <div class="carousel-overlay">Breaking Down the Science</div>
+                    </div>
+                </a>
+                <a href="{% url 'technology' %}#csn22-image">
+                    <div class="carousel-item">
+                        <picture>
+                            <source srcset="{% static 'main/images/webp/caro5.webp' %}" type="image/webp">
+                            <img data-src="{% static 'main/images/caro5.png' %}" alt="Carousel Image 5">
+                        </picture>
+                        <div class="carousel-overlay">Simulation to Reality</div>
+                    </div>
+                </a>
             </div>
         </div>
         
+        <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            <h3 style="color: #0078BE; margin-bottom: -20px; font-size: 28px;">WHAT SETS US APART FROM CONVENTIONAL SOLUTIONS?</h3>
+            <p>
+                Our lighting technology combines evenly distributed PAR, advanced Chip-On-Board (COB) LEDs, validated heat management, and a modular design that scales to any size grow space. By utilizing advanced optimization algorithms, we precisely tune each lighting setup to deliver maximum plant growth and energy efficiency. Simply put: We're setting a new standard for horticultural lighting.
+                <br>
+            </p>
+            <h3 style="color: #0078BE; margin-bottom: -20px;">HORTICULTURAL LIGHTING: AN OPTIMIZATION CHALLENGE</h3>
+            <p>
+                Designing horticultural lighting isn't guesswork—it's a mathematical challenge. Our approach optimizes plant yield while minimizing energy use. We carefully balance LED type, spacing, fixture layout, and intensity through advanced algorithms, ensuring every plant receives exactly the right amount of light for optimal growth.
+            </p>
+        </div>
         <div class="image-container hidden" style="text-align: center;">
             <picture>
                 <source srcset="{% static 'main/images/webp/csnrect.webp' %}" type="image/webp">
@@ -202,94 +188,58 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
             </picture>
         </div>
         <div class="cta hidden">
-            <h1 style="color: #0078BE">Learn More About the Science Behind our Revolutionary Technology</h1>
             <div style="text-align: center; margin-top: 20px;">
                 <a href="{% url 'technology' %}" class="dive-deeper-button">Explore the Technology</a>
             </div>
         </div>
+        </div>
+        <div class="one-col-section" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 0px;">
+            <div class="intro-section">
+              <h2 class="subsection-title" style="color: #0078BE;">WHAT IS UNIFORM PAR DISTRIBUTION?</h2>
+              <p class="section-description">
+                Uniform PAR (<i>Photosynthetically Active Radiation</i>) distribution means every part of every plant receives the same amount of usable light—no matter where it sits under the lights. Instead of some plants or leaves getting more light than others, our lighting system evenly covers the entire growing area, giving every plant consistent conditions for optimal growth.
+              </p>
+          
+              <h2 class="subsection-title" style="color: #0078BE;">WHY IS UNIFORM LIGHT SO IMPORTANT?</h2>
+              <p class="section-description">
+                Uniform lighting boosts photosynthesis equally across all plants, maximizing growth, health, and yield. Academic research supports that uniform PAR:
+              </p>
+              <ul>
+                <li>Enhances photosynthesis across entire plants, improving overall productivity.</li>
+                <li>Prevents lower leaves from dying prematurely due to inadequate light.</li>
+                <li>Helps all leaves efficiently produce and share energy.</li>
+                <li>Encourages healthier plant hormone balances, promoting stronger and more consistent growth.</li>
+              </ul>
+              <p><strong>In short:</strong> uniform lighting ensures healthier plants, better yields, and increased efficiency in controlled growing environments.</p>
+              
+              <!-- Button to toggle academic literature -->
+              <button class="dive-deeper-button" onclick="toggleLiterature()">View the Supporting Academic Literature</button>
+            </div>
+            
+            <!-- Hidden container for the academic citations -->
+            <div id="academic-literature" style="display: none; margin-top: 20px;">
+              <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content;">
+                <code>
+If the PPFD is spatially uniform at an appropriate level in a plant canopy regardless of the canopy's depth, the net photosynthetic rate of the whole plant canopy should increase significantly, and the decrease in net photosynthetic capacity of lower leaves due to their senescence may be prevented.
+
+— (Zhang et al., 2015; Joshi et al., 2017), <cite>Zhang, X., He, D., Niu, G., Yan, Z., &amp; Song, J. (2015). <a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">A Combination of Downward Lighting and Supplemental Upward Lighting Improves Plant Growth in a Closed Plant Factory with Artificial Lighting.</a> <i>Hortscience, 52</i>(6), 831-835.</cite>
+                </code>
+              </pre>
+              <pre style="margin: 20px auto 0; text-align: center; display: flex; justify-content: center; width: fit-content;">
+                <code>
+<b>A uniform light environment in a plant canopy has the following effects:</b>
+(1) Geometrical relationships between the source (photosynthesizing parts) and sink (accumulating parts of translocated carbohydrates) of plants are changed; (2) All leaves of a plant canopy relatively equally act as producers of carbohydrates; (3) Senescence of lower leaves
+due to low PPFD is suppressed; and (4) Phytohormone balances in individual plants are changed.
+
+— (Kozai, 2022), <cite>Kozai, T. (2022). Role and characteristics of PFALs. In <i><a href="http://dx.doi.org/10.1016/B978-0-323-85152-7.00014-8" target="_blank">Plant Factory Basics, Applications and Advances</a></i> (p. 46). Academic Press.</cite>
+                </code>
+              </pre>
+            </div>
+          </div>
     </div>
-    <div class="carousel-container">
-        <div class="carousel">
-            <a href="{% url 'technology' %}#beam-profile-1">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/beam_profile_1.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/beam_profile_1.png' %}" alt="Carousel Image 1" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#beam-profile-2">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/beam_profile_2.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/beam_profile_2.png' %}" alt="Carousel Image 2" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#csn-image">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/csn.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/csn.jpeg' %}" alt="Carousel Image 3" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#csn22-image">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/csn22.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/csn22.png' %}" alt="Carousel Image 4" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#2d-variance-1">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/2d_variance_graph_1.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/2d_variance_graph_1.png' %}" alt="Carousel Image 5" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#2d-variance-2">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/2d_variance_graph_2.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/2d_variance_graph_2.png' %}" alt="Carousel Image 6" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#ppfd-surface-1">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/ppfd_surface_graph_1.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/ppfd_surface_graph_1.png' %}" alt="Carousel Image 7" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#ppfd-surface-2">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/ppfd_surface_graph_2.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/ppfd_surface_graph_2.png' %}" alt="Carousel Image 8" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#heatmap-1">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/heatmap_1.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/heatmap_1.png' %}" alt="Carousel Image 9" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
-            <a href="{% url 'technology' %}#heatmap-2">
-                <div>
-                    <picture>
-                        <source srcset="{% static 'main/images/webp/heatmap_2.webp' %}" type="image/webp">
-                        <img data-src="{% static 'main/images/heatmap_2.png' %}" alt="Carousel Image 10" width="100" height="100" class="lazy-load">
-                    </picture>
-                </div>
-            </a>
+
+        </div>
+
         </div>
     </div>
     <div class="text-below-carousel">
@@ -307,7 +257,7 @@ due to low PPFD is suppressed; and (4) Phytohormone balances in individual plant
         </a>
         <div class="cta hidden">
             <h1 style="color: #0078BE">Observe our Cutting-Edge Research</h1>
-            <button id="pdfButton2" data-pdf-url="{% static 'main/images/White-Paper-2.0.pdf' %}" onclick="openPDF()" class="button">White Paper</button>
+            <button id="pdfButton2" class="dive-deeper-button" data-pdf-url="{% static 'main/images/White-Paper-2.0.pdf' %}" onclick="openPDF()" class="button">White Paper</button>
         </div>
     </div>
 

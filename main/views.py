@@ -22,6 +22,7 @@ import queue
 import threading
 import uuid
 from django_redis import get_redis_connection
+from grow_builder.scripts.newml import solve_single_scenario
 
 # Use Redis keys with a prefix for clarity.
 REDIS_PREFIX = "simulation_job"
@@ -404,3 +405,21 @@ def simulation_status(request, job_id):
         return JsonResponse({'error': 'Job not found'}, status=404)
     return JsonResponse({'status': status.decode("utf-8")})
 
+@csrf_exempt
+def run_scenario(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            layer = data.get('layer')
+            height = data.get('height')
+            ppfd = data.get('ppfd')
+
+            print(f"🔁 Received scenario: layer={layer}, height={height}, ppfd={ppfd}", flush=True)
+
+            result = solve_single_scenario(layer, height, ppfd)
+
+            return JsonResponse(result)
+
+        except Exception as e:
+            print("❌ Error in run_scenario:", str(e), flush=True)
+            return JsonResponse({'error': str(e)}, status=500)

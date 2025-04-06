@@ -9,6 +9,7 @@ cycler==0.12.1
 dj-database-url==2.3.0
 Django==5.0.3
 django-ckeditor-5==0.2.17
+django-cors-headers==4.7.0
 django-js-asset==3.1.2
 django-redis==5.4.0
 fonttools==4.48.1

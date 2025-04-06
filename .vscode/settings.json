@@ -1,4 +1,19 @@
 {
-
+    "python.defaultInterpreterPath": "env/bin/python",
+    "python.analysis.indexing": true,
+    "css.validate": false,
+    "tailwindCSS.includeLanguages": {
+      "plaintext": "html",
+      "javascript": "javascript",
+      "javascriptreact": "javascript",
+      "typescriptreact": "typescript"
+    },
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "tailwindCSS.experimental.configFile": "./tailwind.config.js"
+      
+      
 }
+  
   

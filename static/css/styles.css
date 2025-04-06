@@ -9,7 +9,7 @@ body {
 }
 
 h1 {
-    font-family: 'Avenier Next', 'Helvetica Neue', sans-serif;
+    font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
 }
 
 @font-face {
@@ -197,13 +197,20 @@ h1 {
     padding: 15px;
     margin: 10px;
     text-align: center;
-    width: 18%;
+    width: 20%;
+    height: 150px;
     min-width: 150px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column; /* Arrange content vertically */
     justify-content: center; /* Center vertically */
+}
+
+.info-box.active {
+    height: auto; /* expand to show full content */
+    margin-bottom: 20px; /* extra space at the bottom */
+    overflow: visible;
 }
 
 /* Hover scaling for interactive items */
@@ -237,7 +244,7 @@ h1 {
 .info-box h2 {
     color: #0078BE;
     margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 30px;
     text-align: center; /* Center the h2 heading */
     line-height: 1.2;
     margin-bottom: 5px;
@@ -309,11 +316,7 @@ h1 {
     padding: 20px;
 }
 
-.two-col-section {
-    column-count: 2;
-    column-gap: 1.5rem; /* Adjust gap between columns as needed */
-    /* Optional: add padding or adjust width if necessary */
-  }
+
 
 a {
     color: #66afe9; /* Choose a lighter color */
@@ -437,14 +440,26 @@ p {
 }
 
 .two-col-section {
-    position: relative; /* Establishes positioning context */
-}
+    column-count: 2;
+    column-gap: 1.5rem;
+    position: relative;
+  }
 
 .two-col-section pre {
     position: relative;
     top: 80px; /* Adjust this value to move both boxes down evenly */
 }
 
+.one-col-section {
+    column-count: 1;
+    column-gap: 1.5rem;
+    position: relative;
+  }
+
+.one-col-section pre {
+    position: relative;
+    top: 0px; /* Adjust this value to move both boxes down evenly */
+}
 
 
 .section-description {
@@ -1538,6 +1553,9 @@ pre code {
     box-sizing: border-box;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    min-height: 40vh;
+    text-align: center;
     align-items: center;
     min-height: 40vh;
 }
@@ -1564,7 +1582,16 @@ pre code {
 }
 
 .hero h2 {
-    font-size: 56px;
+    font-size: 72px;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 2;
+}
+
+.hero h3 {
+    font-size: 48px;
     font-weight: 600;
     color: #ffffff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -1583,7 +1610,7 @@ pre code {
     width: 100%; /* Make the container full width */
     margin: 0 auto;
     overflow: visible;
-    border-radius: 5px;
+    border-radius: 0px;
     background-color: #222222;
     padding: 20px 5%; /* Add padding to create space */
     box-sizing: border-box; /* Include padding in the element's total width */
@@ -1594,6 +1621,38 @@ pre code {
     margin: auto;
 }
 
+.carousel-item {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.carousel-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(232, 185, 35, 0.9); /* #e8b923 with transparency */
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 2;
+}
+
+.carousel-item:hover .carousel-overlay {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
 .carousel .slick-slide {
     padding: 0 10px;
     text-align: center;
@@ -1602,8 +1661,7 @@ pre code {
 }
 
 .carousel img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
     object-fit: cover;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin: 0 auto;

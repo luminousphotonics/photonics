@@ -2,15 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YNV5LYTT2C"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-YNV5LYTT2C');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="{% static 'main/images/webp/homeleaf.webp' %}" />
@@ -19,376 +10,221 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" />
     <link rel="icon" type="image/x-icon" href="{% static 'main/images/favicon.ico' %}">
-
-    <!-- MathJax -->
-    <script type="text/javascript" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js">
-    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YNV5LYTT2C"></script>
     <script>
-    MathJax = {
-        tex: {
-            packages: {'[+]': ['physics']} // Load the physics package
-        },
-        options: {
-            renderActions: {
-                addMenu: [0, '', '']  // Optional: Prevent the menu from appearing
-            }
-        }
-    };
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YNV5LYTT2C');
     </script>
-
+    <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
     <style>
-        /* Equation Styling */
-        .equation {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1.2em;
-        }
-        .equation-block {
-             background-color: #f0f8ff; /* Light blue background */
-            border: 1px solid #add8e6;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            overflow-x: auto; /* For long equations */
-        }
-        .variable-list{
-            padding-left: 20px;
-            margin-bottom: 15px;
-        }
-        .variable-list li{
-            margin-bottom: .2rem;
-        }
-
-        /* Additional Styling for Readability */
-        body {
-            font-family: sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-        h1, h2, h3 {
-            color: #0078BE; /* Consistent color scheme */
-        }
-
-        .abstract-section{
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #f9f9f9;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .table-section{
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #f9f9f9;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .image-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .image-container img{
-            max-width: 100%;
-            height: auto;
-        }
-        .hidden {
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition */
-        }
-        .hidden.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+        body { font-family: sans-serif; line-height: 1.6; color: #333; }
+        h1, h2, h3 { color: #0078BE; }
+        .equation-block { background: #f0f8ff; border: 1px solid #add8e6; padding: 15px; border-radius: 5px; overflow-x: auto; margin: 20px 0; }
+        .variable-list { padding-left: 20px; }
+        .image-container { text-align: center; margin-bottom: 20px; }
+        .image-container img { max-width: 100%; height: auto; }
+        .table-section { max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f2f2f2; }
     </style>
 </head>
 <body>
-    {% include 'main/navbar.html' %}
-    <div id="main-content">
+{% include 'main/navbar.html' %}
+<div class="container">
+    <h1 style="text-align: center;">Comparative Analysis of Horticultural Lighting Systems</h1>
 
-    <div class="container">
-    <h1 style="text-align: center;">Comparative Analysis of Horticultural Lighting Systems: A Computational and Experimental Approach</h1>
-    </div>
-
-    <div class="abstract-section">
-        <h2>Abstract</h2>
+    <section>
+        <div class="intro-section hidden" 
+        style="line-height:1.2;color:#333;
+        max-width:1000px;margin:20px auto;
+        padding:20px;background:#f9f9f9;
+        box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+        <p>In this analysis, we test our novel high-performance horticultural lighting system built around a centered-square COB LED arrangement stratagem against a conventional uniform-matrix lighting system that uses Samsung Gen 2 modules.</p> 
         <p>
-            This paper presents a comprehensive comparative analysis of two horticultural lighting systems: a novel system that employs COB LEDs arranged in a centered square sequence and a conventional system that utilizes a uniform matrix of Samsung Gen 2 Horticulture Modules. Luminous flux simulations are conducted using a custom radiosity model that is integrated with a global optimization algorithm based on Differential Evolution (DE) — which generates initial luminous flux assignments that are subsequently validated using DIALux, an industry standard lighting simulation tool. The lux values output by DIALux were converted to PPFD using a methodology based on the LED’s normalized spectral power distribution, yielding conversion factors of 0.0179 and 0.0138 \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\,\mathrm{lux}^{-1}\) for the Samsung Gen~2 module (\(\lambda\in[380,780]\) nm) and the Samsung COB, respectively (See section: <a href="#lux-to-ppfd">Lux to PPFD Conversion</a> for details). The DE-based global optimization algorithm is applied to refine LED intensity assignments in a stratified arrangement (described by the centered square number sequence, \(C(n) = (2n-1)^2\)). The results indicate that the novel design achieves superior PPFD uniformity (Degree of Uniformity (DOU) of approximately 98%) and lower LED component costs (up to 3.7× lower) compared to conventional systems. These findings underscore the technical and economic advantages of the novel design for advanced horticultural applications.
+        Simulations were performed with DIALux, an industry standard tool for lighting simulation and uniformity analysis.
         </p>
+        <p><b>The result:</b> higher PPFD uniformity (up to 98% DOU) versus ≈ 83% DOU.</p>
     </div>
+    </section>
 
-    <div class="container">
-
-    <h2 id="introduction">1. Introduction</h2>
-    <p>Efficient and uniform illumination is critical for optimal plant growth and yield in controlled environment agriculture (CEA). This study investigates the performance of a novel horticultural lighting system, comparing it to a conventional approach. The primary focus is on analyzing the distribution of Photosynthetic Photon Flux Density (PPFD), a key metric for assessing lighting effectiveness. Luminous flux simulations were performed using a custom radiosity model integrated with a DE-based global optimization algorithm, in conjunction with DIALux, where the radiosity model is used only to provide initial luminous flux assignments and DIALux (a trusted standard) validates the results. The simulated lux values are then converted to PPFD using a conversion factor specific to the spectral characteristics of the LEDs (expressed in \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)).</p>
-
-    <h2 id="system-descriptions">2. System Descriptions</h2>
-
-    <h3 id="novel-lighting-system">2.1 Novel Lighting System</h3>
-    <p>The novel lighting system utilizes a plurality of chip-on-board (COB) LEDs (Samsung BXRE-30E6500-C-83). These COBs exhibit a near-Lambertian radiation pattern without secondary optics. The corresponding .ies ray file for the COBs was sourced from Samsung and used in the DIALux simulations.</p>
-    <p>Their arrangement follows a centered square number sequence pattern (OEIS: A001844)(<a href="https://oeis.org/A001844" target="_blank">Sloane, N. J. A. (n.d.). The On-Line Encyclopedia of Integer Sequences.</a>), rotated by 45 degrees to form a square or rectangular lighting array. Mathematically, the pattern is described by:</p>
+    <h3>Centered-Square COB LED System</h3>
+    <p>COB LEDs (Samsung BXRE-30E6500-C-83) are arranged in a centered square number sequence. No secondary optics are used. Layout is defined by the centered square number integer sequence <a href="https://oeis.org/A001844" target="_blank">(Online Encyclopedia of Integer Sequences: A001844):</a></p>
     <div class="equation-block">
         <p class="equation">\(C(n) = (2n-1)^2\)</p>
-        <ul class="variable-list">
-            <li>\(n\): layer (with 1 LED in the center, 4 in the first square ring, 8 in the second, etc.)</li>
-        </ul>
     </div>
-    <p>For example, in some embodiments, a square grow space may use 61 COBs, whereas a rectangular space may incorporate 127 COBs by combining two 61-COB squares with a 5-COB connector module. This design is intended to optimize the uniformity of the PPFD in the illuminated area by enabling layer-wise luminous flux assignments informed by the proprietary DE-based global optimization algorithm.</p>
-
-    <div class="image-container hidden">
-        <img src="{% static 'main/images/image1.png' %}" alt="Centered Square Sequence Pattern Arrangement of COB LEDs.">
-        <p style="text-align: center;"><b>Figure 1:</b> Centered Square Sequence Pattern Arrangement of COB LEDs.</p>
+    <div class="image-container">
+        <img src="{% static 'main/images/image1.png' %}" alt="Centered Square COB LED Arrangement">
+        <p><b>Figure 1:</b> Centered Square COB LED Arrangement.</p>
     </div>
 
-
-    <h3 id="conventional-lighting-system">2.2 Conventional Lighting System</h3>
-     <p>The conventional system employs a plurality of Samsung Gen 2 Horticulture Modules (MFG. PN: SI-B8T502560WW), arranged in a uniform rectangular matrix—a common configuration in horticultural lighting. The corresponding .ies ray file was sourced from Samsung and used in the DIALux simulations.</p>
-
-    <div class="image-container hidden">
-        <img src="{% static 'main/images/image2.png' %}" alt="Uniform Matrix Arrangement of Samsung Gen 2 Horticulture Modules.">
-         <p style="text-align: center;"><b>Figure 2:</b> Uniform Matrix Arrangement of Samsung Gen 2 Horticulture Modules.</p>
+    <h3>Uniform-Matrix Gen 2 System</h3>
+    <p>Samsung SI-B8T502560WW modules are placed in a standard rectangular matrix layout, commonly used in commercial applications.</p>
+    <div class="image-container">
+        <img src="{% static 'main/images/image2.png' %}" alt="Uniform Matrix Arrangement">
+        <p><b>Figure 2:</b> Uniform Matrix Arrangement of Gen 2 Modules.</p>
     </div>
 
+    <h2>Simulation Approach</h2>
+    <p>Photometric data (.ies files), geometric arrangements, and surface reflectances were used in DIALux to simulate lux distributions. Results were then converted to PPFD using Spectral Power Distribution (SPD)-derived conversion factors.</p>
 
-    <h2 id="simulation-methodology">3. Simulation Methodology</h2>
-    <p>The simulations were performed using our custom radiosity model in conjunction with DIALux evo lighting design software. The radiosity model accurately predicts interreflections within the enclosed environment and utilizes a DE-based global optimization algorithm to discover optimal layer-wise luminous flux assignments for the COBs. It is used solely to generate initial intensity assignments that are then manually entered into DIALux. All LED modules in the conventional arrangement were assigned the same luminous flux, following the standard approach.</p>
-    <p>The photometric data (from the .ies files) along with the geometric arrangement and surface reflectances are used by DIALux to produce validated lux distributions. These lux values are converted to PPFD (expressed in \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)) using a conversion factor (See section: <a href="#lux-to-ppfd">Lux to PPFD Conversion</a> for details on this conversion), with justification based on the Samsung COB and Gen 2 module datasheets.</p>
+    <h3>Lux to PPFD Conversion</h3>
 
-
-    <h3 id="lux-to-ppfd">3.1 Lux to PPFD Conversion</h3>
-    <p>The conversion from illuminance (lux) to photosynthetic photon flux density (PPFD, in \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)) is determined by digitizing the LED’s normalized spectral power distribution (SPD), \(I(\lambda)\), over a wavelength range \([\lambda_1,\lambda_2]\). In our approach, the PPFD is calculated as</p>
+    <p>The conversion from illuminance (lux) to photosynthetic photon flux density (PPFD, in μmol m<sup>−2</sup> s<sup>−1</sup>) uses the LED’s normalized spectral power distribution <em>I(λ)</em> over a wavelength range [λ<sub>1</sub>, λ<sub>2</sub>]. In our approach, PPFD is calculated as:</p>
+    
     <div class="equation-block">
-        <p class="equation">
-           \[
-\text{PPFD} = \frac{10^6}{N_A\,h\,c} \int_{\lambda_1}^{\lambda_2} I(\lambda) \; \Bigl( \lambda\times10^{-9}\Bigr) \, d\lambda
-\]
-        </p>
-        <ul class="variable-list">
-            <li>\(h\): Planck's constant</li>
-            <li>\(c\): the speed of light</li>
-            <li>\(N_A\): Avogadro's number</li>
-            <li>\(10^6\): converts moles to micromoles</li>
-        </ul>
+    \[
+    \text{PPFD} = \frac{10^6}{N_A \, h \, c}
+    \int_{\lambda_1}^{\lambda_2}
+    I(\lambda)\,\bigl(\lambda\times10^{-9}\bigr)\,d\lambda
+    \]
     </div>
-    <p>The illuminance is determined by</p>
-
-    <div class="equation-block">
-    <p class="equation">
-        \[
-E = 683 \int_{\lambda_1}^{\lambda_2} I(\lambda)\, V(\lambda) \, d\lambda
-\]
-    </p>
-    <ul class="variable-list">
-        <li>\(V(\lambda)\): the CIE photopic luminous efficiency function</li>
-        <li>\(683\,\mathrm{lux\,W}^{-1}\): the maximum luminous efficacy of radiation</li>
+    
+    <p>where:</p>
+    <ul>
+      <li><strong>h</strong> is Planck’s constant,</li>
+      <li><strong>c</strong> is the speed of light,</li>
+      <li><strong>N<sub>A</sub></strong> is Avogadro’s number,</li>
+      <li>the factor <code>10<sup>6</sup></code> converts moles to micromoles,</li>
+      <li>and the <em>λ×10<sup>−9</sup></em> term converts nanometers to meters.</li>
     </ul>
-    </div>
-    <p>Consequently, the lux-to-PPFD conversion factor, \(C\) (in \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\,\mathrm{lux}^{-1}\)), is given by</p>
+    
+    <p>Illuminance, <em>E</em> (in lux), is given by:</p>
+    
     <div class="equation-block">
-       <p class="equation">
-\[
-C = \frac{\text{PPFD}}{E} = \frac{\frac{10^6}{N_A\,h\,c} \displaystyle \int_{\lambda_1}^{\lambda_2} I(\lambda) \; \Bigl( \lambda\times10^{-9}\Bigr) \, d\lambda}{683 \displaystyle \int_{\lambda_1}^{\lambda_2} I(\lambda)\, V(\lambda) \, d\lambda}
-\]
-       </p>
+    \[
+    E = 683 \int_{\lambda_1}^{\lambda_2} I(\lambda)\,V(\lambda)\,d\lambda
+    \]
     </div>
-    <p>For the Samsung Gen 2 Horticulture Module (\(\lambda \in [380,780]\) nm) and the Samsung COBs (with their corresponding measured SPD), our analysis yields conversion factors of 0.0179 and 0.0138 \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\,\mathrm{lux}^{-1}\), respectively. A more accurate determination would require absolute SPD measurements; however, these values provide a useful basis for comparison in our study.</p>
-
-    <h2 id="results-and-discussion">4. Results and Discussion</h2>
-
-    <h3 id="ppfd-uniformity">4.1 PPFD Uniformity Analysis</h3>
-
-    <p>Figures 3 and 4 show the PAR maps for the novel and conventional systems, respectively. Figures 5 and 6 display the corresponding heatmaps.</p>
-
-    <div class="image-container hidden">
-         <img src="{% static 'main/images/ourparmap.png' %}" alt="Novel Lighting System PAR Map">
-         <p style="text-align: center;"><b>Figure 3:</b> Novel Lighting System PAR Map</p>
-        <img src="{% static 'main/images/image4.png' %}" alt="Conventional Lighting System PAR Map">
-        <p style="text-align: center;"><b>Figure 4:</b> Conventional Lighting System PAR Map</p>
+    
+    <p>where <em>V(λ)</em> is the CIE photopic luminous efficiency function and 683 lux W<sup>−1</sup> is the maximum luminous efficacy of radiation.</p>
+    
+    <p>Therefore, the lux-to-PPFD conversion factor, <strong>C</strong> (in μmol m<sup>−2</sup> s<sup>−1</sup> lux<sup>−1</sup>), is:</p>
+    
+    <div class="equation-block">
+    \[
+    C = \frac{\text{PPFD}}{E}
+      = \frac{\displaystyle\frac{10^6}{N_A \, h \, c}
+        \int_{\lambda_1}^{\lambda_2}
+        I(\lambda)\,\bigl(\lambda\times10^{-9}\bigr)\,d\lambda}
+        {683 \displaystyle
+        \int_{\lambda_1}^{\lambda_2}
+        I(\lambda)\,V(\lambda)\,d\lambda}
+    \]
     </div>
-    <div class="image-container hidden">
-        <img src="{% static 'main/images/ourmap.png' %}" alt="Novel Lighting System Heatmap">
-         <p style="text-align: center;"><b>Figure 5:</b> Novel Lighting System Heatmap</p>
-        <img src="{% static 'main/images/image6.png' %}" alt="Conventional Lighting System Heatmap">
-        <p style="text-align: center;"><b>Figure 6:</b> Conventional Lighting System Heatmap</p>
+    
+    <p>Conversion factors used:</p>
+    <ul>
+      <li>Samsung Gen 2: 0.0179 μmol m<sup>−2</sup> s<sup>−1</sup> lux<sup>−1</sup></li>
+      <li>Samsung COB: 0.0138 μmol m<sup>−2</sup> s<sup>−1</sup> lux<sup>−1</sup></li>
+    </ul>
+    
+
+    <h2>Results</h2>
+
+    <div class="image-container">
+        <img src="{% static 'main/images/ourparmap.png' %}" alt="Novel System PAR Map">
+        <p><b>Figure 3:</b> Novel System PAR Map</p>
+        <img src="{% static 'main/images/image4.png' %}" alt="Conventional System PAR Map">
+        <p><b>Figure 4:</b> Conventional System PAR Map</p>
+        <img src="{% static 'main/images/ourmap.png' %}" alt="Novel System Heatmap">
+        <p><b>Figure 5:</b> Novel System Heatmap</p>
+        <img src="{% static 'main/images/image6.png' %}" alt="Conventional System Heatmap">
+        <p><b>Figure 6:</b> Conventional System Heatmap</p>
     </div>
 
+    <div class="table-section">
+        <table>
+            <caption><b>Simulation Metrics</b></caption>
+            <thead>
+                <tr><th>Metric</th><th>Novel System</th><th>Conventional System</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Average PPFD</td><td>838.98</td><td>830.55</td></tr>
+                <tr><td>RMSE</td><td>10.28</td><td>138.10</td></tr>
+                <tr><td>DOU (%)</td><td>98.77</td><td>83.37</td></tr>
+                <tr><td>MAD</td><td>7.99</td><td>119.40</td></tr>
+                <tr><td>CV (%)</td><td>1.23</td><td>16.63</td></tr>
+                <tr><td>Min/Max PPFD</td><td>0.94</td><td>0.48</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-    <p>Tables 1 and 2 summarize the key performance metrics: average PPFD, RMSE, Degree of Uniformity (DOU), MAD, Coefficient of Variation (CV), and the minimum and maximum PPFD values. The novel system achieves a DOU of 98.14% versus 84.98% for the conventional system.</p>
-
-    <table class="table-section hidden">
-        <caption><b>Table 1:</b> Simulation Results - Novel System</caption>
-        <thead>
-            <tr>
-                <th>Metric</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>RMSE</td>
-                <td>10.28</td>
-            </tr>
-            <tr>
-                <td>DOU (%)</td>
-                <td>98.77</td>
-            </tr>
-            <tr>
-                <td>MAD</td>
-                <td>7.99</td>
-            </tr>
-            <tr>
-                <td>CV (%)</td>
-                <td>1.23</td>
-            </tr>
-            <tr>
-                <td>Average PPFD</td>
-                <td>838.98 \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)</td>
-            </tr>
-            <tr>
-                <td>Min. PPFD</td>
-                <td>815.14 \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)</td>
-            </tr>
-            <tr>
-                <td>Max PPFD</td>
-                <td>865.25 \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)</td>
-            </tr>
-            <tr>
-                <td>Min/Max PPFD</td>
-                <td>0.94</td>
-            </tr>
-            <tr>
-                <td>Min/Avg. PPFD</td>
-                <td>0.97</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table class = "table-section hidden">
-        <caption><b>Table 2:</b> Simulation Results - Conventional System</caption>
-        <thead>
-            <tr>
-                <th>Metric</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>RMSE</td>
-                <td>138.10</td>
-            </tr>
-            <tr>
-                <td>DOU (%)</td>
-                <td>83.37</td>
-            </tr>
-            <tr>
-                <td>MAD</td>
-                <td>119.40</td>
-            </tr>
-            <tr>
-                <td>CV (%)</td>
-                <td>16.63</td>
-            </tr>
-            <tr>
-                <td>Average PPFD</td>
-                <td>830.55 \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)</td>
-            </tr>
-            <tr>
-                <td>Min. PPFD</td>
-                <td>481.42 \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)</td>
-            </tr>
-            <tr>
-                <td>Max PPFD</td>
-                <td>1010.28 \(\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\)</td>
-            </tr>
-            <tr>
-                <td>Min/Max PPFD</td>
-                <td>0.48</td>
-            </tr>
-            <tr>
-                <td>Min/Avg. PPFD</td>
-                <td>0.58</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3 id="mathematical-representation">Mathematical Representation of Metrics</h3>
-    <p>Here, we define the mathematical formulations used to calculate the metrics presented in Tables 1 and 2. Let \(P_i\) represent the PPFD value at the \(i\)-th measurement point, and let \(n\) be the total number of measurement points (in this case, \(n=98\)).</p>
-
+    <h3>Mathematical Representation of Metrics</h3>
+    <p>Here, we define the mathematical formulations used to calculate the metrics presented in the table above. Let <code>P<sub>i</sub></code> represent the PPFD value at the <em>i</em>-th measurement point, and let <code>n</code> be the total number of measurement points (here, <code>n = 98</code>).</p>
+    
     <ol>
-        <li>
-            <p><strong>Average PPFD (\(\text{PPFD}_{\text{avg}}\)):</strong> The average PPFD is simply the arithmetic mean of all PPFD measurements:</p>
-            <div class="equation-block">
-                <p class="equation">\[\text{PPFD}_{\text{avg}} = \frac{1}{n} \sum_{i=1}^{n} P_i\]</p>
-            </div>
-        </li>
-
-        <li>
-            <p><strong>Root Mean Squared Error (RMSE):</strong> RMSE quantifies the difference between the measured PPFD values and the average PPFD:</p>
-            <div class="equation-block">
-                <p class="equation">\[\text{RMSE} = \sqrt{\frac{\sum_{i=1}^{n} (P_i - \text{PPFD}_{\text{avg}})^2}{n}}\]</p>
-            </div>
-        </li>
-        <li>
-            <p><strong>Degree of Uniformity (DOU):</strong> DOU is calculated based on the RMSE and the average PPFD:
-            </p>
-            <div class="equation-block">
-                <p class="equation">\[\text{DOU} = 100 \times \left(1 - \frac{\text{RMSE}}{\text{PPFD}_{\text{avg}}}\right)\]</p>
-            </div>
-        </li>
-        <li>
-            <p><strong>Mean Absolute Deviation (MAD):</strong> MAD measures the average absolute difference between each PPFD value and the average PPFD:</p>
-            <div class="equation-block">
-                <p class="equation">\[\text{MAD} = \frac{1}{n} \sum_{i=1}^{n} |P_i - \text{PPFD}_{\text{avg}}|\]</p>
-            </div>
-        </li>
-        <li>
-            <p><strong>Coefficient of Variation (CV):</strong>  CV is the ratio of the standard deviation (\(\sigma\)) to the average PPFD, expressed as a percentage:</p>
-            <div class="equation-block">
-                <p>\[\text{CV} = 100 \times \frac{\sigma}{\text{PPFD}_{\text{avg}}}\]</p>
-                <p>where the standard deviation, \(\sigma\), is calculated as:</p>
-                <p>\[\sigma = \sqrt{\frac{\sum_{i=1}^{n} (P_i - \text{PPFD}_{\text{avg}})^2}{n}}\]</p>
-                <p>Note: In this specific case, since we are calculating sample statistics and using all data points, the sample standard deviation and population standard deviation are equivalent.</p>
-            </div>
-        </li>
+      <li>
+        <strong>Average PPFD (<em>PPFD<sub>avg</sub></em>):</strong>  
+        <div class="equation-block">
+        \[
+          \text{PPFD}_{\text{avg}} \;=\; \frac{1}{n} \sum_{i=1}^{n} P_i
+        \]
+        </div>
+      </li>
+    
+      <li>
+        <strong>Root Mean Squared Error (RMSE):</strong>  
+        <div class="equation-block">
+        \[
+          \text{RMSE} \;=\; \sqrt{\frac{1}{n} \sum_{i=1}^{n} \bigl(P_i - \text{PPFD}_{\text{avg}}\bigr)^2}
+        \]
+        </div>
+      </li>
+    
+      <li>
+        <strong>Degree of Uniformity (DOU):</strong>  
+        <div class="equation-block">
+        \[
+          \text{DOU} \;=\; 100 \times \Bigl(1 - \frac{\text{RMSE}}{\text{PPFD}_{\text{avg}}}\Bigr)
+        \]
+        </div>
+      </li>
+    
+      <li>
+        <strong>Mean Absolute Deviation (MAD):</strong>  
+        <div class="equation-block">
+        \[
+          \text{MAD} \;=\; \frac{1}{n} \sum_{i=1}^{n} \bigl|P_i - \text{PPFD}_{\text{avg}}\bigr|
+        \]
+        </div>
+      </li>
+    
+      <li>
+        <strong>Coefficient of Variation (CV):</strong>  
+        <p>CV is the ratio of the standard deviation (<em>σ</em>) to the average PPFD, expressed as a percentage. The standard deviation is:</p>
+        <div class="equation-block">
+        \[
+          \sigma \;=\; \sqrt{\frac{1}{n} \sum_{i=1}^{n} \bigl(P_i - \text{PPFD}_{\text{avg}}\bigr)^2}
+        \]
+        </div>
+        <p>Thus</p>
+        <div class="equation-block">
+        \[
+          \text{CV} \;=\; 100 \times \frac{\sigma}{\text{PPFD}_{\text{avg}}}
+        \]
+        </div>
+        <p><em>Note:</em> Since we use all data points, population and sample standard deviations coincide.</p>
+      </li>
     </ol>
-
-
-    <h3 id="cost-analysis">4.3 Cost Analysis</h3>
-    <p>A preliminary cost analysis reveals that using 127 Samsung COBs at $11.81352 per COB results in a total LED cost of $1,500.32. In contrast, employing 210 Samsung Gen 2 modules at $26.56317 per module results in a cost of $5,578.27. This indicates that the conventional system’s LED cost is approximately 3.7 times higher than that of the novel design.</p>
-
-    </div> <!-- Close container -->
-    <!-- Back to Top Button -->
-    <a href="#" class="back-to-top" id="backToTopBtn">
-        <picture>
-            <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
-            <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
-        </picture>
-    </a>
-    <a href="/" class="home-button" id="homeButton">
-        <picture>
-            <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
-            <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
-        </picture>
-    </a>
-    </div> <!-- Close main-content -->
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'js/scripts.js' %}"></script>
-    {% include 'main/footer.html' %}
+    
+</div>
+<a href="#" class="back-to-top" id="backToTopBtn">
+    <picture>
+        <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
+        <img src="{% static 'main/images/top-btn.png' %}" alt="Back to Top">
+    </picture>
+</a>
+<a href="/" class="home-button" id="homeButton">
+    <picture>
+        <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
+        <img src="{% static 'main/images/home-btn.png' %}" alt="Home">
+    </picture>
+</a>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/scripts.js' %}"></script>
+{% include 'main/footer.html' %}
 </body>
 </html>

@@ -2,7 +2,7 @@ import csv
 import numpy as np
 
 layer_ppfds = {}
-with open("ppfd_data.csv", 'r') as csvfile:
+with open("ppfd_layer_data.csv", 'r') as csvfile:
     reader = csv.reader(csvfile)
     next(reader)  # Skip the header row
     for row in reader:

@@ -20,11 +20,11 @@ warnings.filterwarnings('ignore', category=NumbaPerformanceWarning)
 # ------------------------------------
 # 1) Basic Config & Reflectances
 # ------------------------------------
-REFL_WALL = 0.8
-REFL_CEIL = 0.8
+REFL_WALL = 0.7
+REFL_CEIL = 0.7
 REFL_FLOOR = 0.1
 
-LUMINOUS_EFFICACY = 182.0  # lumens/W - Still needed for Lux -> W/m^2
+LUMINOUS_EFFICACY = 160.0  # lumens/W - Still needed for Lux -> W/m^2
 SPD_FILE = "/Users/austinrouse/photonics/backups/spd_data.csv" # <<< SET PATH - Still needed for W/m^2 -> PPFD
 
 MAX_RADIOSITY_BOUNCES = 10
@@ -1160,9 +1160,9 @@ def simulate_lighting(light_positions, light_lumens, X, Y, patches_dict):
 # ------------------------------------
 def main():
     # --- Simulation-Specific Parameters ---
-    W = 6.096; L = 6.096; H = 0.9144 # Room dimensions (meters)
+    W = 3.6576; L = 3.6576; H = 0.9144 # Room dimensions (meters)
     global FIXED_NUM_LAYERS
-    FIXED_NUM_LAYERS = 10 # Must match param array length below
+    FIXED_NUM_LAYERS = 6 # Must match param array length below
 
     # Define COB lumens per layer (index corresponds to layer number)
     # Example: 10 layers, constant 10000 lumens for each layer's COBs
@@ -1170,16 +1170,12 @@ def main():
     # Example 2: Decreasing lumens per layer
     #cob_lumen_params = np.linspace(15000, 5000, FIXED_NUM_LAYERS)
     cob_lumen_params = np.array([
-        4000,
-        3000,
-        6000,
-        6000,
-        5000,
-        6000,
-        8000,
-        8000,
         10000,
-        14000
+        10000,
+        9000,
+        11000,
+        13000,
+        16000
     ])
     # --- Runtime Parameter Adjustments ---
     global N_FF_SAMPLES, MC_SAMPLES

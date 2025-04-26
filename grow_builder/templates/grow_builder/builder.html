@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grow Room Builder</title>
-    {% load static %}
+
     <style>
         body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
         #controls { padding: 20px; width: 250px; background-color: #f0f0f0; overflow-y: auto; display: flex; flex-direction: column;}
@@ -93,6 +94,7 @@
     </style>
 </head>
 <body>
+    
     <div id="controls">
         <h2>Grow Room Dimensions</h2>
         <label for="width">Width (W) (ft):</label>
@@ -113,27 +115,12 @@
             <span>Show LED Strips:</span>
             <label class="switch"><input type="checkbox" id="toggleStrips" checked><span class="slider round"></span></label>
         </div>
-        <div class="toggle-container">
-            <span>Show Heatmap:</span>
-            <label class="switch"><input type="checkbox" id="toggleHeatmap" checked><span class="slider round"></span></label>
-        </div>
-        <!-- Simulation Button -->
-        <button id="runSimulationBtn">Run Simulation</button>
-
+        <a href="/"><img src="{% static 'main/images/homeleaf.png' %}" alt="Luminous Photonics Logo" height="100"></a>
         <div id="loading-status"></div>
-        <div id="heatmap-status"></div>
     </div>
 
     <div id="renderer-container">
         <canvas id="builder-canvas"></canvas>
-    </div>
-
-    <!-- The Modal -->
-    <div id="simulationModal" class="modal">
-      <div class="modal-content">
-        <span class="close-button" title="Close Simulation Window">×</span>
-        <iframe id="simulationFrame" src="about:blank" title="Lighting Simulation"></iframe>
-      </div>
     </div>
 
 <script type="importmap">
@@ -156,7 +143,6 @@
     // --- Configuration ---
     // *** Use your original layout-only API endpoint URL here ***
     const LAYOUT_API_URL = "{% url 'grow_builder:calculate_lights_api' %}";
-    const SIMULATION_APP_URL = "/simulation/"; // URL of your simulation app page
     const BUILDER_APP_ORIGIN = window.location.origin; // Security check for postMessage
     const PLANT_MODEL_URL = "{% static 'grow_builder/models/tree.gltf' %}";
     const PLANT_SCALE = 0.25;
@@ -175,14 +161,8 @@
     const canvas = document.getElementById('builder-canvas');
     const container = document.getElementById('renderer-container');
     const loadingStatus = document.getElementById('loading-status');
-    const heatmapStatus = document.getElementById('heatmap-status');
     const togglePlantsCheckbox = document.getElementById('togglePlants');
     const toggleStripsCheckbox = document.getElementById('toggleStrips');
-    const toggleHeatmapCheckbox = document.getElementById('toggleHeatmap');
-    const runSimulationBtn = document.getElementById('runSimulationBtn');
-    const simulationModal = document.getElementById('simulationModal');
-    const simulationFrame = document.getElementById('simulationFrame');
-    const closeModalBtn = simulationModal.querySelector('.close-button');
 
     // --- Three.js Variables ---
     let scene, camera, renderer, controls;
@@ -193,13 +173,11 @@
     let stripsGroup = new THREE.Group();
     let ppfdValuesGroup = new THREE.Group(); // <<< ENSURE THIS LINE EXISTS AND IS UNCOMMENTED
     let stripMaterials = []; // For resizing line width
-    let heatmapPlane = null; // Mesh for the heatmap texture
 
     // --- State Variables ---
     let plantModel = null;
     let areAssetsLoading = { plant: false };
     let areAssetsLoaded = { plant: false };
-    let currentHeatmapData = null; // Store received PPFD data { values: [...], resolution_x: ..., ... }
     let fetchController = null;
 
     // --- Utility ---
@@ -289,19 +267,6 @@
         // Toggle listeners
         togglePlantsCheckbox?.addEventListener('change', handlePlantToggle);
         toggleStripsCheckbox?.addEventListener('change', handleStripToggle);
-        toggleHeatmapCheckbox?.addEventListener('change', handleHeatmapToggle);
-    
-        // Modal listeners
-        runSimulationBtn.addEventListener('click', openSimulationModal);
-        closeModalBtn.addEventListener('click', closeSimulationModal);
-        window.addEventListener('click', (event) => { // Close if clicked outside modal content
-            if (event.target == simulationModal) {
-                closeSimulationModal();
-            }
-        });
-
-        // --- Listener for messages FROM the iframe ---
-        window.addEventListener('message', receiveSimulationResult);
     }
 
 
@@ -309,8 +274,6 @@
 
     function handleInputChange() {
         logDebug("Input changed by user.");
-        // When user manually changes dimensions, the heatmap becomes invalid
-        clearHeatmap();
 
         // Debounce the API call
         clearTimeout(handleInputChange.timeoutId);
@@ -320,123 +283,98 @@
     }
     handleInputChange.timeoutId = null;
 
-    function clearHeatmap() {
-        if (currentHeatmapData || heatmapPlane) {
-             logDebug("Clearing heatmap due to input change.");
-             currentHeatmapData = null; // Clear heatmap data reference
-             if (heatmapPlane) {
-                  scene.remove(heatmapPlane); // Remove visual heatmap
-                  // Dispose geometry and texture later if needed, or reuse material
-                  heatmapPlane.geometry?.dispose();
-                  heatmapPlane.material?.map?.dispose();
-                  heatmapPlane.material?.dispose();
-                  heatmapPlane = null;
-             }
-             heatmapStatus.textContent = ""; // Clear status
-             toggleHeatmapCheckbox.checked = false; // Uncheck the toggle maybe? Or just hide.
-             handleHeatmapToggle(); // Update visibility based on toggle state
-        }
-        clearPPFDValues(); // Also clear PPFD value meshes
-    }
-
-    function clearPPFDValues() {
-        logDebug("Clearing PPFD value meshes.");
-        while (ppfdValuesGroup.children.length > 0) {
-            const textMesh = ppfdValuesGroup.children[0];
-            ppfdValuesGroup.remove(textMesh);
-            textMesh.geometry?.dispose();
-            textMesh.material?.dispose();
-        }
-    }
-
     async function fetchAndUpdateScene() {
-        logDebug("Attempting fetchAndUpdateScene...");
-        const W_ft_str = widthInput.value; const L_ft_str = lengthInput.value;
-        const H_ft_str = heightInput.value; const light_h_ft_str = lightHeightInput.value;
+    logDebug("Attempting fetchAndUpdateScene...");
+    const W_ft_str = widthInput.value;
+    const L_ft_str = lengthInput.value;
+    const H_ft_str = heightInput.value;
+    const light_h_ft_str = lightHeightInput.value;
 
-        if (!W_ft_str || !L_ft_str || !H_ft_str || !light_h_ft_str ) {
-            logDebug("Missing input values."); loadingStatus.textContent = 'Missing Dimensions'; return;
-        }
-        const W_ft = parseFloat(W_ft_str); const L_ft = parseFloat(L_ft_str);
-        const H_ft = parseFloat(H_ft_str); const light_h_ft = parseFloat(light_h_ft_str);
-
-        if (isNaN(W_ft) || isNaN(L_ft) || isNaN(H_ft) || isNaN(light_h_ft) || W_ft <= 0 || L_ft <= 0 || H_ft <= 0 || light_h_ft <= 0) {
-            logDebug("Invalid numeric dimensions (feet)."); loadingStatus.textContent = 'Invalid Dimensions'; return;
-        }
-        if (light_h_ft >= H_ft) {
-            logDebug("Light height >= ceiling height (feet)."); loadingStatus.textContent = 'Light Height >= Ceiling Height!';
-            clearSceneGeometry(true); // Clear geometry including room
-            return;
-        }
-
-        const W_m = W_ft * FT_TO_METERS; const L_m = L_ft * FT_TO_METERS;
-        const H_m = H_ft * FT_TO_METERS; const light_h_m = light_h_ft * FT_TO_METERS;
-        logDebug(`Converted dimensions (meters): W=${W_m.toFixed(2)}, L=${L_m.toFixed(2)}, H=${H_m.toFixed(2)}, light_h=${light_h_m.toFixed(2)}`);
-
-        if (fetchController) { fetchController.abort(); logDebug("Aborted previous fetch.");}
-        fetchController = new AbortController(); const signal = fetchController.signal;
-
-        loadingStatus.textContent = 'Calculating Layout...';
-        const params = new URLSearchParams({ W: W_m, L: L_m, H: H_m, light_h: light_h_m });
-        const requestUrl = `${LAYOUT_API_URL}?${params.toString()}`;
-
-        try {
-            logDebug("Fetching layout from:", requestUrl);
-            const response = await fetch(requestUrl, { signal });
-            logDebug(`Fetch response status: ${response.status}`);
-            if (!response.ok) {
-                let errorMsg = `Layout fetch failed: ${response.status} ${response.statusText}`;
-                try { const errData = await response.json(); errorMsg = errData.error || errorMsg; } catch(e){}
-                throw new Error(errorMsg);
-            }
-            const layoutData = await response.json(); // Assumes direct layout data object
-            logDebug("Received layout data:", JSON.stringify(layoutData).substring(0, 300) + "...");
-            loadingStatus.textContent = '';
-
-            // --- Update Scene ---
-            clearSceneGeometry(false); // Clear old layout geometry but keep room if dimensions match
-            drawRoom(W_m, L_m, H_m); // Draw/update room outline
-            updateActualCobVisuals(layoutData.placed_cob_positions || []);
-            updateStripVisuals(layoutData.strip_layer_coordinates || []);
-            updatePlants(layoutData.plant_positions || []);
-
-            // --- Draw Heatmap IF data exists and matches current dimensions ---
-            if (currentHeatmapData) {
-                // Optional check: Ensure heatmap dimensions match current room dimensions reasonably
-                const hm_W = currentHeatmapData.width_m;
-                const hm_L = currentHeatmapData.length_m;
-                if (Math.abs(hm_W - W_m) < 0.01 && Math.abs(hm_L - L_m) < 0.01) {
-                     logDebug("Drawing heatmap with stored data matching current dimensions.");
-                     drawHeatmap(currentHeatmapData);
-                } else {
-                     logDebug("Stored heatmap data dimensions mismatch current room. Clearing heatmap.");
-                     clearHeatmap(); // Clear if dimensions changed since heatmap was generated
-                }
-            } else {
-                 logDebug("No current heatmap data to draw.");
-                 clearHeatmap(); // Ensure no old heatmap is shown
-            }
-            handleHeatmapToggle(); // Ensure visibility matches toggle
-
-            // Update controls target based on new dimensions
-            if(controls) {
-                 controls.target.set(W_m / 2, H_m / 3, L_m / 2); // Target lower part of the room
-                 controls.update();
-            }
-
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                logDebug('Layout fetch aborted');
-            } else {
-                console.error("Fetch/Update error:", error);
-                loadingStatus.textContent = `Error: ${error.message}`;
-                clearSceneGeometry(true); // Clear everything on error
-            }
-        } finally {
-            fetchController = null;
-            logDebug("fetchAndUpdateScene finished.");
-        }
+    if (!W_ft_str || !L_ft_str || !H_ft_str || !light_h_ft_str) {
+        logDebug("Missing input values.");
+        loadingStatus.textContent = 'Missing Dimensions';
+        return;
     }
+
+    const W_ft = parseFloat(W_ft_str);
+    const L_ft = parseFloat(L_ft_str);
+    const H_ft = parseFloat(H_ft_str);
+    let light_h_ft = parseFloat(light_h_ft_str); // make mutable
+
+    if (isNaN(W_ft) || isNaN(L_ft) || isNaN(H_ft) || isNaN(light_h_ft) ||
+        W_ft <= 0 || L_ft <= 0 || H_ft <= 0 || light_h_ft <= 0) {
+        logDebug("Invalid numeric dimensions (feet).");
+        loadingStatus.textContent = 'Invalid Dimensions';
+        return;
+    }
+
+    // clamp light height just beneath ceiling instead of erroring out
+    if (light_h_ft >= H_ft) {
+        const minGapFt = 0.1;                            // 0.1 ft buffer
+        light_h_ft = H_ft - minGapFt;
+        lightHeightInput.value = light_h_ft.toFixed(2); // update UI
+        logDebug(`Clamped light height to ${light_h_ft.toFixed(2)} ft beneath ceiling`);
+        clearSceneGeometry(true);
+    }
+
+    const W_m       = W_ft      * FT_TO_METERS;
+    const L_m       = L_ft      * FT_TO_METERS;
+    const H_m       = H_ft      * FT_TO_METERS;
+    const light_h_m = light_h_ft* FT_TO_METERS;
+    logDebug(`Converted dims (m): W=${W_m.toFixed(2)}, L=${L_m.toFixed(2)}, H=${H_m.toFixed(2)}, light_h=${light_h_m.toFixed(2)}`);
+
+    if (fetchController) {
+        fetchController.abort();
+        logDebug("Aborted previous fetch.");
+    }
+    fetchController = new AbortController();
+    const signal = fetchController.signal;
+
+    loadingStatus.textContent = 'Calculating Layout...';
+    const params = new URLSearchParams({ W: W_m, L: L_m, H: H_m, light_h: light_h_m });
+    const requestUrl = `${LAYOUT_API_URL}?${params.toString()}`;
+
+    try {
+        logDebug("Fetching layout from:", requestUrl);
+        const response = await fetch(requestUrl, { signal });
+        logDebug(`Fetch status: ${response.status}`);
+        if (!response.ok) {
+            let errorMsg = `Layout fetch failed: ${response.status} ${response.statusText}`;
+            try {
+                const errData = await response.json();
+                errorMsg = errData.error || errorMsg;
+            } catch(e) {}
+            throw new Error(errorMsg);
+        }
+        const layoutData = await response.json();
+        logDebug("Received layout data:", JSON.stringify(layoutData).slice(0,300) + "...");
+        loadingStatus.textContent = '';
+
+        // --- Update Scene ---
+        clearSceneGeometry(false);
+        drawRoom(W_m, L_m, H_m);
+        updateActualCobVisuals(layoutData.placed_cob_positions || []);
+        updateStripVisuals(layoutData.strip_layer_coordinates || []);
+        updatePlants(layoutData.plant_positions || []);
+
+        if (controls) {
+            controls.target.set(W_m/2, H_m/3, L_m/2);
+            controls.update();
+        }
+
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            logDebug('Layout fetch aborted');
+        } else {
+            console.error("Fetch/Update error:", error);
+            loadingStatus.textContent = `Error: ${error.message}`;
+            clearSceneGeometry(true);
+        }
+    } finally {
+        fetchController = null;
+        logDebug("fetchAndUpdateScene finished.");
+    }
+}
 
     function clearSceneGeometry(includeRoom = false) {
          logDebug(`Clearing scene geometry (includeRoom=${includeRoom})`);
@@ -449,14 +387,6 @@
          stripMaterials = []; // Clear materials array
          while (plantsGroup.children.length > 0) { plantsGroup.remove(plantsGroup.children[0]); } // Add dispose if needed
 
-         // Remove heatmap
-         if (heatmapPlane) {
-              scene.remove(heatmapPlane);
-              heatmapPlane.geometry?.dispose();
-              heatmapPlane.material?.map?.dispose();
-              heatmapPlane.material?.dispose();
-              heatmapPlane = null;
-         }
          // Optionally remove room
          if (includeRoom && roomOutline) {
               scene.remove(roomOutline);
@@ -464,250 +394,11 @@
               roomOutline.material?.dispose();
               roomOutline = null;
          }
-         clearPPFDValues(); // Make sure values are cleared here too
-    }
-
-
-    // --- Modal Handling ---
-    function openSimulationModal() {
-        const currentW_ft = widthInput.value;
-        const currentL_ft = lengthInput.value;
-        // Construct URL with initial parameters for the iframe to pre-fill
-        const iframeSrc = `${SIMULATION_APP_URL}?initialW=${currentW_ft}&initialL=${currentL_ft}`;
-        logDebug("Opening simulation modal with src:", iframeSrc);
-        simulationFrame.src = iframeSrc;
-        simulationModal.style.display = "block";
-        heatmapStatus.textContent = "Opening simulation window...";
-        currentHeatmapData = null; // Clear old data when opening modal
-    }
-
-    function closeSimulationModal() {
-        logDebug("Closing simulation modal.");
-        simulationFrame.src = 'about:blank'; // Clear iframe content to stop potential background activity
-        simulationModal.style.display = "none";
-        if (!currentHeatmapData) { // If modal closed before results received
-             heatmapStatus.textContent = ""; // Clear status if nothing came back
-        }
-    }
-
-    // --- Message Handling ---
-    function receiveSimulationResult(event) {
-        // --- Security Check: Verify the origin ---
-        let expectedOrigin;
-        try {
-             expectedOrigin = new URL(SIMULATION_APP_URL, window.location.origin).origin;
-        } catch (e) {
-             console.error("Could not determine expected origin from SIMULATION_APP_URL", SIMULATION_APP_URL);
-             expectedOrigin = BUILDER_APP_ORIGIN; // Fallback, less secure if SIMULATION_APP_URL is external
-        }
-
-        if (event.origin !== expectedOrigin) {
-            console.warn(`Message received from unexpected origin: "${event.origin}". Expected: "${expectedOrigin}". Ignoring.`);
-            return;
-        }
-
-        logDebug("Message received from iframe:", event.data);
-
-        // --- Data Validation ---
-        if (typeof event.data !== 'object' || !event.data.type || event.data.type !== 'simulationResult' || !event.data.payload) {
-            console.warn("Invalid message format received:", event.data);
-            return;
-        }
-
-        const payload = event.data.payload;
-
-        // --- Process Payload ---
-        if (payload.error) {
-             heatmapStatus.textContent = `Simulation Error: ${payload.error}`;
-             console.error("Simulation reported error:", payload.error);
-             clearHeatmap();
-             closeSimulationModal(); // Close modal on error too
-        } else if (payload.dimensions && payload.ppfd_grid) {
-            heatmapStatus.textContent = "Simulation results received. Updating builder...";
-            logDebug("Processing valid simulation result payload.");
-
-            // 1. Update Builder Dimension Inputs (use FT from simulation results)
-            let dimensionsUpdated = false;
-            if (payload.dimensions.W_ft && payload.dimensions.L_ft) {
-                widthInput.value = parseFloat(payload.dimensions.W_ft).toFixed(1);
-                lengthInput.value = parseFloat(payload.dimensions.L_ft).toFixed(1);
-                dimensionsUpdated = true;
-            } else if (payload.dimensions.W_m && payload.dimensions.L_m) {
-                 // Fallback: Convert from meters if feet not provided
-                 widthInput.value = (parseFloat(payload.dimensions.W_m) * METERS_TO_FT).toFixed(1);
-                 lengthInput.value = (parseFloat(payload.dimensions.L_m) * METERS_TO_FT).toFixed(1);
-                 dimensionsUpdated = true;
-            } else {
-                 console.warn("Simulation result missing dimension data.");
-            }
-
-            // 2. Store Heatmap Data
-            currentHeatmapData = payload.ppfd_grid; // Store the grid object {values, resolution_x, ...}
-
-            // 3. Trigger Builder Update (will fetch new layout and draw heatmap)
-            if (dimensionsUpdated) {
-                fetchAndUpdateScene(); // This will read new inputs and redraw everything
-            } else {
-                // If dimensions didn't change, just draw the heatmap
-                 if (currentHeatmapData) drawHeatmap(currentHeatmapData);
-                 handleHeatmapToggle();
-            }
-
-
-            // 4. Close the Modal
-            closeSimulationModal();
-        } else {
-            console.warn("Received simulation result message, but payload format is unexpected.", payload);
-            // Optionally close modal or show generic error
-            closeSimulationModal();
-        }
-    }
-
-    // --- Heatmap Drawing ---
-    function drawHeatmap(ppfdData) {
-        if (!ppfdData || !ppfdData.values || !ppfdData.resolution_x || !ppfdData.resolution_y || !ppfdData.width_m || !ppfdData.length_m) {
-            console.error("Invalid PPFD data for heatmap.", ppfdData);
-            heatmapStatus.textContent = "Error: Invalid heatmap data received.";
-            clearHeatmap();
-            return;
-        }
-        logDebug(`Drawing heatmap (${ppfdData.resolution_x}x${ppfdData.resolution_y})`);
-
-        const gridValues = ppfdData.values; // 2D array [y][x]
-        const resX = parseInt(ppfdData.resolution_x, 10);
-        const resY = parseInt(ppfdData.resolution_y, 10);
-        const planeWidth = parseFloat(ppfdData.width_m);
-        const planeLength = parseFloat(ppfdData.length_m);
-        const heatmapHeight = parseFloat(ppfdData.height_m || 0.05); // Height above floor
-
-        if (isNaN(resX) || isNaN(resY) || isNaN(planeWidth) || isNaN(planeLength) || isNaN(heatmapHeight) || resX <= 0 || resY <= 0 || planeWidth <= 0 || planeLength <= 0) {
-             console.error("Invalid numeric values in PPFD data dimensions/resolution.", ppfdData);
-             heatmapStatus.textContent = "Error: Invalid heatmap dimensions/resolution.";
-             clearHeatmap();
-             return;
-        }
-
-
-        // --- Create Canvas Texture ---
-        const canvasTexture = document.createElement('canvas');
-        canvasTexture.width = resX;
-        canvasTexture.height = resY;
-        const context = canvasTexture.getContext('2d', { willReadFrequently: false }); // Optimization hint
-
-        // Find min/max PPFD for color mapping
-        let minPPFD = Infinity;
-        let maxPPFD = -Infinity;
-        let validValueFound = false;
-        for (let y = 0; y < resY; y++) {
-             if (!gridValues[y]) continue; // Skip if row is missing
-            for (let x = 0; x < resX; x++) {
-                const val = gridValues[y][x];
-                if (typeof val === 'number' && isFinite(val)) {
-                     if (val < minPPFD) minPPFD = val;
-                     if (val > maxPPFD) maxPPFD = val;
-                     validValueFound = true;
-                }
-            }
-        }
-
-        if (!validValueFound) {
-             console.error("No valid numeric PPFD values found in grid data.");
-             heatmapStatus.textContent = "Error: No valid PPFD values in data.";
-             clearHeatmap();
-             return;
-        }
-        // Handle case where all values are the same
-        if (minPPFD >= maxPPFD) {
-            minPPFD = maxPPFD - 1; // Create a small range to avoid division by zero
-        }
-        const range = maxPPFD - minPPFD;
-
-
-        // Draw pixels onto canvas
-        const imageData = context.createImageData(resX, resY);
-        const data = imageData.data; // Uint8ClampedArray [R, G, B, A, ...]
-        for (let y = 0; y < resY; y++) {
-            if (!gridValues[y]) continue;
-            // NOTE: We draw the texture based on the grid [y][x], but the plane is positioned
-            // relative to the room's origin (0,0). The texture mapping handles aligning it.
-            // We might need to flip the Y coordinate when drawing if the texture appears upside down.
-            const textureY = (resY - 1) - y; // Flip Y for texture mapping if needed
-
-            for (let x = 0; x < resX; x++) {
-                let ppfdValue = gridValues[y][x];
-                if (typeof ppfdValue !== 'number' || !isFinite(ppfdValue)) {
-                     ppfdValue = minPPFD; // Default color for invalid values (e.g., blue)
-                }
-                const normalizedValue = Math.max(0, Math.min(1, (ppfdValue - minPPFD) / range)); // Clamp 0-1
-
-                // HSL color mapping (Blue=0 Hue=240 -> Green=0.5 Hue=120 -> Red=1 Hue=0)
-                const hue = (1 - normalizedValue) * 240;
-                const saturation = 100;
-                const lightness = 50;
-
-                const color = new THREE.Color(); // Use THREE.Color for HSL conversion
-                color.setHSL(hue / 360, saturation / 100, lightness / 100);
-
-                // Calculate pixel index in the flat array using the potentially flipped textureY
-                const index = (textureY * resX + x) * 4;
-                data[index] = Math.round(color.r * 255);
-                data[index + 1] = Math.round(color.g * 255);
-                data[index + 2] = Math.round(color.b * 255);
-                data[index + 3] = 200; // Set alpha (e.g., 200 for some transparency)
-            }
-        }
-        context.putImageData(imageData, 0, 0);
-
-        // --- Create/Update Three.js Plane ---
-        const texture = new THREE.CanvasTexture(canvasTexture);
-        texture.needsUpdate = true; // Ensure texture updates
-
-        if (heatmapPlane) {
-            logDebug("Updating existing heatmap plane.");
-            heatmapPlane.geometry.dispose(); // Dispose old geometry first
-            heatmapPlane.material.map?.dispose(); // Dispose old texture
-
-            heatmapPlane.geometry = new THREE.PlaneGeometry(planeWidth, planeLength);
-            heatmapPlane.material.map = texture;
-            heatmapPlane.material.needsUpdate = true;
-        } else {
-            logDebug("Creating new heatmap plane.");
-            const geometry = new THREE.PlaneGeometry(planeWidth, planeLength);
-            const material = new THREE.MeshBasicMaterial({
-                 map: texture,
-                 side: THREE.DoubleSide, // See both sides
-                 transparent: true,
-                 opacity: 0.85 // Adjust opacity
-             });
-            heatmapPlane = new THREE.Mesh(geometry, material);
-            scene.add(heatmapPlane);
-        }
-
-        // Position the plane slightly above the floor (Y=up in Three.js)
-        heatmapPlane.rotation.x = -Math.PI / 2; // Rotate to lay flat on XZ plane
-        // Center the plane in the room
-        heatmapPlane.position.set(planeWidth / 2, heatmapHeight, planeLength / 2);
-
-        heatmapStatus.textContent = `Heatmap: ${minPPFD.toFixed(0)} - ${maxPPFD.toFixed(0)} PPFD`;
-        logDebug("Heatmap drawing complete.");
-
-        handleHeatmapToggle(); // Ensure main heatmap visibility is correct
     }
     
     // --- Toggle Handlers ---
     function handlePlantToggle() { if(plantsGroup) plantsGroup.visible = togglePlantsCheckbox.checked; }
     function handleStripToggle() { if(stripsGroup) stripsGroup.visible = toggleStripsCheckbox.checked; }
-    function handleHeatmapToggle() {
-        if (heatmapPlane) {
-             heatmapPlane.visible = toggleHeatmapCheckbox.checked;
-             heatmapStatus.style.display = toggleHeatmapCheckbox.checked && currentHeatmapData ? 'block' : 'none';
-             logDebug("Heatmap visibility set to:", heatmapPlane.visible);
-        } else {
-             heatmapStatus.style.display = 'none'; // Hide status if no heatmap exists
-             // Ensure toggle is unchecked if no heatmap exists?
-             // toggleHeatmapCheckbox.checked = false;
-        }
-    }
 
     // --- Scene Update Functions --- (Keep your existing implementations)
     function drawRoom(W_m, L_m, H_m) { /* ... your logic ... */

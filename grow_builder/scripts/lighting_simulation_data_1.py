@@ -933,8 +933,8 @@ def simulate_lighting(params, geo):
 def main():
     # --- Command Line Arguments ---
     parser = argparse.ArgumentParser(description="Lighting Simulation Script")
-    parser.add_argument('--layers', type=int, default=10, help='Number of COB layers to simulate (e.g., 10)')
-    parser.add_argument('--width', type=float, default=6.10, help='Room width in meters (e.g., 6.10 for 20ft)')
+    parser.add_argument('--layers', type=int, default=19, help='Number of COB layers to simulate (e.g., 10)')
+    parser.add_argument('--width', type=float, default=11.22, help='Room width in meters (e.g., 6.10 for 20ft)')
     parser.add_argument('--length', type=float, default=None, help='Room length in meters (defaults to width)')
     parser.add_argument('--height', type=float, default=0.9144, help='Mounting height H in meters (e.g., 0.9144 for 3ft)')
     parser.add_argument('--flux', nargs='+', type=float, default=None, help='List of flux values per layer (optional, overrides default)')
@@ -957,8 +957,11 @@ def main():
             params = np.array([10000.0] * NUM_LAYERS, dtype=np.float64) # Default: 10k lumens per layer
     else:
         # Default flux if not provided via command line
-        params = np.array([10000.0] * NUM_LAYERS, dtype=np.float64)
-
+        #params = np.array([10000.0] * NUM_LAYERS, dtype=np.float64)
+        params = np.array([
+            1500, 2000, 3500, 8000, 14000, 8000, 8000, 13500, 11000, 12000,
+            10000, 9000, 8500, 9000, 10000, 11000, 12167, 20000, 20000
+        ], dtype=np.float64)
     print("\n--- Running Standalone Simulation ---")
     print(f"Layers: {NUM_LAYERS}, Width: {W:.2f}m, Length: {L:.2f}m, Height: {H:.2f}m")
     print(f"Flux per layer: {params}")

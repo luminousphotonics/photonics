@@ -1,29 +1,27 @@
+<!-- index.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YNV5LYTT2C"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
+  <!-- Google tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YNV5LYTT2C"></script>
+  <script>
+    window.dataLayer = window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+    gtag('config','G-YNV5LYTT2C');
+  </script>
 
-    gtag('config', 'G-YNV5LYTT2C');
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:image" content="{% static 'main/images/webp/homeleaf.webp' %}" />
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:image" content="{% static 'main/images/webp/homeleaf.webp' %}" />
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-    <link rel="icon" type="image/x-icon" href="{% static 'main/images/favicon.ico' %}">
-    <title>Luminous Photonics - Revolutionizing Horticultural Lighting</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="icon" href="{% static 'main/images/favicon.ico' %}">
+  <title>Luminous Photonics - Revolutionizing Horticultural Lighting</title>
 </head>
 <body>
     {% include 'main/navbar.html' %}
@@ -37,13 +35,17 @@
         <h3>Grow Room Lighting <div style="color: #FFD700;">PERFECTED</div></h3>
     </div>
 
+  <!-- --- animated-bg section --- -->
+  <div id="animated-bg-1" class="animated-bg">
+    <canvas id="animated-canvas-1"></canvas>
+  
     <div class="container">
 
-        <div>
-            <p class="intro-paragraph hidden" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                Our <a  href="https://patents.google.com/patent/US10687478B2" target="_blank" style="font-size: 0.9em;">patented</a>, infinitely scalable, modular LED lighting system delivers <i>truly uniform PAR distribution</i>, maximizing energy efficiency and plant growth in controlled environments.
-            </p>
-        </div>
+      <div>
+        <p class="intro-paragraph hidden" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            Our <a  href="https://patents.google.com/patent/US10687478B2" target="_blank" style="font-size: 0.9em;">patented</a>, infinitely scalable, modular LED lighting system delivers <i>truly uniform PAR distribution</i>, maximizing energy efficiency and plant growth in controlled environments.
+        </p>
+      </div>
         <div class="info-box-container hidden">
             <div class="info-box" data-info="agentic-ai">
                 <h2>INFINITELY SCALABLE</h2>
@@ -68,29 +70,20 @@
                 </div>
             </div>
             <div class="info-box" data-info="ml-optimization">
-                <h2>OPTIMIZATION ALGORITHM</h2>
+                <h2>GROW ROOM BUILDER</h2>
                 <div class="info-box-content">
-                    <p>Our differential evolution-based global optimization algorithm optimizes the lighting system luminous flux layer by layer, achieving truly uniform PAR distribution.</p>
+                    <p>Interact with our 3D grow room builder to envision your ideal space!</p>
                     <div class="cta-section1">
-                        <a href="{% url 'technology' %}#ml" class="learn-more-link">
-                            <button class="learn-more">Learn More</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="info-box" data-info="cooling-system">
-                <h2>THERMAL MANAGEMENT</h2>
-                <div class="info-box-content">
-                    <p>Our state-of-the-art cooling system maintains optimal operating temperatures for the lighting elements, resulting in a maximum light output to energy input ratio. We utilize Computational Fluid Dynamics (CFD) to validate the cooling system.</p>
-                    <div class="cta-section1">
-                        <a href="{% url 'cooling_system' %}" class="learn-more-link">
-                            <button class="learn-more">Learn More</button>
+                        <a href="{% url 'grow_builder:builder_page' %}#ml" class="learn-more-link">
+                            <button class="learn-more">Enter</button>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+  </div>
+  <!-- /animated-bg -->
         <div class="grey-background lazy-load-bg" data-bg="{% static 'main/images/webp/hydro.webp' %}">
             <div class="overlay">
             <div class="content-wrapper">
@@ -101,8 +94,7 @@
                             <li class="feature-item">Uniform PAR Distribution</li>
                             <li class="feature-item">Optimized Energy Efficiency</li>
                             <li class="feature-item">Infinitely Scalable</li>
-                            <li class="feature-item">Agentic AI Control</li>
-                            <li class="feature-item">Advanced Thermal Management</li>
+                            <li class="feature-item">Modular Design</li>
                         </ul>
                     </div>
                     <div class="cta-section">
@@ -169,106 +161,213 @@
                 </a>
             </div>
         </div>
-        
-        <div class="container" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <h3 style="color: #0078BE; margin-bottom: -20px; font-size: 28px;">WHAT SETS US APART FROM CONVENTIONAL SOLUTIONS?</h3>
-            <p>
-                Our lighting technology combines evenly distributed PAR, advanced Chip-On-Board (COB) LEDs, validated heat management, and a modular design that scales to any size grow space. By utilizing advanced optimization algorithms, we precisely tune each lighting setup to deliver maximum plant growth and energy efficiency. Simply put: We're setting a new standard for horticultural lighting.
-                <br>
-            </p>
-            <h3 style="color: #0078BE; margin-bottom: -20px;">HORTICULTURAL LIGHTING: AN OPTIMIZATION CHALLENGE</h3>
-            <p>
-                Designing horticultural lighting isn't guesswork—it's a mathematical challenge. Our approach optimizes plant yield while minimizing energy use. We carefully balance LED type, spacing, fixture layout, and intensity through advanced algorithms, ensuring every plant receives exactly the right amount of light for optimal growth.
-            </p>
-        </div>
-        <div class="image-container hidden" style="text-align: center;">
-            <picture>
-                <source srcset="{% static 'main/images/webp/csnrect.webp' %}" type="image/webp">
-                <img src="{% static 'main/images/csnrect.png' %}" alt="Fixture" style="display: block; margin: 0 auto;" loading="lazy">
-            </picture>
-        </div>
-        <div class="cta hidden">
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="{% url 'technology' %}" class="dive-deeper-button">Explore the Technology</a>
-            </div>
-        </div>
-        </div>
-        <div class="one-col-section" style="line-height: 1.2; color: #333; max-width: 1000px; margin: 20px auto; padding: 20px; background: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 0px;">
-            <div class="intro-section">
-              <h2 class="subsection-title" style="color: #0078BE;">WHAT IS UNIFORM PAR DISTRIBUTION?</h2>
-              <p class="section-description">
-                Uniform PAR (<i>Photosynthetically Active Radiation</i>) distribution means every part of every plant receives the same amount of usable light—no matter where it sits under the lights. Instead of some plants or leaves getting more light than others, our lighting system evenly covers the entire growing area, giving every plant consistent conditions for optimal growth.
-              </p>
-          
-              <h2 class="subsection-title" style="color: #0078BE;">WHY IS UNIFORM LIGHT SO IMPORTANT?</h2>
-              <p class="section-description">
-                Uniform lighting boosts photosynthesis equally across all plants, maximizing growth, health, and yield. Academic research supports that uniform PAR:
-              </p>
-              <ul>
-                <li>Enhances photosynthesis across entire plants, improving overall productivity.</li>
-                <li>Prevents lower leaves from dying prematurely due to inadequate light.</li>
-                <li>Helps all leaves efficiently produce and share energy.</li>
-                <li>Encourages healthier plant hormone balances, promoting stronger and more consistent growth.</li>
-              </ul>
-              <p><strong>In short:</strong> uniform lighting ensures healthier plants, better yields, and increased efficiency in controlled growing environments.</p>
-              
-              <!-- Button to toggle academic literature -->
-              <button class="dive-deeper-button" onclick="toggleLiterature()">View the Supporting Academic Literature</button>
-            </div>
-            
-            <!-- Hidden container for the academic citations -->
-            <div id="academic-literature" style="display: none; margin-top: 20px;">
-              <pre style="margin: 0 auto; text-align: center; display: flex; justify-content: center; width: fit-content;">
-                <code>
-If the PPFD is spatially uniform at an appropriate level in a plant canopy regardless of the canopy's depth, the net photosynthetic rate of the whole plant canopy should increase significantly, and the decrease in net photosynthetic capacity of lower leaves due to their senescence may be prevented.
-
-— (Zhang et al., 2015; Joshi et al., 2017), <cite>Zhang, X., He, D., Niu, G., Yan, Z., &amp; Song, J. (2015). <a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">A Combination of Downward Lighting and Supplemental Upward Lighting Improves Plant Growth in a Closed Plant Factory with Artificial Lighting.</a> <i>Hortscience, 52</i>(6), 831-835.</cite>
-                </code>
-              </pre>
-              <pre style="margin: 20px auto 0; text-align: center; display: flex; justify-content: center; width: fit-content;">
-                <code>
-<b>A uniform light environment in a plant canopy has the following effects:</b>
-(1) Geometrical relationships between the source (photosynthesizing parts) and sink (accumulating parts of translocated carbohydrates) of plants are changed; (2) All leaves of a plant canopy relatively equally act as producers of carbohydrates; (3) Senescence of lower leaves
-due to low PPFD is suppressed; and (4) Phytohormone balances in individual plants are changed.
-
-— (Kozai, 2022), <cite>Kozai, T. (2022). Role and characteristics of PFALs. In <i><a href="http://dx.doi.org/10.1016/B978-0-323-85152-7.00014-8" target="_blank">Plant Factory Basics, Applications and Advances</a></i> (p. 46). Academic Press.</cite>
-                </code>
-              </pre>
-            </div>
-          </div>
+  <!-- --- animated-bg section --- -->
+  <section id="spark-scroll-section">
+    <canvas id="spark-canvas"></canvas>
+  
+    <div class="container"
+         style="line-height:1.2;color:#333;
+                max-width:1000px;margin:20px auto;
+                padding:20px;background:#f9f9f9;
+                box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+      <h3 style="color:#0078BE;margin-bottom:-20px;font-size:28px;">
+        WHAT SETS US APART FROM CONVENTIONAL SOLUTIONS?
+      </h3>
+      <p>
+        Our lighting technology combines evenly distributed PAR,
+        advanced Chip-On-Board (COB) LEDs, validated heat
+        management, and a modular design that scales to any
+        size grow space. By utilizing advanced optimization
+        algorithms, we precisely tune each lighting setup to deliver
+        maximum plant growth and energy efficiency. Simply put:
+        We’re setting a new standard for horticultural lighting.
+      </p>
+  
+      <h3 style="color:#0078BE; margin-bottom:-20px;">
+        HORTICULTURAL LIGHTING: AN OPTIMIZATION CHALLENGE
+      </h3>
+      <p>
+        Designing horticultural lighting isn’t guesswork—it's
+        a mathematical challenge. Our approach optimizes plant
+        yield while minimizing energy use. We carefully balance
+        LED type, spacing, fixture layout, and intensity through
+        advanced algorithms, ensuring every plant receives
+        exactly the right amount of light for optimal growth.
+      </p>
     </div>
-
-        </div>
-
-        </div>
+  
+    <div class="image-container hidden" style="text-align:center;">
+      <picture>
+        <source srcset="{% static 'main/images/webp/csnrect.webp' %}" type="image/webp">
+        <img src="{% static 'main/images/csnrect.png' %}"
+             alt="Fixture" style="display:block; margin:0 auto;"
+             loading="lazy">
+      </picture>
     </div>
-    <div class="text-below-carousel">
-        <a href="#" class="back-to-top" id="backToTopBtn">
-            <picture>
-                <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
-                <img data-src="{% static 'main/images/top-btn.png' %}" alt="Back to Top" class="lazy-load">
-            </picture>
+  
+    <div class="cta hidden">
+      <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'technology' %}" class="dive-deeper-button">
+          Explore the Technology
         </a>
-        <a href="/" class="home-button" id="homeButton">
-            <picture>
-                <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
-                <img data-src="{% static 'main/images/home-btn.png' %}" alt="Home" class="lazy-load">
-            </picture>
-        </a>
-        <div class="cta hidden">
-            <h1 style="color: #0078BE">Observe our Cutting-Edge Research</h1>
-            <button id="pdfButton2" class="dive-deeper-button" data-pdf-url="{% static 'main/images/White-Paper-2.0.pdf' %}" onclick="openPDF()" class="button">White Paper</button>
-        </div>
+      </div>
     </div>
+  
+    <div class="one-col-section"
+         style="line-height:1.2;color:#333;
+                max-width:1000px;margin:20px auto;
+                padding:20px;background:#f9f9f9;
+                box-shadow:0 2px 5px rgba(0,0,0,0.1);
+                margin-bottom:0px;">
+      <div class="intro-section">
+        <h2 class="subsection-title" style="color:#0078BE;">
+          WHAT IS UNIFORM PAR DISTRIBUTION?
+        </h2>
+        <p class="section-description">
+          Uniform PAR (<i>Photosynthetically Active Radiation</i>)
+          distribution means every part of every plant receives the
+          same amount of usable light—no matter where it sits under
+          the lights. Instead of some plants or leaves getting more
+          light than others, our lighting system evenly covers the
+          entire growing area, giving every plant consistent
+          conditions for optimal growth.
+        </p>
+  
+        <h2 class="subsection-title" style="color:#0078BE;">
+          WHY IS UNIFORM LIGHT SO IMPORTANT?
+        </h2>
+        <p class="section-description">
+          Uniform lighting boosts photosynthesis equally across all
+          plants, maximizing growth, health, and yield. Academic
+          research supports that uniform PAR:
+        </p>
+        <ul>
+          <li>Enhances photosynthesis across entire plants, improving overall productivity.</li>
+          <li>Prevents lower leaves from dying prematurely due to inadequate light.</li>
+          <li>Helps all leaves efficiently produce and share energy.</li>
+          <li>Encourages healthier plant hormone balances, promoting stronger and more consistent growth.</li>
+        </ul>
+        <p><strong>In short:</strong> uniform lighting ensures healthier plants, better yields, and increased efficiency in controlled growing environments.</p>
+        <button class="dive-deeper-button" onclick="toggleLiterature()">
+          View the Supporting Academic Literature
+        </button>
+      </div>
+  
+      <div id="academic-literature"
+           style="display:none; margin-top:20px;text-align:center;">
+        <pre style="margin:0 auto;width:fit-content;">
+  <code>
+  If the PPFD is spatially uniform at an appropriate level in a plant canopy regardless of the canopy's depth, the net photosynthetic rate of the whole plant canopy should increase significantly, and the decrease in net photosynthetic capacity of lower leaves due to their senescence may be prevented.
+  
+  — (Zhang et al., 2015; Joshi et al., 2017), <cite>Zhang, X., He, D., Niu, G., Yan, Z., &amp; Song, J. (2015). <a href="https://doi.org/10.21273/HORTSCI11822-17" target="_blank">A Combination of Downward Lighting and Supplemental Upward Lighting Improves Plant Growth in a Closed Plant Factory with Artificial Lighting.</a> <i>Hortscience, 52</i>(6), 831-835.</cite>
+  </code>
+        </pre>
+        <pre style="margin:20px auto 0;width:fit-content;text-align:center;">
+  <code>
+  <b>A uniform light environment in a plant canopy has the following effects:</b>
+  (1) Geometrical relationships between the source (photosynthesizing parts) and sink (accumulating parts of translocated carbohydrates) of plants are changed; 
+  (2) All leaves of a plant canopy relatively equally act as producers of carbohydrates; 
+  (3) Senescence of lower leaves due to low PPFD is suppressed; and 
+  (4) Phytohormone balances in individual plants are changed.
+  
+  — (Kozai, 2022), <cite>Kozai, T. (2022). Role and characteristics of PFALs. In <i><a href="http://dx.doi.org/10.1016/B978-0-323-85152-7.00014-8" target="_blank">Plant Factory Basics, Applications and Advances</a></i> (p. 46). Academic Press.</cite>
+  </code>
+        </pre>
+      </div>
+    </div>
+    <div class="cta hidden">
+        <h1 style="color: #0078BE">Observe our Cutting-Edge Research</h1>
+        <button id="pdfButton2" class="dive-deeper-button" data-pdf-url="{% static 'main/images/White-Paper-2.0.pdf' %}" onclick="openPDF()" class="button">White Paper</button>
+    </div>
+</section>
+</div>
+</div>
+<div class="text-below-carousel">
+    <a href="#" class="back-to-top" id="backToTopBtn">
+        <picture>
+            <source srcset="{% static 'main/images/webp/top-btn.webp' %}" type="image/webp">
+            <img data-src="{% static 'main/images/top-btn.png' %}" alt="Back to Top" class="lazy-load">
+        </picture>
+    </a>
+    <a href="/" class="home-button" id="homeButton">
+        <picture>
+            <source srcset="{% static 'main/images/webp/home-btn.webp' %}" type="image/webp">
+            <img data-src="{% static 'main/images/home-btn.png' %}" alt="Home" class="lazy-load">
+        </picture>
+    </a>
+</div>
 
     {% include 'main/footer.html' %}
-  
-    <!-- jQuery and Slick (unchanged) -->
+
+    <!-- libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-    
-    <!-- Optional: your custom scripts.js -->
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+
+    <!-- your script -->
     <script src="{% static 'js/scripts.js' %}"></script>
-      
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const section = document.getElementById('spark-scroll-section');
+          const canvas  = document.getElementById('spark-canvas');
+          if (!section || !canvas) return;
+          const ctx = canvas.getContext('2d');
+          let width, height;
+          function resize() {
+            width  = section.clientWidth;
+            height = section.clientHeight;
+            canvas.width  = width;
+            canvas.height = height;
+          }
+          window.addEventListener('resize', resize);
+          resize();
+        
+          let lastScroll = window.scrollY, scrollV = 0;
+          window.addEventListener('scroll', () => {
+            const y = window.scrollY;
+            scrollV = y - lastScroll;
+            lastScroll = y;
+          });
+        
+          class Spark {
+            constructor() { this.reset(); }
+            reset() {
+              this.x = Math.random()*width;
+              this.y = Math.random()*height;
+              this.size  = 1 + Math.random()*3;
+              this.speed = 0.8 + Math.random()*1.5;
+              this.hue   = Math.random()*360;
+            }
+            update() {
+              this.y -= this.speed + scrollV*0.4;
+              if (this.y < -10 || this.y > height+10) {
+                this.reset();
+                this.y = height + 10;
+              }
+            }
+            draw() {
+              ctx.fillStyle = `hsla(${this.hue},100%,70%,0.6)`;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.size, 0, 2*Math.PI);
+              ctx.fill();
+            }
+          }
+        
+          const sparks = Array.from({length:300},() => new Spark());
+        
+          function animate() {
+            ctx.clearRect(0,0,width,height);
+            ctx.globalCompositeOperation = 'lighter';
+            sparks.forEach(s => { s.update(); s.draw(); });
+            ctx.globalCompositeOperation = 'source-over';
+            scrollV *= 0.95;
+            requestAnimationFrame(animate);
+          }
+          animate();
+        });
+        </script>
+
 </body>
 </html>

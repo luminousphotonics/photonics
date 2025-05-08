@@ -1,28 +1,37 @@
 services:
   - type: web
-    name: luminous-photonics # Change to your desired service name
+    name: luminous-photonics        # your existing service name
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn photonics.wsgi:application"
-    static: true # This tells Render to serve static files
-    staticPath: ./staticfiles # This is the path to your STATIC_ROOT
-    timeoutSeconds: 600  # Added timeout setting (10 minutes)
+    timeoutSeconds: 600             # 10-minute timeout
+
+    # Serve your collected static files
+    static: true
+    staticPath: ./staticfiles       # your STATIC_ROOT
+
+    # Serve your media uploads
+    staticPublishPath: /app/media
+    routes:
+      - type: filesystem
+        pathPrefix: /media
+        publishPath: /app/media
+
     envVars:
       - key: SECRET_KEY
-        fromDatabase: # If using a Render PostgreSQL database
-          name: photonics-db # Change to your database name
+        fromDatabase:
+          name: photonics-db
           property: connectionString
       - key: DATABASE_URL
         fromDatabase:
-          name: photonics-db # Change to your database name
+          name: photonics-db
           property: connectionString
       - key: DEBUG
         value: False
-      # Add other environment variables as needed:
       - key: EMAIL_HOST
-        sync: false # Do not sync this from a blueprint spec
+        sync: false
       - key: EMAIL_HOST_USER
         sync: false
       - key: EMAIL_HOST_PASSWORD
         sync: false
-      # ... other environment variables
+      # … any other env vars you had …

@@ -114,57 +114,29 @@
         </div>
         <div class="carousel-container">
             <div class="carousel">
-                <a href="{% url 'technology' %}#beam-profile-1">
-                    <div class="carousel-item">
-                        <picture>
-                            <source srcset="{% static 'main/images/webp/caro1.webp' %}" type="image/webp">
-                            <img data-src="{% static 'main/images/caro1.png' %}" alt="Carousel Image 1">
-                        </picture>
-                        <div class="carousel-overlay">Sustainable Farming Through Smarter Lighting</div>
-                    </div>
+              {% for post in blog_posts %}
+                <a href="{% url 'blog_detail' post.slug %}">
+                  <div class="carousel-item">
+                    <picture>
+                      {# if you have .webp versions alongside your uploads, swap the URL here #}
+                      <img
+                        data-src="{{ post.title_image.url }}"
+                        alt="{{ post.title }}"
+                        loading="lazy"
+                        class="carousel-img"
+                      >
+                    </picture>
+                    <div class="carousel-overlay">{{ post.title }}</div>
+                  </div>
                 </a>
-                <a href="{% url 'technology' %}#beam-profile-2">
-                    <div class="carousel-item">
-                        <picture>
-                            <source srcset="{% static 'main/images/webp/caro2.webp' %}" type="image/webp">
-                            <img data-src="{% static 'main/images/caro2.png' %}" alt="Carousel Image 2">
-                        </picture>
-                        <div class="carousel-overlay">Revolutionzing Indoor Farming</div>
-                    </div>
-                </a>
-                <a href="{% url 'technology' %}#csn-image">
-                    <div class="carousel-item">
-                        <picture>
-                            <source srcset="{% static 'main/images/webp/caro3.webp' %}" type="image/webp">
-                            <img data-src="{% static 'main/images/caro3.png' %}" alt="Carousel Image 3">
-                        </picture>
-                        <div class="carousel-overlay">The Cost of Light</div>
-                    </div>
-                </a>
-                <a href="{% url 'technology' %}#csn22-image">
-                    <div class="carousel-item">
-                        <picture>
-                            <source srcset="{% static 'main/images/webp/caro4.webp' %}" type="image/webp">
-                            <img data-src="{% static 'main/images/caro4.png' %}" alt="Carousel Image 4">
-                        </picture>
-                        <div class="carousel-overlay">Breaking Down the Science</div>
-                    </div>
-                </a>
-                <a href="{% url 'technology' %}#csn22-image">
-                    <div class="carousel-item">
-                        <picture>
-                            <source srcset="{% static 'main/images/webp/caro5.webp' %}" type="image/webp">
-                            <img data-src="{% static 'main/images/caro5.png' %}" alt="Carousel Image 5">
-                        </picture>
-                        <div class="carousel-overlay">Simulation to Reality</div>
-                    </div>
-                </a>
+              {% empty %}
+                <p>No featured blog posts yet.</p>
+              {% endfor %}
             </div>
-        </div>
+          </div>
+          
   <!-- --- animated-bg section --- -->
   <section id="spark-scroll-section">
-    <canvas id="spark-canvas"></canvas>
-  
     <div class="container"
          style="line-height:1.2;color:#333;
                 max-width:1000px;margin:20px auto;
@@ -279,6 +251,7 @@
         <h1 style="color: #0078BE">Observe our Cutting-Edge Research</h1>
         <button id="pdfButton2" class="dive-deeper-button" data-pdf-url="{% static 'main/images/White-Paper-2.0.pdf' %}" onclick="openPDF()" class="button">White Paper</button>
     </div>
+        
 </section>
 </div>
 </div>
@@ -308,66 +281,7 @@
 
     <!-- your script -->
     <script src="{% static 'js/scripts.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          const section = document.getElementById('spark-scroll-section');
-          const canvas  = document.getElementById('spark-canvas');
-          if (!section || !canvas) return;
-          const ctx = canvas.getContext('2d');
-          let width, height;
-          function resize() {
-            width  = section.clientWidth;
-            height = section.clientHeight;
-            canvas.width  = width;
-            canvas.height = height;
-          }
-          window.addEventListener('resize', resize);
-          resize();
-        
-          let lastScroll = window.scrollY, scrollV = 0;
-          window.addEventListener('scroll', () => {
-            const y = window.scrollY;
-            scrollV = y - lastScroll;
-            lastScroll = y;
-          });
-        
-          class Spark {
-            constructor() { this.reset(); }
-            reset() {
-              this.x = Math.random()*width;
-              this.y = Math.random()*height;
-              this.size  = 1 + Math.random()*3;
-              this.speed = 0.8 + Math.random()*1.5;
-              this.hue   = Math.random()*360;
-            }
-            update() {
-              this.y -= this.speed + scrollV*0.4;
-              if (this.y < -10 || this.y > height+10) {
-                this.reset();
-                this.y = height + 10;
-              }
-            }
-            draw() {
-              ctx.fillStyle = `hsla(${this.hue},100%,70%,0.6)`;
-              ctx.beginPath();
-              ctx.arc(this.x, this.y, this.size, 0, 2*Math.PI);
-              ctx.fill();
-            }
-          }
-        
-          const sparks = Array.from({length:300},() => new Spark());
-        
-          function animate() {
-            ctx.clearRect(0,0,width,height);
-            ctx.globalCompositeOperation = 'lighter';
-            sparks.forEach(s => { s.update(); s.draw(); });
-            ctx.globalCompositeOperation = 'source-over';
-            scrollV *= 0.95;
-            requestAnimationFrame(animate);
-          }
-          animate();
-        });
-        </script>
+
 
 </body>
 </html>

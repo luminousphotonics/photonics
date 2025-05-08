@@ -28,7 +28,11 @@ from grow_builder.scripts.newml import solve_single_scenario
 REDIS_PREFIX = "simulation_job"
 
 def index(request):
-    return render(request, 'main/index.html')
+    blog_posts = BlogPost.objects.filter(approved=True) \
+                                 .order_by('-created_at')[:5]
+    return render(request, 'main/index.html', {
+        'blog_posts': blog_posts
+    })
 
 def technology(request):
     return render(request, 'main/technology.html')
@@ -423,3 +427,6 @@ def run_scenario(request):
         except Exception as e:
             print("❌ Error in run_scenario:", str(e), flush=True)
             return JsonResponse({'error': str(e)}, status=500)
+        
+def prototype(request):
+    return render(request, 'main/prototype.html')

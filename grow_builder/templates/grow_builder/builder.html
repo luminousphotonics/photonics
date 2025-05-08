@@ -96,6 +96,7 @@
 <body>
     
     <div id="controls">
+        <a href="/"><img src="{% static 'main/images/homeleaf.png' %}" alt="Luminous Photonics Logo" height="100"></a>
         <h2>Grow Room Dimensions</h2>
         <label for="width">Width (W) (ft):</label>
         <input type="number" id="width" value="{{ initial_W|default:12 }}" step="0.1" min="1">
@@ -115,7 +116,7 @@
             <span>Show LED Strips:</span>
             <label class="switch"><input type="checkbox" id="toggleStrips" checked><span class="slider round"></span></label>
         </div>
-        <a href="/"><img src="{% static 'main/images/homeleaf.png' %}" alt="Luminous Photonics Logo" height="100"></a>
+        <button id="showCostBtn">Show Cost Estimate</button>
         <div id="loading-status"></div>
     </div>
 
@@ -152,6 +153,12 @@
     const DEBUG_LOGGING = true;
     const FT_TO_METERS = 0.3048;
     const METERS_TO_FT = 1 / FT_TO_METERS;
+
+    // --- Cost Estimate Modal Logic ---
+    const showCostBtn = document.getElementById('showCostBtn');
+    const costModal   = document.getElementById('cost-modal');
+    const closeBtn    = costModal.querySelector('.close-button');
+    const costText    = document.getElementById('cost-estimate-text');
 
     // --- DOM Elements ---
     const widthInput = document.getElementById('width');
@@ -376,6 +383,22 @@
     }
 }
 
+    // Show the modal and compute cost
+    showCostBtn.addEventListener('click', () => {
+      const W = parseFloat(widthInput.value) || 0;
+      const L = parseFloat(lengthInput.value) || 0;
+      const area = W * L;
+      const cost = area * 50.55;
+      costText.textContent = `$${cost.toFixed(2)} for ${area.toFixed(1)} sq ft`;
+      costModal.style.display = 'block';
+    });
+
+    // Close handlers
+    closeBtn.addEventListener('click', () => costModal.style.display = 'none');
+    window.addEventListener('click', e => {
+      if (e.target === costModal) costModal.style.display = 'none';
+    });
+
     function clearSceneGeometry(includeRoom = false) {
          logDebug(`Clearing scene geometry (includeRoom=${includeRoom})`);
          // Remove COBs, strips, plants always
@@ -499,5 +522,14 @@
     }
 
 </script>
+    <!-- Cost Estimate Modal -->
+    <div id="cost-modal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h2>Cost Estimate</h2>
+          <p id="cost-estimate-text" style="font-size:1.25em; margin-top:1em;"></p>
+        </div>
+      </div>
+  
 </body>
 </html>

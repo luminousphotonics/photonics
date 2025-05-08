@@ -39,6 +39,8 @@ urlpatterns = [
     path('api/ml_simulation/result/<str:job_id>/', views.simulation_result, name='simulation_result'),
     path('grow-builder/', include('grow_builder.urls')),
     path('api/run_scenario', views.run_scenario, name='run_scenario'),
+    path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
+    path('prototype/', views.prototype, name='prototype'),
 
 ]
 

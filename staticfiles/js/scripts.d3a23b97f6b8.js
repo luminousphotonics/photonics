@@ -167,9 +167,7 @@ $(document).ready(function () {
         arrows: true,
         pauseOnHover: false,
         centerMode: true,
-        variableWidth: false,  // Ensure this is false
-        lazyLoad: 'ondemand',  // <-- pull images from data-lazy attributes
-        accessibility: false   // <-- disable the ADA init that was erroring
+        variableWidth: false, // Ensure this is false
     });
 
     // Adjust Carousel Height
@@ -191,7 +189,6 @@ $(document).ready(function () {
         adjustCarouselHeight();
     });
 });
-
 
 function toggleLiterature() {
     var literatureDiv = document.getElementById('academic-literature');

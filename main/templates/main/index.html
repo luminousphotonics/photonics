@@ -113,27 +113,28 @@
         </div>
         </div>
         <div class="carousel-container">
-            <div class="carousel">
-              {% for post in blog_posts %}
-                <a href="{% url 'blog_detail' post.slug %}">
-                  <div class="carousel-item">
-                    <picture>
-                      {# if you have .webp versions alongside your uploads, swap the URL here #}
-                      <img
-                        data-src="{{ post.title_image.url }}"
-                        alt="{{ post.title }}"
-                        loading="lazy"
-                        class="carousel-img"
-                      >
-                    </picture>
-                    <div class="carousel-overlay">{{ post.title }}</div>
-                  </div>
-                </a>
-              {% empty %}
-                <p>No featured blog posts yet.</p>
-              {% endfor %}
-            </div>
+          <div class="carousel">
+            {% for post in blog_posts %}
+              <a href="{% url 'blog_detail' post.slug %}">
+                <div class="carousel-item">
+                  <picture>
+                    {# use data-lazy for Slick’s ondemand loading #}
+                    <img
+                      data-lazy="{{ post.title_image.url }}"
+                      alt="{{ post.title }}"
+                      loading="lazy"
+                      class="carousel-img"
+                    >
+                  </picture>
+                  <div class="carousel-overlay">{{ post.title }}</div>
+                </div>
+              </a>
+            {% empty %}
+              <p>No featured blog posts yet.</p>
+            {% endfor %}
           </div>
+        </div>
+        
           
   <!-- --- animated-bg section --- -->
   <section id="spark-scroll-section">
